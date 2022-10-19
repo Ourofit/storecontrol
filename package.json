@@ -54,8 +54,8 @@
 		"electron:start": "wait-on tcp:3000 && electron ."
 	},
 	"build": {
-		"appId": "com.example.creacionesmayte",
-		"productName": "Creaciones Mayte",
+		"appId": "com.example.ourofit",
+		"productName": "Ourofit",
 		"win": {
 			"icon": "./src/assets/store1.png"
 		},

@@ -45,7 +45,7 @@ function Sidebar(props) {
 						className="user_img"
 					/>
 				</div>
-				<div className="profile_name">Creaciones Mayte</div>
+				<div className="profile_name">Ourofit</div>
 			</div>
 			<ul className="sidebar_list">
 				{navigation_data.map((item, index) => (
