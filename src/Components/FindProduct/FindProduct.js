@@ -480,7 +480,7 @@ function FindProduct({ addorder, allpro, setAllPro, ...props }) {
 									<tbody>
 										{
 											allpro?.map((pro, index) => 
-												JSON.parse(localStorage.getItem('DepositoLogin')).Type === 'Manager'
+												JSON.parse(localStorage.getItem('DepositoLogin')).Type === 'Manager' || JSON.parse(localStorage.getItem('DepositoLogin')).Type === 'Master Manager'
 												? <tr key={index} style={{cursor: 'pointer'}}>
 													<th onClick={() => details(pro)} scope="row" className='text-center align-middle' data-toggle="modal" data-target="#detailsproduct">{index+1}</th>
 													<td onClick={() => details(pro)} className='align-middle' data-toggle="modal" data-target="#detailsproduct">{pro.nombre}</td>

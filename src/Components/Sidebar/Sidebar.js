@@ -49,7 +49,32 @@ function Sidebar(props) {
 			</div>
 			<ul className="sidebar_list">
 				{navigation_data.map((item, index) => (
-					<li className="nested_list" key={index}>
+					item.title === 'Tienda'
+					? localStorage.getItem('DepositoLogin') !== null && JSON.parse(localStorage.getItem('DepositoLogin')).Type === 'Master Manager'
+						? <li className="nested_list" key={index}>
+							<Link
+								to={item.path}
+								onClick={() => {
+									stylechange(index);
+									if (window.innerWidth <= 768) {
+										props.toggle();
+									}
+								}}
+							>
+								<div className={item.cName}>
+									<div className="container-fluid">
+										<div className="row d-flex justify-content-center">
+											<div className="col-3 d-flex justify-content-center">
+												{item.icon}
+											</div>
+											<div className="col f-1 link_names">{item.title}</div>
+										</div>
+									</div>
+								</div>
+							</Link>
+						</li>
+						: null
+					: <li className="nested_list" key={index}>
 						<Link
 							to={item.path}
 							onClick={() => {

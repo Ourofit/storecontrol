@@ -27,7 +27,7 @@ function App() {
     useEffect(() => {
         if(localStorage.getItem('DepositoLogin') !== null) {
 			var num = window.location.href.split('/').length - 1
-            if(JSON.parse(localStorage.getItem('DepositoLogin')).Type === 'Manager') {
+            if(JSON.parse(localStorage.getItem('DepositoLogin')).Type === 'Manager' || JSON.parse(localStorage.getItem('DepositoLogin')).Type === 'Master Manager') {
                 if(window.location.href.split('/')[num] === 'employeeorder' || window.location.href.split('/')[num] === '') {
                     navigate(-1)
                 }

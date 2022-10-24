@@ -14,7 +14,7 @@ function Navbar(props) {
             navigate('/')
             window.location.reload()
         } else {
-            if(JSON.parse(localStorage.getItem('DepositoLogin')).Type === 'Manager') {
+            if(JSON.parse(localStorage.getItem('DepositoLogin')).Type === 'Manager' || JSON.parse(localStorage.getItem('DepositoLogin')).Type === 'Master Manager') {
                 if(window.location.href.split('/')[window.location.href.split('/').length - 1] === 'employeeorder' || window.location.href.split('/')[window.location.href.split('/').length - 1] === '') {
                     navigate(-1)
                 }

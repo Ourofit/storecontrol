@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { GiPadlock } from "react-icons/gi";
-import { FaUserAlt } from "react-icons/fa";
+import { FaUserAlt, FaEnvelope } from "react-icons/fa";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
@@ -8,6 +8,7 @@ import axios from "axios";
 
 import InputLogin from "./InputLog/InputLog";
 import "./Login.scss";
+import Dropdown from "../../Components/Dropdown/Dropdown";
 // import { Employee_master } from "../../Data/Employee_master";
 // import { Manager_master } from "../../Data/Manager_master";
 
@@ -61,7 +62,7 @@ function Login({...props}) {
 							await window.api.addData(item.data, "Deposito")
 						}
 						if(localStorage.getItem('DepositoLogin') !== null) {
-							if(JSON.parse(localStorage.getItem('DepositoLogin')).Type === 'Manager') {
+							if(JSON.parse(localStorage.getItem('DepositoLogin')).Type === 'Manager' || JSON.parse(localStorage.getItem('DepositoLogin')).Type === 'Master Manager') {
 								navigate('/dashboard')
 							} else {
 								navigate('/employeeorder')
@@ -73,7 +74,7 @@ function Login({...props}) {
                         await window.api.getAllData("Deposito").then((item) => {
 							deposito(item.Deposito)
 							if(localStorage.getItem('DepositoLogin') !== null) {
-								if(JSON.parse(localStorage.getItem('DepositoLogin')).Type === 'Manager') {
+								if(JSON.parse(localStorage.getItem('DepositoLogin')).Type === 'Manager' || JSON.parse(localStorage.getItem('DepositoLogin')).Type === 'Master Manager') {
 									navigate('/dashboard')
 								} else {
 									navigate('/employeeorder')
@@ -93,6 +94,7 @@ function Login({...props}) {
 
     const formik = useFormik({
         initialValues: {
+			manager: '',
 			fullname: '',
             email: '',
             password: '',
@@ -210,8 +212,9 @@ function Login({...props}) {
 									</div>
 									{formik.errors.val_type ? <div className='error_display text-danger'>{formik.errors.val_type}</div> : null}
 								</div> */}
+								<Dropdown name='manager' dropvalues={DepositoAdd.map(deposito => deposito.Type === 'Manager' ? deposito.nombre : null)} value_select={formik.values.manager} onChange={formik.handleChange} touched={formik.touched.manager} errors={formik.errors.manager} />
 								<InputLogin icon={<FaUserAlt />} name='fullname' value_ch={formik.values.fullname} onChange={formik.handleChange} placeholder="Store Name" touched={formik.touched.fullname} errors={formik.errors.fullname} />
-								<InputLogin icon={<FaUserAlt />} name='email' value_ch={formik.values.email} onChange={formik.handleChange} placeholder="Email" touched={formik.touched.email} errors={formik.errors.email} />
+								<InputLogin icon={<FaEnvelope />} name='email' value_ch={formik.values.email} onChange={formik.handleChange} placeholder="Email" touched={formik.touched.email} errors={formik.errors.email} />
 								<InputLogin icon={<GiPadlock size={20} />} name='password' value_ch={formik.values.password} onChange={formik.handleChange} placeholder="Password" touched={formik.touched.email} errors={formik.errors.email} />
 								<button type="submit" className='btn-login'>Inscribirse</button>
 							</div>

@@ -10,18 +10,18 @@ function Dropdown({ name, dropvalues, onChange, touched, errors, value_select, i
 
     const { CategoryAdd, category, deposito, DepositoLog, Expensecat, allexpensecat, Status, DepositoAdd, Products } = props
     
-    const [selected, setSelected] = useState(value_select === '' ? 'Select' : value_select)
+    const [selected, setSelected] = useState(value_select === '' ? name === 'manager' ? 'Manager' : 'Select' : value_select)
     const [filter_val, setFilterVal] = useState()
     const [inputText, setInputText] = useState('')
     const [open, setOpen] = useState(false)
 
     useEffect(() => {
         function selecting() {
-            setSelected(value_select === '' ? 'Select' : value_select)
+            setSelected(value_select === '' ? name === 'manager' ? 'Manager' : 'Select' : value_select)
             setFilterVal(CategoryAdd.filter(cat => Products.filter(pro => pro.Category_id === cat.Category_id)[0]?.Category_id).map((final) => final.nombre))
         }
         selecting()
-    }, [value_select, CategoryAdd, Products])
+    }, [value_select, CategoryAdd, Products, name])
 
     const dropingdown = () => {
         document.getElementById(name).classList.toggle('drop_show')
@@ -146,21 +146,32 @@ function Dropdown({ name, dropvalues, onChange, touched, errors, value_select, i
     }
 
     return (
-        <div className='whole_drop'>
-            <div className={`${name === 'Nombre Vendedor :' ? null : 'container-fluid'}`}>
+        <div className='whole_drop' style={name === 'manager' ? {width: '270px', marginBottom: '20px'} : null}>
+            <div className={`${name === 'Nombre Vendedor :' ? null : 'container-fluid'} ${name === 'manager' ? 'p-0' : ''}`}>
                 <div className='row'>
-                    <div className={`${name === 'Nombre Vendedor :' ? 'col-6' : 'col-4'} d-flex align-items-center`}>
-                        <span style={{fontWeight: name === 'Nombre Vendedor :' ? '500' : '700'}}>{name.charAt(0).toUpperCase() + name.slice(1)}</span>
-                    </div>
-                    <div className={`${name === 'Nombre Vendedor :' ? 'col-6' : 'col-8'}`}>
+                    {
+                        name === 'manager'
+                        ? null
+                        : <div className={`${name === 'Nombre Vendedor :' ? 'col-6' : 'col-4'} d-flex align-items-center`}>
+                            <span style={{fontWeight: name === 'Nombre Vendedor :' ? '500' : '700'}}>{name.charAt(0).toUpperCase() + name.slice(1)}</span>
+                        </div>
+                    }
+                    <div className={`${name === 'Nombre Vendedor :' ? 'col-6' : name === 'manager' ? 'col-12' : 'col-8'}`}>
                         <div className="dropdown_select">
-                            <button type='button' className='select_value' id={name+'1'} onChange={onChange} onClick={dropingdown}>
+                            <button type='button' className='select_value' style={name === 'manager' ? {padding: '10px 20px', backgroundColor: 'rgba(0,0,0,0.5)', border: 0} : null} id={name+'1'} onChange={onChange} onClick={dropingdown}>
                                 <div className='d-flex justify-content-between align-items-center'>
-                                    <span style={{padding: 5, paddingLeft: 10, fontSize: name === 'Nombre Vendedor :' ? 15 : null}}>{selected}</span>
+                                    {
+                                        name === 'manager'
+                                        ? <div className="d-flex justify-content-between align-items-center">
+                                            <FontAwesomeIcon icon="user-tie" style={{padding: 5, paddingRight: 10, color: name === 'manager' ? selected === 'Manager' ? 'gray' : 'white' : null}}/>
+                                            <span style={{padding: 5, paddingLeft: 10, fontSize: name === 'Nombre Vendedor :' ? 15 : null, color: name === 'manager' ? selected === 'Manager' ? 'gray' : 'white' : null}}>{selected}</span>
+                                        </div>
+                                        : <span style={{padding: 5, paddingLeft: 10, fontSize: name === 'Nombre Vendedor :' ? 15 : null, color: name === 'manager' ? selected === 'Manager' ? 'gray' : 'white' : null}}>{selected}</span>                                        
+                                    }
                                     {
                                         open
-                                        ? <FontAwesomeIcon icon="angle-down" style={{padding: 5, paddingRight: 10}}/>
-                                        : <FontAwesomeIcon icon="angle-up" style={{padding: 5, paddingRight: 10}}/>
+                                        ? <FontAwesomeIcon icon="angle-down" style={{padding: 5, paddingRight: 10, color: name === 'manager' ? selected === 'Manager' ? 'gray' : 'white' : null}}/>
+                                        : <FontAwesomeIcon icon="angle-up" style={{padding: 5, paddingRight: 10, color: name === 'manager' ? selected === 'Manager' ? 'gray' : 'white' : null}}/>
                                     }
                                 </div>
                             </button>
