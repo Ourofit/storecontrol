@@ -11,8 +11,13 @@ export const store_SalesActivity = async (naming, Status, Sales_Activity, allsal
                     console.log(`${naming} -> Sales Activity`)
                     var log = JSON.parse(localStorage.getItem('DepositoLogin'))
                     var main_data = item.data
-                    var con = item.data.find(element => element.year === new Date().getFullYear() && log.Deposito_id === element.Deposito_id)
-                    if(con === undefined) {
+                    var con = {}
+                    if(log.Type === 'Store') {
+                        con = item.data.find(element => element.year === new Date().getFullYear() && log.Deposito_id_fk === element.Deposito_id)
+                    } else {
+                        con = item.data.find(element => element.year === new Date().getFullYear() && log.Deposito_id === element.Deposito_id)
+                    }
+                    if(con === undefined && log.Type === 'Manager') {
                         var single_month = {}
                         for(var i = 1; i <= months_data.length; i++) {
                             var single_date = []
