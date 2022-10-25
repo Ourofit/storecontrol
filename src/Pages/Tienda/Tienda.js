@@ -40,6 +40,7 @@ function Tienda(props) {
 								<th scope="col" className='text-center'>Fecha</th>
 								<th scope="col" className='text-center'>Nombre Tienda</th>
 								<th scope="col" className='text-center'>Total De Productos</th>
+								<th scope="col" className='text-center'>Type</th>
 								<th scope="col" className='text-center'>Direccion</th>
 								<th scope="col" className='text-center'>Edit / Delete</th>
 							</tr>
@@ -53,6 +54,7 @@ function Tienda(props) {
 									<td className='text-center align-middle'>{i.createdAt.split('T')[0]}</td>
 									<td className='text-center align-middle'>{i.nombre}</td>
 									<td className='text-center align-middle'>0</td>
+									<td className='text-center align-middle'>{i.Type}</td>
 									<td className='text-center align-middle'>No Direccion</td>
 									<td className='edit text-center align-middle'> 
 										{/* <IoCloseCircle style={{ display: "inline" }} onClick={() => removeExp(i.ExpenseId)} className="close_icon_ind" />

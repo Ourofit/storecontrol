@@ -18,7 +18,7 @@ import { connect } from "react-redux";
 // prettier-ignore
 function Orders({ setOrderDetails, setOrdering, boxes = false, employee = null, refund = false, seRefund, searchbox = true, ...props }) {
 
-	const { Products, allproduct, allorders, Orders, allemployee, Status, Sales_Activity, allsalesactivity, Notific } = props
+	const { Orders } = props
 
 	const [search, setSeatrch] = useState('')
 	const [allorder, setAllOrders] = useState()
@@ -88,7 +88,7 @@ function Orders({ setOrderDetails, setOrdering, boxes = false, employee = null, 
 			}
 		}
 		order_storing()
-	}, [Orders, allemployee, allorders, employee, Status, Notific, Products, Sales_Activity, allsalesactivity, allproduct])
+	}, [Orders, employee])
 
 	const onChange = (e) => {
 		setSeatrch(e.target.value)
@@ -261,9 +261,7 @@ function Orders({ setOrderDetails, setOrdering, boxes = false, employee = null, 
 
 const mapStateToProps = (state) => {
     return {
-        Products: state.Products,
         Notific: state.NotifyMaster,
-        Sales_Activity: state.Sales_Activity,
         Orders: state.Orders,
         Status: state.Status,
     };
@@ -283,21 +281,9 @@ const mapDispatchToProps = (dispatch) => {
                 item: val,
             });
         },
-        allsalesactivity: (val) => {
-            dispatch({
-                type: "SALESACTIVITY",
-                item: val,
-            });
-        },
         notify: (val) => {
             dispatch({
                 type: "NOTIFICATION",
-                item: val,
-            });
-        },
-        allproduct: (val) => {
-            dispatch({
-                type: "PRODUCTS",
                 item: val,
             });
         },

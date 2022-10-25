@@ -12,11 +12,7 @@ import axios from "axios";
 import { connect } from "react-redux";
 import DetailsProduct from "../../Components/DetailsProduct/DetailsProduct";
 import TransferStock from "../../Components/TransferStock/TransferStock";
-import {
-    store_Expensecat,
-    store_Expenses,
-    store_SalesActivity,
-} from "../../Functions/AllFunctions";
+import { store_Expensecat, store_Expenses } from "../../Functions/AllFunctions";
 
 // prettier-ignore
 function Home(props) {
@@ -73,151 +69,9 @@ function Home(props) {
     useEffect(() => {
         let months_data = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
         async function linedata() {
-            await store_SalesActivity('Home', Status, Sales_Activity, allsalesactivity)
+            // await store_SalesActivity('Home', Status, Sales_Activity, allsalesactivity)
             await store_Expenses('Home', Status, Expenses, allexp)
             await store_Expensecat('Home', Status, Expensecat, expense_category)
-            // if(Sales_Activity.length === 0) {
-            //     if(Status) {
-            //         await axios.get('http://localhost:5000/salesactivity')
-            //             .then(async item => {
-            //                 console.log("Home -> Sales Activity")
-            //                 var main_data = item.data
-            //                 var con = item.data.find(element => element.year === new Date().getFullYear())
-            //                 if(con === undefined) {
-            //                     await window.api.getAllData("Sales_Activity").then(async (item2) => {
-            //                         if(item2.Sales_Activity === undefined) {
-            //                             var single_month = {}
-            //                             for(var i = 1; i <= months_data.length; i++) {
-            //                                 var single_date = []
-            //                                 var days = new Date(new Date().getFullYear(), i, 0).getDate()
-            //                                 for(var j = 1; j <= days; j++) {
-            //                                     var d = {
-            //                                         id: j,
-            //                                         day: j,
-            //                                         sales: 0
-            //                                     }
-            //                                     single_date.push(d)
-            //                                 }
-            //                                 single_month[months_data[i-1]] = JSON.stringify(single_date)
-            //                             }
-            //                             var data = {
-            //                                 Sales_id: new Date().getFullYear(),
-            //                                 year: new Date().getFullYear(),
-            //                                 ...single_month 
-            //                             }
-            //                             main_data.push(data)
-            //                             await axios.post('http://localhost:5000/salesactivity/new', data)
-            //                             for(var t=0; t < main_data.length; t++) {
-            //                                 for(var m=0; m < months_data.length; m++) {
-            //                                     main_data[t][months_data[m]] = JSON.parse(main_data[t][months_data[m]])
-            //                                 }
-            //                             }
-            //                             allsalesactivity(main_data)
-            //                             if(window.desktop) {
-            //                                 await window.api.addData(main_data, "Sales_Activity")
-            //                             }
-            //                         } else {
-            //                             allsalesactivity(item2.Sales_Activity)
-            //                             var another_data = item2.Sales_Activity
-            //                             for(var q=0; q < another_data.length; q++) {
-            //                                 for(var r=0; r < months_data.length; r++) {
-            //                                     another_data[q][months_data[r]] = JSON.stringify(another_data[q][months_data[r]])
-            //                                 }
-            //                             }
-            //                             await axios.post('http://localhost:5000/salesactivity/new', another_data[another_data.length - 1])
-            //                         }
-            //                     })
-            //                 }
-            //             })
-            //     } else {
-            //         if(window.desktop) {
-            //             await window.api.getAllData("Sales_Activity").then(async (item) => {
-            //                 if(item.Sales_Activity === undefined) {
-            //                     var main_data = []
-            //                     var single_month = {}
-            //                     for(var i = 1; i <= months_data.length; i++) {
-            //                         var single_date = []
-            //                         var days = new Date(new Date().getFullYear(), i, 0).getDate()
-            //                         for(var j = 1; j <= days; j++) {
-            //                             var d = {
-            //                                 id: j,
-            //                                 day: j,
-            //                                 sales: 0
-            //                             }
-            //                             single_date.push(d)
-            //                         }
-            //                         single_month[months_data[i-1]] = JSON.stringify(single_date)
-            //                     }
-            //                     var data = {
-            //                         Sales_id: new Date().getFullYear(),
-            //                         year: new Date().getFullYear(),
-            //                         ...single_month 
-            //                     }
-            //                     main_data.push(data)
-            //                     allsalesactivity(main_data)
-            //                     await window.api.addData(main_data, "Sales_Activity")
-            //                 } else {
-            //                     allsalesactivity(item.Sales_Activity)
-            //                 }
-            //             });
-            //         }
-            //     }
-            // }
-            // if(Expenses.length === 0){
-			// 	if(Status) {
-			// 		await axios.get("http://localhost:5000/expense").then(async (item) => {
-			// 			console.log('Home -> all expenses')
-			// 			// setallDataExp(item.data)
-			// 			allexp(item.data)
-			// 			if(window.desktop) {
-            //                 await window.api.getAllData("Expenses").then(async (item2) => {
-			// 					item2.Expenses.forEach(async function (exp, index) {
-            //                         if(!Object.keys(exp).includes('ExpenseId')) {
-			// 							await axios.post("http://localhost:5000/expense/new", exp)
-			// 							.then(async (item3) => {
-			// 								var m = item.data;
-			// 								m.push(item3.data);
-			// 								allexp(m);
-			// 								await window.api.addData(m, "Expenses")
-			// 								// console.log(allExpenses, 'details')
-			// 							}).catch(err => console.log(err))
-			// 						}
-			// 					})
-			// 				});
-			// 				await window.api.addData(item.data, "Expenses")
-			// 			}
-			// 		})
-			// 	} else {
-			// 		if(window.desktop) {
-            //             await window.api.getAllData("Expenses").then((item) => allexp(item.Expenses));
-            //         }
-			// 	}
-			// }
-			// if (Expensecat.length === 0) {
-			// 	if(Status) {
-			// 		await axios.get("http://localhost:5000/expensecat").then(async (item) => {
-			// 			console.log("Home -> ExpenseCat") 		
-			// 			expense_category(item.data)
-			// 			if(window.desktop) {
-            //                 await window.api.getAllData("Expensecat").then(async (item2) => {
-			// 					item2.Expensecat.forEach(async function (exp_cate, index) {
-			// 						if(!Object.keys(exp_cate).includes('CategoryExpense_id')) {
-			// 							await axios.post("http://localhost:5000/expensecat/new", exp_cate).then(async (item3) => {
-			// 								console.log("ExpenseCat -> new expensecate")
-			// 								expense_category(item3.data);
-			// 							}).catch(err => console.log(err))
-			// 						}
-			// 					})
-			// 				});
-			// 				await window.api.addData(item.data, "Expensecat")
-			// 			}
-			// 		})
-			// 	} else {
-			// 		if(window.desktop) {
-            //             await window.api.getAllData("Expensecat").then((item) => expense_category(item.Expensecat));
-            //         }
-			// 	}
-			// }
         }
         
         if(loop.current) {
@@ -305,6 +159,8 @@ function Home(props) {
             let label_data = [];
             let total = [];
             if(Sales_Activity.length !== 0) {
+                // var log = JSON.parse(localStorage.getItem('DepositoLogin'))
+                // console.log(Sales_Activity.filter(element => element.year === new Date().getFullYear() && log.Deposito_id === element.Deposito_id))
                 let months_data = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec",];
                 if (!select_year || select_year === "All") {
                     for (var k = 0; k < Sales_Activity.length; k++) {
@@ -355,6 +211,7 @@ function Home(props) {
         }
 
         // var {label_data, total} = labels_data()
+        // console.log(labels_data()[1])
 
         const sales = {
             labels: labels_data()[0],

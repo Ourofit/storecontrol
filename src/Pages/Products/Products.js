@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Overall from "../../Components/Overall/Overall";
 import { useReactToPrint } from "react-to-print";
@@ -25,7 +25,8 @@ import FindProduct from "../../Components/FindProduct/FindProduct";
 
 // prettier-ignore
 function Products(props) {
-    const { Products, allproduct, category, deposito, DepositoAdd, CategoryAdd, Status, Sales_Activity, allsalesactivity, Notific, notify, Orders, allorders } = props;
+    // const { Products, allproduct, category, deposito, DepositoAdd, CategoryAdd, Status, Sales_Activity, allsalesactivity, Notific, notify, Orders, allorders } = props;
+    const { Products, allproduct, CategoryAdd, Status, Orders } = props;
 
     const [search, setSeatrch] = useState("");
     const [allpro, setAllPro] = useState(Products);
@@ -86,7 +87,7 @@ function Products(props) {
     // console.log(CategoryAdd);
     // const [productload, setProductload] = useState(10);
     // const [product, setProduct] = useState([]);
-    const [loading, setLoading] = useState(true);
+    // const [loading, setLoading] = useState(true);
 
     // const inspro = useCallback(() => {
     //     allproduct(Products_data);
@@ -335,358 +336,358 @@ function Products(props) {
         }
     };
 
-    const loop = useRef(true)
+    // const loop = useRef(true)
 
-    useEffect(() => {
-        async function pro_method() {
-            // store_Category('Products', Status, CategoryAdd, category)
-			// store_Products('Products', Status, Products, allproduct, setAllPro, Sales_Activity, allorders, allsalesactivity)
-			// store_Desposito('Products', Status, DepositoAdd, deposito)
-            // if(CategoryAdd.length === 0) {
-			// 	if(Status) {
-			// 		await axios.get("http://localhost:5000/category").then(async (item) => {
-			// 			console.log('Products -> Category')
-			// 			category(item.data);
-			// 			if(window.desktop) {
-            //                 await window.api.getAllData("CategoryAdd").then(async (item2) => {
-            //                     item2.CategoryAdd.forEach(async function (cate) {
-            //                         if (!Object.keys(cate).includes('createdAt')) {
-            //                             await axios.post('http://localhost:5000/category/new', cate).then(async (item3) => {
-            //                                     console.log('Products -> Category Inserted')
-            //                                     category(item3.data)
-            //                                     var da = item.data
-            //                                     da.push(item3.data)
-            //                                     // console.log(da)
-            //                                     await window.api.addData(da, "CategoryAdd")
-            //                                     return
-            //                                 })
-            //                         }
-            //                     })
-            //                     // console.log(item.data.length, item2.CategoryAdd.length)
-            //                     if(item.data.length > item2.CategoryAdd.length) {
-            //                         item.data.forEach(async function(c) {
-            //                             var flaging = 0
-            //                             for(var k=0; k < item2.CategoryAdd.length; k++) {
-            //                                 if(c.Category_id === item2.CategoryAdd[k].Category_id) {
-            //                                     flaging = 1
-            //                                     break
-            //                                 }
-            //                             }
-            //                             if(flaging === 0) {
-            //                                 console.log('Products -> Category Delete')
-            //                                 await axios.delete(`http://localhost:5000/category/delete/${c.Category_id}`)
-            //                                 var filter = item.data.filter(item => item.Category_id !== c.Category_id)
-            //                                 await window.api.addData(filter, "CategoryAdd")
-            //                                 category(filter)
-            //                                 return
-            //                             }
-            //                         })
-            //                     }
-            //                     // console.log(item2)
-            //                 });
-            //                 await window.api.addData(item.data, "CategoryAdd")
-            //             }
-            //         })
-            //     } else {
-            //         if (window.desktop) {
-            //             await window.api.getAllData("CategoryAdd").then((item) => {
-            //                 console.log(item)
-            //                 category(item.CategoryAdd)
-            //             });
-            //         }
-            //     }
-            // }
-            // if(Products.length === 0) {
-            //     if(Status) {
-            //         await axios.get("http://localhost:5000/product").then(async (item) => {
-            //             console.log('Products -> Products')
-            //             var alldata = item.data
-            //             if (alldata.length > 0) {
-            //                 if (typeof alldata[0].Color === 'string') {
-            //                     for (var i = 0; i < alldata.length; i++) {
-            //                         alldata[i].codigo = JSON.parse(alldata[i].codigo)
-            //                         alldata[i].Color = JSON.parse(alldata[i].Color)
-            //                         alldata[i].Size = JSON.parse(alldata[i].Size)
-            //                         alldata[i].Stock = JSON.parse(alldata[i].Stock)
-            //                         alldata[i].precioVenta = JSON.parse(alldata[i].precioVenta)
-            //                         alldata[i].costoCompra = JSON.parse(alldata[i].costoCompra)
-            //                         alldata[i].costoMenor = JSON.parse(alldata[i].costoMenor)
-            //                         alldata[i].Image = JSON.parse(alldata[i].Image)
-            //                     }
-            //                 }
-            //             }
-            //             alldata.sort(function (d1, d2) {
-            //                 return new Date(d1.createdAt) - new Date(d2.createdAt);
-            //             });
-            //             setAllPro(alldata)
-            //             allproduct(alldata);
-            //             if(window.desktop) {
-            //                 await window.api.getAllData("Products").then(async (item) => {
-            //                     await window.api.getAllData("Orders_Returns").then(async (order_ret) => {
-            //                         if(order_ret.Orders_Returns) {
-            //                             console.log(order_ret.Orders_Returns)
-            //                             order_ret.Orders_Returns.forEach(async (ret) => {
-            //                                 await axios.put('http://localhost:5000/product/quantity', {Product_id: ret.Product_id, Stock: ret.Stock})
-            //                                 var new_data = alldata.findIndex(p => p.Product_id === ret.Product_id)
-            //                                 alldata[new_data].Stock = JSON.parse(ret.Stock)
-            //                                 setAllPro(alldata)
-            //                                 allproduct(alldata)
-            //                                 await axios.delete(`http://localhost:5000/ordermaster/delete/${ret.order.Order_id}`)
-            //                                 await axios.delete(`http://localhost:5000/orderproduct/delete/${ret.val}`)
-            //                                 .then(async item => {
-            //                                     await axios.get('http://localhost:5000/ordermaster')
-            //                                         .then(async prod => {
-            //                                             let months_data = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-            //                                             prod.data.sort(function (d1, d2) {
-            //                                                 return new Date(d2.createdAt) - new Date(d1.createdAt);
-            //                                             });
-            //                                             allorders(prod.data)
-            //                                             await window.api.addData(prod.data, "Orders")
-            //                                             var year = new Date(ret.order.createdAt).getFullYear()
-            //                                             var month = new Date(ret.order.createdAt).getMonth()
-            //                                             var date = new Date(ret.order.createdAt).getDate()
-            //                                             var tot = 0
-            //                                             for(var q=0; q<prod.data.length; q++) {
-            //                                                 if(new Date(prod.data[q].createdAt).toDateString() === new Date(ret.order.createdAt).toDateString()) {
-            //                                                     tot = prod.data[q].Total_price + tot
-            //                                                 }
-            //                                             }
-            //                                             var index = Sales_Activity.findIndex(item => item.year === year)
-            //                                             Sales_Activity[index][months_data[month]][date-1].sales = tot
-            //                                             for(var t=0; t < Sales_Activity.length; t++) {
-            //                                                 for(var m=0; m < months_data.length; m++) {
-            //                                                     Sales_Activity[t][months_data[m]] = JSON.stringify(Sales_Activity[t][months_data[m]])
-            //                                                 }
-            //                                             }
-            //                                             await axios.put('http://localhost:5000/salesactivity/day', {
-            //                                                 Sales_id: Sales_Activity[index].Sales_id,
-            //                                                 ...Sales_Activity[index]
-            //                                             })
-            //                                             await axios.get('http://localhost:5000/salesactivity')
-            //                                                 .then(async item => {
-            //                                                     for(var t=0; t < item.data.length; t++) {
-            //                                                         for(var m=0; m < months_data.length; m++) {
-            //                                                             item.data[t][months_data[m]] = JSON.parse(item.data[t][months_data[m]])
-            //                                                         }
-            //                                                     }
-            //                                                     allsalesactivity(item.data)
-            //                                                 })
-            //                                         })
-            //                                 })
-            //                             })
-            //                         }
-            //                     })
-            //                     item.Products.forEach(async function (pro, index) {
-            //                         // console.log('pro', pro)
-            //                         var find_pro = alldata.find(al => al.Product_id === pro.Product_id)
-            //                         var flag4 = 0
-            //                         if(find_pro) {
-            //                             if(pro.Stock.length === find_pro.Stock.length && 
-            //                                 pro.description === find_pro.description && 
-            //                                 pro.nombre === find_pro.nombre && 
-            //                                 pro.Category_id === find_pro.Category_id) {
-            //                                 for(var i=0; i < pro.Stock.length; i++) {
-            //                                     if(pro.Stock[i].length !== find_pro.Stock[i].length ) {
-            //                                         flag4 = 1
-            //                                         break
-            //                                     }
-            //                                     for(var j=0; j < pro.Stock[i].length; j++) {
-            //                                         if(pro.Size[i][j] !== find_pro.Size[i][j] ||
-            //                                             pro.Stock[i][j] !== find_pro.Stock[i][j] ||
-            //                                             pro.precioVenta[i][j] !== find_pro.precioVenta[i][j] ||
-            //                                             pro.costoCompra[i][j] !== find_pro.costoCompra[i][j] ||
-            //                                             pro.costoMenor[i][j] !== find_pro.costoMenor[i][j]) {
-            //                                             flag4 = 1
-            //                                             break
-            //                                         }
-            //                                     }
-            //                                 }
-            //                             } else {
-            //                                 flag4 = 1
-            //                             }
-            //                         }
-            //                         if (!Object.keys(pro).includes('createdAt')) {
-            //                             console.log('First')
-            //                             var dep = pro.deposito
-            //                             delete pro.deposito
-            //                             var convert_data = {
-            //                                 ...pro,
-            //                                 codigo: JSON.stringify(pro.codigo),
-            //                                 Color: JSON.stringify(pro.Color),
-            //                                 Size: JSON.stringify(pro.Size),
-            //                                 Stock: JSON.stringify(pro.Stock),
-            //                                 precioVenta: JSON.stringify(pro.precioVenta),
-            //                                 costoCompra: JSON.stringify(pro.costoCompra),
-            //                                 costoMenor: JSON.stringify(pro.costoMenor),
-            //                                 Image: JSON.stringify(pro.Image),
-            //                             }
-            //                             console.log(convert_data)
-            //                             await axios.post("http://localhost:5000/product/new", convert_data).then(async (item) => {
-            //                                 item.data.codigo = JSON.parse(item.data.codigo);
-            //                                 item.data.Color = JSON.parse(item.data.Color);
-            //                                 item.data.Size = JSON.parse(item.data.Size);
-            //                                 item.data.Stock = JSON.parse(item.data.Stock);
-            //                                 item.data.precioVenta = JSON.parse(item.data.precioVenta);
-            //                                 item.data.costoCompra = JSON.parse(item.data.costoCompra);
-            //                                 item.data.costoMenor = JSON.parse(item.data.costoMenor);
-            //                                 item.data.deposito = dep
-            //                                 item.data.Image = JSON.parse(item.data.Image);
+    // useEffect(() => {
+    //     async function pro_method() {
+    //         // store_Category('Products', Status, CategoryAdd, category)
+	// 		// store_Products('Products', Status, Products, allproduct, setAllPro, Sales_Activity, allorders, allsalesactivity)
+	// 		// store_Desposito('Products', Status, DepositoAdd, deposito)
+    //         // if(CategoryAdd.length === 0) {
+	// 		// 	if(Status) {
+	// 		// 		await axios.get("http://localhost:5000/category").then(async (item) => {
+	// 		// 			console.log('Products -> Category')
+	// 		// 			category(item.data);
+	// 		// 			if(window.desktop) {
+    //         //                 await window.api.getAllData("CategoryAdd").then(async (item2) => {
+    //         //                     item2.CategoryAdd.forEach(async function (cate) {
+    //         //                         if (!Object.keys(cate).includes('createdAt')) {
+    //         //                             await axios.post('http://localhost:5000/category/new', cate).then(async (item3) => {
+    //         //                                     console.log('Products -> Category Inserted')
+    //         //                                     category(item3.data)
+    //         //                                     var da = item.data
+    //         //                                     da.push(item3.data)
+    //         //                                     // console.log(da)
+    //         //                                     await window.api.addData(da, "CategoryAdd")
+    //         //                                     return
+    //         //                                 })
+    //         //                         }
+    //         //                     })
+    //         //                     // console.log(item.data.length, item2.CategoryAdd.length)
+    //         //                     if(item.data.length > item2.CategoryAdd.length) {
+    //         //                         item.data.forEach(async function(c) {
+    //         //                             var flaging = 0
+    //         //                             for(var k=0; k < item2.CategoryAdd.length; k++) {
+    //         //                                 if(c.Category_id === item2.CategoryAdd[k].Category_id) {
+    //         //                                     flaging = 1
+    //         //                                     break
+    //         //                                 }
+    //         //                             }
+    //         //                             if(flaging === 0) {
+    //         //                                 console.log('Products -> Category Delete')
+    //         //                                 await axios.delete(`http://localhost:5000/category/delete/${c.Category_id}`)
+    //         //                                 var filter = item.data.filter(item => item.Category_id !== c.Category_id)
+    //         //                                 await window.api.addData(filter, "CategoryAdd")
+    //         //                                 category(filter)
+    //         //                                 return
+    //         //                             }
+    //         //                         })
+    //         //                     }
+    //         //                     // console.log(item2)
+    //         //                 });
+    //         //                 await window.api.addData(item.data, "CategoryAdd")
+    //         //             }
+    //         //         })
+    //         //     } else {
+    //         //         if (window.desktop) {
+    //         //             await window.api.getAllData("CategoryAdd").then((item) => {
+    //         //                 console.log(item)
+    //         //                 category(item.CategoryAdd)
+    //         //             });
+    //         //         }
+    //         //     }
+    //         // }
+    //         // if(Products.length === 0) {
+    //         //     if(Status) {
+    //         //         await axios.get("http://localhost:5000/product").then(async (item) => {
+    //         //             console.log('Products -> Products')
+    //         //             var alldata = item.data
+    //         //             if (alldata.length > 0) {
+    //         //                 if (typeof alldata[0].Color === 'string') {
+    //         //                     for (var i = 0; i < alldata.length; i++) {
+    //         //                         alldata[i].codigo = JSON.parse(alldata[i].codigo)
+    //         //                         alldata[i].Color = JSON.parse(alldata[i].Color)
+    //         //                         alldata[i].Size = JSON.parse(alldata[i].Size)
+    //         //                         alldata[i].Stock = JSON.parse(alldata[i].Stock)
+    //         //                         alldata[i].precioVenta = JSON.parse(alldata[i].precioVenta)
+    //         //                         alldata[i].costoCompra = JSON.parse(alldata[i].costoCompra)
+    //         //                         alldata[i].costoMenor = JSON.parse(alldata[i].costoMenor)
+    //         //                         alldata[i].Image = JSON.parse(alldata[i].Image)
+    //         //                     }
+    //         //                 }
+    //         //             }
+    //         //             alldata.sort(function (d1, d2) {
+    //         //                 return new Date(d1.createdAt) - new Date(d2.createdAt);
+    //         //             });
+    //         //             setAllPro(alldata)
+    //         //             allproduct(alldata);
+    //         //             if(window.desktop) {
+    //         //                 await window.api.getAllData("Products").then(async (item) => {
+    //         //                     await window.api.getAllData("Orders_Returns").then(async (order_ret) => {
+    //         //                         if(order_ret.Orders_Returns) {
+    //         //                             console.log(order_ret.Orders_Returns)
+    //         //                             order_ret.Orders_Returns.forEach(async (ret) => {
+    //         //                                 await axios.put('http://localhost:5000/product/quantity', {Product_id: ret.Product_id, Stock: ret.Stock})
+    //         //                                 var new_data = alldata.findIndex(p => p.Product_id === ret.Product_id)
+    //         //                                 alldata[new_data].Stock = JSON.parse(ret.Stock)
+    //         //                                 setAllPro(alldata)
+    //         //                                 allproduct(alldata)
+    //         //                                 await axios.delete(`http://localhost:5000/ordermaster/delete/${ret.order.Order_id}`)
+    //         //                                 await axios.delete(`http://localhost:5000/orderproduct/delete/${ret.val}`)
+    //         //                                 .then(async item => {
+    //         //                                     await axios.get('http://localhost:5000/ordermaster')
+    //         //                                         .then(async prod => {
+    //         //                                             let months_data = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    //         //                                             prod.data.sort(function (d1, d2) {
+    //         //                                                 return new Date(d2.createdAt) - new Date(d1.createdAt);
+    //         //                                             });
+    //         //                                             allorders(prod.data)
+    //         //                                             await window.api.addData(prod.data, "Orders")
+    //         //                                             var year = new Date(ret.order.createdAt).getFullYear()
+    //         //                                             var month = new Date(ret.order.createdAt).getMonth()
+    //         //                                             var date = new Date(ret.order.createdAt).getDate()
+    //         //                                             var tot = 0
+    //         //                                             for(var q=0; q<prod.data.length; q++) {
+    //         //                                                 if(new Date(prod.data[q].createdAt).toDateString() === new Date(ret.order.createdAt).toDateString()) {
+    //         //                                                     tot = prod.data[q].Total_price + tot
+    //         //                                                 }
+    //         //                                             }
+    //         //                                             var index = Sales_Activity.findIndex(item => item.year === year)
+    //         //                                             Sales_Activity[index][months_data[month]][date-1].sales = tot
+    //         //                                             for(var t=0; t < Sales_Activity.length; t++) {
+    //         //                                                 for(var m=0; m < months_data.length; m++) {
+    //         //                                                     Sales_Activity[t][months_data[m]] = JSON.stringify(Sales_Activity[t][months_data[m]])
+    //         //                                                 }
+    //         //                                             }
+    //         //                                             await axios.put('http://localhost:5000/salesactivity/day', {
+    //         //                                                 Sales_id: Sales_Activity[index].Sales_id,
+    //         //                                                 ...Sales_Activity[index]
+    //         //                                             })
+    //         //                                             await axios.get('http://localhost:5000/salesactivity')
+    //         //                                                 .then(async item => {
+    //         //                                                     for(var t=0; t < item.data.length; t++) {
+    //         //                                                         for(var m=0; m < months_data.length; m++) {
+    //         //                                                             item.data[t][months_data[m]] = JSON.parse(item.data[t][months_data[m]])
+    //         //                                                         }
+    //         //                                                     }
+    //         //                                                     allsalesactivity(item.data)
+    //         //                                                 })
+    //         //                                         })
+    //         //                                 })
+    //         //                             })
+    //         //                         }
+    //         //                     })
+    //         //                     item.Products.forEach(async function (pro, index) {
+    //         //                         // console.log('pro', pro)
+    //         //                         var find_pro = alldata.find(al => al.Product_id === pro.Product_id)
+    //         //                         var flag4 = 0
+    //         //                         if(find_pro) {
+    //         //                             if(pro.Stock.length === find_pro.Stock.length && 
+    //         //                                 pro.description === find_pro.description && 
+    //         //                                 pro.nombre === find_pro.nombre && 
+    //         //                                 pro.Category_id === find_pro.Category_id) {
+    //         //                                 for(var i=0; i < pro.Stock.length; i++) {
+    //         //                                     if(pro.Stock[i].length !== find_pro.Stock[i].length ) {
+    //         //                                         flag4 = 1
+    //         //                                         break
+    //         //                                     }
+    //         //                                     for(var j=0; j < pro.Stock[i].length; j++) {
+    //         //                                         if(pro.Size[i][j] !== find_pro.Size[i][j] ||
+    //         //                                             pro.Stock[i][j] !== find_pro.Stock[i][j] ||
+    //         //                                             pro.precioVenta[i][j] !== find_pro.precioVenta[i][j] ||
+    //         //                                             pro.costoCompra[i][j] !== find_pro.costoCompra[i][j] ||
+    //         //                                             pro.costoMenor[i][j] !== find_pro.costoMenor[i][j]) {
+    //         //                                             flag4 = 1
+    //         //                                             break
+    //         //                                         }
+    //         //                                     }
+    //         //                                 }
+    //         //                             } else {
+    //         //                                 flag4 = 1
+    //         //                             }
+    //         //                         }
+    //         //                         if (!Object.keys(pro).includes('createdAt')) {
+    //         //                             console.log('First')
+    //         //                             var dep = pro.deposito
+    //         //                             delete pro.deposito
+    //         //                             var convert_data = {
+    //         //                                 ...pro,
+    //         //                                 codigo: JSON.stringify(pro.codigo),
+    //         //                                 Color: JSON.stringify(pro.Color),
+    //         //                                 Size: JSON.stringify(pro.Size),
+    //         //                                 Stock: JSON.stringify(pro.Stock),
+    //         //                                 precioVenta: JSON.stringify(pro.precioVenta),
+    //         //                                 costoCompra: JSON.stringify(pro.costoCompra),
+    //         //                                 costoMenor: JSON.stringify(pro.costoMenor),
+    //         //                                 Image: JSON.stringify(pro.Image),
+    //         //                             }
+    //         //                             console.log(convert_data)
+    //         //                             await axios.post("http://localhost:5000/product/new", convert_data).then(async (item) => {
+    //         //                                 item.data.codigo = JSON.parse(item.data.codigo);
+    //         //                                 item.data.Color = JSON.parse(item.data.Color);
+    //         //                                 item.data.Size = JSON.parse(item.data.Size);
+    //         //                                 item.data.Stock = JSON.parse(item.data.Stock);
+    //         //                                 item.data.precioVenta = JSON.parse(item.data.precioVenta);
+    //         //                                 item.data.costoCompra = JSON.parse(item.data.costoCompra);
+    //         //                                 item.data.costoMenor = JSON.parse(item.data.costoMenor);
+    //         //                                 item.data.deposito = dep
+    //         //                                 item.data.Image = JSON.parse(item.data.Image);
 
-            //                                 var m = alldata;
-            //                                 m.push(item.data);
-            //                                 // console.log(m)
-            //                                 setAllPro(m);
-            //                                 allproduct(m);
-            //                                 if (window.desktop) {
-            //                                     await window.api.addData(m, "Products");
-            //                                 }
-            //                             });
-            //                         } else if (flag4 === 1) {
-            //                             var edit_val = {
-            //                                 Product_id: pro.Product_id,
-            //                                 nombre: pro.nombre,
-            //                                 codigo: JSON.stringify(pro.codigo),
-            //                                 description: pro.description,
-            //                                 Image: JSON.stringify(pro.Image),
-            //                                 Color: JSON.stringify(pro.Color),
-            //                                 Size: JSON.stringify(pro.Size),
-            //                                 Stock: JSON.stringify(pro.Stock),
-            //                                 precioVenta: JSON.stringify(pro.precioVenta),
-            //                                 costoCompra: JSON.stringify(pro.costoCompra),
-            //                                 costoMenor: JSON.stringify(pro.costoMenor),
-            //                                 Deposito: pro.Deposito_id,
-            //                                 deposito: pro.deposito.nombre,
-            //                                 Category_id: pro.Category_id,
-            //                             };
-            //                             // console.log(edit_val);
+    //         //                                 var m = alldata;
+    //         //                                 m.push(item.data);
+    //         //                                 // console.log(m)
+    //         //                                 setAllPro(m);
+    //         //                                 allproduct(m);
+    //         //                                 if (window.desktop) {
+    //         //                                     await window.api.addData(m, "Products");
+    //         //                                 }
+    //         //                             });
+    //         //                         } else if (flag4 === 1) {
+    //         //                             var edit_val = {
+    //         //                                 Product_id: pro.Product_id,
+    //         //                                 nombre: pro.nombre,
+    //         //                                 codigo: JSON.stringify(pro.codigo),
+    //         //                                 description: pro.description,
+    //         //                                 Image: JSON.stringify(pro.Image),
+    //         //                                 Color: JSON.stringify(pro.Color),
+    //         //                                 Size: JSON.stringify(pro.Size),
+    //         //                                 Stock: JSON.stringify(pro.Stock),
+    //         //                                 precioVenta: JSON.stringify(pro.precioVenta),
+    //         //                                 costoCompra: JSON.stringify(pro.costoCompra),
+    //         //                                 costoMenor: JSON.stringify(pro.costoMenor),
+    //         //                                 Deposito: pro.Deposito_id,
+    //         //                                 deposito: pro.deposito.nombre,
+    //         //                                 Category_id: pro.Category_id,
+    //         //                             };
+    //         //                             // console.log(edit_val);
 
-            //                             await axios.put('http://localhost:5000/product/edit', edit_val).then(res => {
-            //                                 console.log(res.data, 'its here')
-            //                             })
-            //                             await axios.get("http://localhost:5000/product").then(async (item) => {
-            //                                 console.log('Products -> Update')
-            //                                 var alldata2 = item.data
-            //                                 if (alldata2.length > 0) {
-            //                                     if (typeof alldata2[0].Color === 'string') {
-            //                                         for (var i = 0; i < alldata2.length; i++) {
-            //                                             alldata2[i].codigo = JSON.parse(alldata2[i].codigo)
-            //                                             alldata2[i].Color = JSON.parse(alldata2[i].Color)
-            //                                             alldata2[i].Size = JSON.parse(alldata2[i].Size)
-            //                                             alldata2[i].Stock = JSON.parse(alldata2[i].Stock)
-            //                                             alldata2[i].precioVenta = JSON.parse(alldata2[i].precioVenta)
-            //                                             alldata2[i].costoCompra = JSON.parse(alldata2[i].costoCompra)
-            //                                             alldata2[i].costoMenor = JSON.parse(alldata2[i].costoMenor)
-            //                                             alldata2[i].Image = JSON.parse(alldata2[i].Image)
-            //                                         }
-            //                                     }
-            //                                 }
-            //                                 alldata2.sort(function (d1, d2) {
-            //                                     return new Date(d1.createdAt) - new Date(d2.createdAt);
-            //                                 });
-            //                                 setAllPro(alldata2)
-            //                                 allproduct(alldata2);
-            //                                 if (window.desktop) {
-            //                                     await window.api.addData(alldata2, "Products");
-            //                                 }
-            //                             });
-            //                         }
-            //                         // console.log(item)
-            //                     });
-            //                     for (var h = 0; h < alldata.length; h++) {
-            //                         var flag = 0
-            //                         for (var v = 0; v < item.Products.length; v++) {
-            //                             if (alldata[h].Product_id === item.Products[v].Product_id) {
-            //                                 flag = 1
-            //                                 break
-            //                             }
-            //                         }
-            //                         if (flag === 0) {
-            //                             await axios.delete(
-            //                                 `http://localhost:5000/product/delete/${alldata[h].Product_id}`
-            //                             );
-            //                             await axios.get("http://localhost:5000/product").then(async (item) => {
-            //                                 console.log('Products -> Delete')
-            //                                 var alldata = item.data
-            //                                 if (alldata.length > 0) {
-            //                                     if (typeof alldata[0].Color === 'string') {
-            //                                         for (var i = 0; i < alldata.length; i++) {
-            //                                             alldata[i].codigo = JSON.parse(alldata[i].codigo)
-            //                                             alldata[i].Color = JSON.parse(alldata[i].Color)
-            //                                             alldata[i].Size = JSON.parse(alldata[i].Size)
-            //                                             alldata[i].Stock = JSON.parse(alldata[i].Stock)
-            //                                             alldata[i].precioVenta = JSON.parse(alldata[i].precioVenta)
-            //                                             alldata[i].costoCompra = JSON.parse(alldata[i].costoCompra)
-            //                                             alldata[i].costoMenor = JSON.parse(alldata[i].costoMenor)
-            //                                             alldata[i].Image = JSON.parse(alldata[i].Image)
-            //                                         }
-            //                                     }
-            //                                 }
-            //                                 alldata.sort(function (d1, d2) {
-            //                                     return new Date(d1.createdAt) - new Date(d2.createdAt);
-            //                                 });
-            //                                 setAllPro(alldata)
-            //                                 allproduct(alldata);
-            //                                 if (window.desktop) {
-            //                                     await window.api.addData(alldata, "Products");
-            //                                 }
-            //                             });
-            //                         }
-            //                     }
+    //         //                             await axios.put('http://localhost:5000/product/edit', edit_val).then(res => {
+    //         //                                 console.log(res.data, 'its here')
+    //         //                             })
+    //         //                             await axios.get("http://localhost:5000/product").then(async (item) => {
+    //         //                                 console.log('Products -> Update')
+    //         //                                 var alldata2 = item.data
+    //         //                                 if (alldata2.length > 0) {
+    //         //                                     if (typeof alldata2[0].Color === 'string') {
+    //         //                                         for (var i = 0; i < alldata2.length; i++) {
+    //         //                                             alldata2[i].codigo = JSON.parse(alldata2[i].codigo)
+    //         //                                             alldata2[i].Color = JSON.parse(alldata2[i].Color)
+    //         //                                             alldata2[i].Size = JSON.parse(alldata2[i].Size)
+    //         //                                             alldata2[i].Stock = JSON.parse(alldata2[i].Stock)
+    //         //                                             alldata2[i].precioVenta = JSON.parse(alldata2[i].precioVenta)
+    //         //                                             alldata2[i].costoCompra = JSON.parse(alldata2[i].costoCompra)
+    //         //                                             alldata2[i].costoMenor = JSON.parse(alldata2[i].costoMenor)
+    //         //                                             alldata2[i].Image = JSON.parse(alldata2[i].Image)
+    //         //                                         }
+    //         //                                     }
+    //         //                                 }
+    //         //                                 alldata2.sort(function (d1, d2) {
+    //         //                                     return new Date(d1.createdAt) - new Date(d2.createdAt);
+    //         //                                 });
+    //         //                                 setAllPro(alldata2)
+    //         //                                 allproduct(alldata2);
+    //         //                                 if (window.desktop) {
+    //         //                                     await window.api.addData(alldata2, "Products");
+    //         //                                 }
+    //         //                             });
+    //         //                         }
+    //         //                         // console.log(item)
+    //         //                     });
+    //         //                     for (var h = 0; h < alldata.length; h++) {
+    //         //                         var flag = 0
+    //         //                         for (var v = 0; v < item.Products.length; v++) {
+    //         //                             if (alldata[h].Product_id === item.Products[v].Product_id) {
+    //         //                                 flag = 1
+    //         //                                 break
+    //         //                             }
+    //         //                         }
+    //         //                         if (flag === 0) {
+    //         //                             await axios.delete(
+    //         //                                 `http://localhost:5000/product/delete/${alldata[h].Product_id}`
+    //         //                             );
+    //         //                             await axios.get("http://localhost:5000/product").then(async (item) => {
+    //         //                                 console.log('Products -> Delete')
+    //         //                                 var alldata = item.data
+    //         //                                 if (alldata.length > 0) {
+    //         //                                     if (typeof alldata[0].Color === 'string') {
+    //         //                                         for (var i = 0; i < alldata.length; i++) {
+    //         //                                             alldata[i].codigo = JSON.parse(alldata[i].codigo)
+    //         //                                             alldata[i].Color = JSON.parse(alldata[i].Color)
+    //         //                                             alldata[i].Size = JSON.parse(alldata[i].Size)
+    //         //                                             alldata[i].Stock = JSON.parse(alldata[i].Stock)
+    //         //                                             alldata[i].precioVenta = JSON.parse(alldata[i].precioVenta)
+    //         //                                             alldata[i].costoCompra = JSON.parse(alldata[i].costoCompra)
+    //         //                                             alldata[i].costoMenor = JSON.parse(alldata[i].costoMenor)
+    //         //                                             alldata[i].Image = JSON.parse(alldata[i].Image)
+    //         //                                         }
+    //         //                                     }
+    //         //                                 }
+    //         //                                 alldata.sort(function (d1, d2) {
+    //         //                                     return new Date(d1.createdAt) - new Date(d2.createdAt);
+    //         //                                 });
+    //         //                                 setAllPro(alldata)
+    //         //                                 allproduct(alldata);
+    //         //                                 if (window.desktop) {
+    //         //                                     await window.api.addData(alldata, "Products");
+    //         //                                 }
+    //         //                             });
+    //         //                         }
+    //         //                     }
 
-            //                 });
-            //                 // await window.api.addData(alldata, "Products")
-            //                 await window.api.deleteData("Orders_Returns")
-            //             }
-            //         })
-            //     } else {
-            //         if (window.desktop) {
-            //             await window.api.getAllData("Products").then((item) => {
-            //                 allproduct(item.Products)
-            //                 setAllPro(item.Products)
-            //             });
-            //         }
-            //     }
-            // }
-            // if (DepositoAdd.length === 0) {
-            //     if (Status) {
-            //         await axios.get("http://localhost:5000/deposito").then(async (item) => {
-            //             console.log('Products -> Deposito')
-            //             deposito(item.data);
-            //             if (window.desktop) {
-            //                 await window.api.addData(item.data, "Deposito")
-            //             }
-            //         })
-            //     } else {
-            //         if (window.desktop) {
-            //             await window.api.getAllData("Deposito").then((item) => deposito(item.Deposito));
-            //         }
-			// 	}
-			// }
-            setLoading(false)
-        }
-        if (loop.current) {
-            pro_method()
-            loop.current = false
-        }
-        // axios.get('https://dtodo-indumentaria-server.herokuapp.com/product/all').then(res => {
-        // 	if(Products.length !== 0) {
-        // 		if(Products[Products.length - 1].Product_id !== res.data[res.data.length - 1].Product_id) {
-        // 			allproduct(res.data)
-        // 		}
-        // 		// else {
-        // 		//     if(u !== undefined) {
-        // 		//         allproduct(res.data)
-        // 		//     }
-        // 		// }
-        // 		setlop(true)
-        // 	} else {
-        // 		if(lop) {
-        // 			allproduct(res.data)
-        // 			setlop(false)
-        // 		}
-        // 	}
-        // })
-    }, [Products, allproduct, category, allpro, deposito, CategoryAdd, DepositoAdd, Status, Notific, Sales_Activity, allsalesactivity, notify, allorders]);
+    //         //                 });
+    //         //                 // await window.api.addData(alldata, "Products")
+    //         //                 await window.api.deleteData("Orders_Returns")
+    //         //             }
+    //         //         })
+    //         //     } else {
+    //         //         if (window.desktop) {
+    //         //             await window.api.getAllData("Products").then((item) => {
+    //         //                 allproduct(item.Products)
+    //         //                 setAllPro(item.Products)
+    //         //             });
+    //         //         }
+    //         //     }
+    //         // }
+    //         // if (DepositoAdd.length === 0) {
+    //         //     if (Status) {
+    //         //         await axios.get("http://localhost:5000/deposito").then(async (item) => {
+    //         //             console.log('Products -> Deposito')
+    //         //             deposito(item.data);
+    //         //             if (window.desktop) {
+    //         //                 await window.api.addData(item.data, "Deposito")
+    //         //             }
+    //         //         })
+    //         //     } else {
+    //         //         if (window.desktop) {
+    //         //             await window.api.getAllData("Deposito").then((item) => deposito(item.Deposito));
+    //         //         }
+	// 		// 	}
+	// 		// }
+    //         setLoading(false)
+    //     }
+    //     if (loop.current) {
+    //         pro_method()
+    //         loop.current = false
+    //     }
+    //     // axios.get('https://dtodo-indumentaria-server.herokuapp.com/product/all').then(res => {
+    //     // 	if(Products.length !== 0) {
+    //     // 		if(Products[Products.length - 1].Product_id !== res.data[res.data.length - 1].Product_id) {
+    //     // 			allproduct(res.data)
+    //     // 		}
+    //     // 		// else {
+    //     // 		//     if(u !== undefined) {
+    //     // 		//         allproduct(res.data)
+    //     // 		//     }
+    //     // 		// }
+    //     // 		setlop(true)
+    //     // 	} else {
+    //     // 		if(lop) {
+    //     // 			allproduct(res.data)
+    //     // 			setlop(false)
+    //     // 		}
+    //     // 	}
+    //     // })
+    // }, [Products, allproduct, category, allpro, deposito, CategoryAdd, DepositoAdd, Status, Notific, Sales_Activity, allsalesactivity, notify, allorders]);
     // window.api.getAllData("CategoryAdd").then((item) => console.log(item));
 
     const update = () => {
@@ -858,13 +859,13 @@ function Products(props) {
                     </thead>
                     <tbody>
                         {update()}
-                        {loading && (
+                        {/* {loading && (
                             <tr>
                                 <td colSpan="8" style={{ textAlign: "center" }}>
                                     Loading...
                                 </td>
                             </tr>
-                        )}
+                        )} */}
                         {/* {
 							allproducts?.map((pro, index) => 
 								<tr key={index} style={{cursor: 'pointer'}}>
