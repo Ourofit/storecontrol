@@ -4,7 +4,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./PayOrder.scss";
 import axios from "axios";
 import { connect } from "react-redux";
+// import { store_SalesActivity } from "../../Functions/AllFunctions";
 // import NotifyAuto from "../SendMessage/NotifyAuto";
+
 // prettier-ignore
 function PayOrder({ details_data, setDetailsData, order, setOrder, ...props }) {
     // console.log('order', order)
@@ -37,17 +39,18 @@ function PayOrder({ details_data, setDetailsData, order, setOrder, ...props }) {
         async function fetchSale() {
             if(Sales_Activity.length === 0) {
                 if(Status) {
-                    await axios.get('http://localhost:5000/salesactivity')
-                        .then(async item => {
-                            var main_data = item.data
-                            let months_data = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-                            for(var t=0; t < main_data.length; t++) {
-                                for(var m=0; m < months_data.length; m++) {
-                                    main_data[t][months_data[m]] = JSON.parse(main_data[t][months_data[m]])
-                                }
-                            }
-                            allsalesactivity(main_data)
-                        })
+                    // await store_SalesActivity('PayOrder', Status, Sales_Activity, allsalesactivity)
+                    // await axios.get('http://localhost:5000/salesactivity')
+                    //     .then(async item => {
+                    //         var main_data = item.data
+                    //         let months_data = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+                    //         for(var t=0; t < main_data.length; t++) {
+                    //             for(var m=0; m < months_data.length; m++) {
+                    //                 main_data[t][months_data[m]] = JSON.parse(main_data[t][months_data[m]])
+                    //             }
+                    //         }
+                    //         allsalesactivity(main_data)
+                    //     })
                 } else {
                     if(window.desktop) {
                         await window.api.getAllData("Sales_Activity").then((item) => allsalesactivity(item.Sales_Activity));

@@ -9,8 +9,9 @@ export const store_SalesActivity = async (naming, Status, Sales_Activity, allsal
             await axios.get('http://localhost:5000/salesactivity')
                 .then(async item => {
                     console.log(`${naming} -> Sales Activity`)
+                    var log = JSON.parse(localStorage.getItem('DepositoLogin'))
                     var main_data = item.data
-                    var con = item.data.find(element => element.year === new Date().getFullYear())
+                    var con = item.data.find(element => element.year === new Date().getFullYear() && log.Deposito_id === element.Deposito_id)
                     if(con === undefined) {
                         var single_month = {}
                         for(var i = 1; i <= months_data.length; i++) {
@@ -27,11 +28,11 @@ export const store_SalesActivity = async (naming, Status, Sales_Activity, allsal
                             single_month[months_data[i-1]] = JSON.stringify(single_date)
                         }
                         var data = {
-                            Sales_id: new Date().getFullYear(),
                             year: new Date().getFullYear(),
+                            Deposito_id: log.Deposito_id,
                             ...single_month 
                         }
-                        main_data.push(data)
+                        main_data.push(main_data)
                         await axios.post('http://localhost:5000/salesactivity/new', data)
                         for(var t=0; t < main_data.length; t++) {
                             for(var m=0; m < months_data.length; m++) {
@@ -69,6 +70,7 @@ export const store_SalesActivity = async (naming, Status, Sales_Activity, allsal
             if(window.desktop) {
                 await window.api.getAllData("Sales_Activity").then(async (item) => {
                     if(item.Sales_Activity === undefined) {
+                        var log = JSON.parse(localStorage.getItem('DepositoLogin'))
                         var main_data = []
                         var single_month = {}
                         for(var i = 1; i <= months_data.length; i++) {
@@ -85,8 +87,8 @@ export const store_SalesActivity = async (naming, Status, Sales_Activity, allsal
                             single_month[months_data[i-1]] = JSON.stringify(single_date)
                         }
                         var data = {
-                            Sales_id: new Date().getFullYear(),
                             year: new Date().getFullYear(),
+                            Deposito_id: log.Deposito_id,
                             ...single_month 
                         }
                         main_data.push(data)

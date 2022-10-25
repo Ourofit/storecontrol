@@ -19,6 +19,7 @@ function Login({...props}) {
 
 	const [loginerr, setLoginErr] = useState('')
 	const [btn_name, setBtnName] = useState('Login')
+	const [man, setMan] = useState('')
 	const loop = useRef(true)
 
 	let navigate = useNavigate();
@@ -29,11 +30,13 @@ function Login({...props}) {
 		// console.log(values.val_type)
 
 		if(btn_name === 'Signup') {
+			if(!values.manager) errors.manager = 'Required'
 			if(!values.fullname) errors.fullname = 'Required'
 		}
 		// if(!values.val_type) errors.val_type = 'Required'
         if(!values.email) errors.email = 'Required'
         if(!values.password) errors.password = 'Required'
+		console.log(values)
 
         return errors
     }
@@ -92,9 +95,13 @@ function Login({...props}) {
 		}
 	}, [DepositoAdd, deposito, navigate, Status])
 
+	const settingval = (name, val) => {
+		setMan(val)
+    }
+
     const formik = useFormik({
         initialValues: {
-			manager: '',
+			manager: man,
 			fullname: '',
             email: '',
             password: '',
@@ -212,7 +219,7 @@ function Login({...props}) {
 									</div>
 									{formik.errors.val_type ? <div className='error_display text-danger'>{formik.errors.val_type}</div> : null}
 								</div> */}
-								<Dropdown name='manager' dropvalues={DepositoAdd.map(deposito => deposito.Type === 'Manager' ? deposito.nombre : null)} value_select={formik.values.manager} onChange={formik.handleChange} touched={formik.touched.manager} errors={formik.errors.manager} />
+								<Dropdown name='manager' dropvalues={DepositoAdd.map(deposito => deposito.Type === 'Manager' ? deposito.nombre : null)} value_select={formik.values.manager} onChange={settingval} touched={formik.touched.manager} errors={formik.errors.manager} />
 								<InputLogin icon={<FaUserAlt />} name='fullname' value_ch={formik.values.fullname} onChange={formik.handleChange} placeholder="Store Name" touched={formik.touched.fullname} errors={formik.errors.fullname} />
 								<InputLogin icon={<FaEnvelope />} name='email' value_ch={formik.values.email} onChange={formik.handleChange} placeholder="Email" touched={formik.touched.email} errors={formik.errors.email} />
 								<InputLogin icon={<GiPadlock size={20} />} name='password' value_ch={formik.values.password} onChange={formik.handleChange} placeholder="Password" touched={formik.touched.email} errors={formik.errors.email} />
