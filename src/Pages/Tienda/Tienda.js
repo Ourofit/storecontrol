@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
 import { IoCloseCircle } from "react-icons/io5";
-import { AiFillEdit } from "react-icons/ai";
+// import { AiFillEdit } from "react-icons/ai";
 import { store_Desposito } from "../../Functions/AllFunctions";
+import axios from "axios";
 
 import "./Tienda.scss";
 import NewTienda from "../../Components/NewTienda/NewTienda";
@@ -26,6 +27,35 @@ function Tienda(props) {
 			loop.current = false
 		}
 	}, [Deposito, Status, deposito])
+
+	const removetienda = async (id) => {
+		var e = Deposito.filter(function (x) { return x.Deposito_id !== id })
+
+		var result = [];
+		result = e
+
+		deposito(result)
+		if(Status) {
+			await axios.delete(`http://localhost:5000/deposito/delete/${id}`);
+		} else {
+			if(window.desktop) {
+				await window.api.addData(result, "Deposito")
+				// var exp_ret2 = []
+                // await window.api.getAllData('Expenses_Returns').then(async return_exp => {
+                //     // console.log(return_ord.Orders_Returns)
+                //     if(return_exp.Expenses_Returns) {
+                //         exp_ret2 = return_exp.Expenses_Returns
+                //     }
+                //     var extra = {
+                //         Expense_id: id,
+                //     }
+                //     exp_ret2.push(extra)
+                //     // console.log(ord_ret)
+                //     await window.api.addData(exp_ret2, "Expenses_Returns")
+                // })
+			}
+		}
+	}
     
     return (
         <div className="tienda">
@@ -59,8 +89,8 @@ function Tienda(props) {
 									<td className='edit text-center align-middle'> 
 										{/* <IoCloseCircle style={{ display: "inline" }} onClick={() => removeExp(i.ExpenseId)} className="close_icon_ind" />
 										<AiFillEdit style={{ display: "inline" }} className="edit_icon_ind" onClick={() => seteditexp(i)}  data-toggle="modal" data-target="#expenseedit" /> */}
-                                        <IoCloseCircle style={{ display: "inline" }} className="close_icon_ind" />
-										<AiFillEdit style={{ display: "inline" }} className="edit_icon_ind" data-toggle="modal" data-target="#expenseedit" />
+                                        <IoCloseCircle style={{ display: "inline" }} onClick={() => removetienda(i.Deposito_id)} className="close_icon_ind" />
+										{/* <AiFillEdit style={{ display: "inline" }} className="edit_icon_ind" data-toggle="modal" data-target="#expenseedit" /> */}
 									</td>
 								</tr>
 
