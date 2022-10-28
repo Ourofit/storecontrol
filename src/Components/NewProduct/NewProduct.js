@@ -60,7 +60,7 @@ function NewProduct({ details_data, setDetailsData, setAllPro, allpro, ...props 
         precioVenta: JSON.stringify([]),
         costoCompra: JSON.stringify([]),
         costoMenor: JSON.stringify([]),
-        Deposito: "",
+        Deposito: JSON.parse(localStorage.getItem("DepositoLogin")).Type !== "Manager" ? "" : JSON.parse(localStorage.getItem("DepositoLogin")).nombre,
         Category_id: "",
         // nombre: details_data === null ? '' : details_data?.nombre,
         // codigo: details_data === null ? '' : details_data?.codigo,
@@ -200,9 +200,14 @@ function NewProduct({ details_data, setDetailsData, setAllPro, allpro, ...props 
                                                 <div className="col-6">
                                                     <Inputbox textarea_dis={true} name='description' placeholder='Description' />
                                                 </div>
-                                                <div className="col-lg-6">
-                                                    <Dropdown name='Deposito' dropvalues={DepositoAdd.map((d) => d.nombre)} value_select={props.values.Deposito} onChange={settingval} touched={props.touched.Deposito} errors={props.errors.Deposito} />
-                                                </div>
+                                                {
+                                                    JSON.parse(localStorage.getItem('DepositoLogin')).Type !== 'Manager'
+                                                    ? <div className="col-lg-6">
+                                                        <Dropdown name='Deposito' dropvalues={DepositoAdd.map((d) => d.nombre)} value_select={props.values.Deposito} onChange={settingval} touched={props.touched.Deposito} errors={props.errors.Deposito} />
+                                                    </div>
+                                                    : null
+                                                    
+                                                }
                                             </div>
                                             <div className='d-flex justify-content-end my-2'>
                                                 <button type="submit" className="btn btn-dark" id='submit'>Submit</button>

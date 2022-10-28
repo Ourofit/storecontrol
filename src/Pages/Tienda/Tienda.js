@@ -11,7 +11,7 @@ import NewTienda from "../../Components/NewTienda/NewTienda";
 // prettier-ignore
 function Tienda(props) {
 
-    const { Deposito, deposito, Status } = props
+    const { Products, Deposito, deposito, Status } = props
 
     const [alldepo, setAllDepo] = useState(Deposito);
     const [details_data, setDetailsData] = useState(null);
@@ -83,7 +83,7 @@ function Tienda(props) {
 									<th scope="row" className='text-center align-middle'>{key+1}</th>
 									<td className='text-center align-middle'>{i.createdAt.split('T')[0]}</td>
 									<td className='text-center align-middle'>{i.nombre}</td>
-									<td className='text-center align-middle'>0</td>
+									<td className='text-center align-middle'>{Products.filter(ele => ele.Deposito_id === i.Deposito_id).length}</td>
 									<td className='text-center align-middle'>{i.Type}</td>
 									<td className='text-center align-middle'>No Direccion</td>
 									<td className='edit text-center align-middle'> 
