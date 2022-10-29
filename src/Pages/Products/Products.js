@@ -35,18 +35,39 @@ function Products(props) {
     const [stocknum, setStockNum] = useState();
     const [printBar, setPrintBar] = useState([]);
 
+    const [search_filter, setSearch_filter] = useState("Product Nombre")
+
     const onChange = (e) => {
         setSeatrch(e.target.value);
         var result = [];
         // setAllPro(Products)
         if (e.target.value !== "") {
-            for (var i = 0; i < Products.length; i++) {
-                if (
-                    Products[i].nombre.toUpperCase().indexOf(
-                        e.target.value.toUpperCase()
-                    ) > -1
-                ) {
-                    result.push(Products[i]);
+            if(search_filter === "Product Nombre") {
+                for (let i = 0; i < Products.length; i++) {
+                    if (
+                        Products[i].nombre.toUpperCase().indexOf(
+                            e.target.value.toUpperCase()
+                        ) > -1
+                    ) {
+                        result.push(Products[i]);
+                    }
+                }
+            } else if(search_filter === "Deposito") {
+                for (let i = 0; i < Products.length; i++) {
+                    if (
+                        Products[i].deposito.nombre.toUpperCase().indexOf(
+                            e.target.value.toUpperCase()
+                        ) > -1
+                    ) {
+                        result.push(Products[i]);
+                    }
+                }
+            } else if(search_filter === "Categoria") {
+                for (let i = 0; i < Products.length; i++) {
+                    var cat = CategoryAdd.find(ele => ele.Category_id === Products[i].Category_id).nombre
+                    if (cat.toUpperCase().indexOf(e.target.value.toUpperCase()) > -1) {
+                        result.push(Products[i]);
+                    }
                 }
             }
         } else {
@@ -827,8 +848,17 @@ function Products(props) {
                                     Barcode
                                 </button>
                             </div>
+                            <select className="search_select" onChange={(e) => setSearch_filter(e.target.value)}>
+                                <option name="Product Nombre" value="Product Nombre">Product Nombre</option>
+                                {
+                                    JSON.parse(localStorage.getItem("DepositoLogin")).Type !== "Manager"
+                                    ? <option name="Deposito" value="Deposito">Deposito</option>
+                                    : null
+                                }
+                                <option name="Categoria" value="Categoria">Categoria</option>
+                            </select>
                             <div className="search">
-                                <input type="text" className="txt_input" placeholder="Search by Nombre" defaultValue={search} onChange={onChange} />
+                                <input type="text" className="txt_input" placeholder={`Search by ${search_filter}`} defaultValue={search} onChange={onChange} />
                                 <button className="btn">
                                     <FontAwesomeIcon icon="search" size="lg" />
                                 </button>
