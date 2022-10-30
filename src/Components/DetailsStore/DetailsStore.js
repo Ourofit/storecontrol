@@ -18,20 +18,7 @@ function DetailsStore({ idModal="detailsStore", details_data, setDetailsData, in
 	const { CategoryAdd, Deposito, Products, Orders, Status } = props
 	
 	const [search,] = useState("");
-    // const [details_store, setDetailsStore] = useState(null);
-	// const [cop, setCop] = useState(null)
-    // const [stocknum, setStockNum] = useState();
     const [printBar, setPrintBar] = useState([]);
-
-	// const details = (pro) => {
-    //     var index = Products.findIndex((item) => item.Product_id === pro.Product_id)
-    //     setDetailsStore(pro);
-    //     setCop(index)
-    // };
-
-	// const stocktransfer = (val) => {
-    //     setStockNum(val);
-    // };
 
 	const checking = (e, val) => {
         if (e.target.checked) {
@@ -432,10 +419,6 @@ function DetailsStore({ idModal="detailsStore", details_data, setDetailsData, in
 									<table className="table table-striped table-hover">
 										<thead>
 											<tr>
-												{/* <th scope="col">Nombre</th>
-												<th scope="col" className='text-center'>Stock</th>
-												<th scope="col" className='text-center'>Precio</th>
-												<th scope="col" className='text-center'>Fecha</th> */}
 												<th scope="col" className='text-center'>ID</th>
 												<th scope="col" className='text-center'>Image</th>
 												<th scope="col" className='text-center'>Product nombre</th>
@@ -450,96 +433,9 @@ function DetailsStore({ idModal="detailsStore", details_data, setDetailsData, in
 											{update()}
 										</tbody>
 									</table>
-									{/* <DetailsProduct
-										details_data={details_store}
-										setDetailsData={setDetailsStore}
-										index={cop}
-										stocktransfer={stocktransfer}
-									/>
-									<TransferStock
-										details_data={details_store}
-										stocknum={stocknum}
-										setAllPro={setAllPro}
-									/> */}
-									{/* <FindProduct setAllPro={setAllPro}/>
-									<div style={{ display: "none" }}>
-										<PrintBarcode printRef={printRef} printBar={printBar} />
-									</div> */}
 								</div>
 								: null
 							}
-							{/* <OneDetail key={index} name={'Stock'} data={details_data} transfer={true} stocktransfer={stocktransfer} /> */}
-							{/* {
-								Products[index] !== undefined
-								? <Colorpicker colap={index} addorder={addorder} />
-								: null
-							} */}
-							<div>
-								{/* <div className='container-fluid'>
-									<div className='row'>
-										<div className='col-md-6'>
-											<div className='image_slide'>
-												<div id="carouselExampleControls" className="carousel slide" data-ride="carousel" data-interval={false}>
-													<div className="carousel-inner">
-														<div className="carousel-item active">
-															<img className="" src={require('../../assets/Product1.jpg')} alt="First slide" />
-														</div>
-														<div className="carousel-item">
-															<img className="" src={require('../../assets/Product2.jpg')} alt="Second slide" />
-														</div>
-														<div className="carousel-item">
-															<img className="" src={require('../../assets/Product3.jpg')} alt="Third slide" />
-														</div>
-													</div>
-													<a className="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-														<span style={{fontSize: 30}} aria-hidden="true"><FontAwesomeIcon icon="angle-left"/></span>
-														<span className="sr-only">Previous</span>
-													</a>
-													<a className="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-														<span style={{fontSize: 30}} aria-hidden="true"><FontAwesomeIcon icon="angle-right"/></span>
-														<span className="sr-only">Next</span>
-													</a>
-												</div>
-											</div>
-										</div>
-										<div className='col-md-6'>
-											<OneDetail name='Nombre' data={details_data?.nombre} />
-											<OneDetail name='Codigo' data={details_data?.codigo} /> */}
-											{/* <OneDetail name='Stock' data={details_data?.stock} /> */}
-											{/* <OneDetail name='Description' data={details_data?.description} /> */}
-											{/* {
-												details_data?.stock.map((item, index) => <OneDetail key={index} name={item.name} data={item} transfer={true} stocktransfer={stocktransfer} />)
-											} */}
-											{/* <OneDetail name='Deposito' data={details_data?.deposito} transfer={true} /> */}
-											{/* <OneDetail name='Categoria' data={details_data?.categoria} />
-											<OneDetail name='Talles' data={details_data?.talles} />
-											<OneDetail name='Color' data={details_data?.Color} />
-											<OneDetail name='Estado' data={details_data?.estado} />
-										</div>
-										<div className='col-md-4 my-3 border-top'>
-											<div className='title my-2'>
-												<span style={{fontSize: 23, fontWeight: 600}}>Ventas</span>
-											</div>
-											<OneDetail name='Precio de Venta' data={`$${details_data?.precioVenta}`} />
-											<OneDetail name='IVA por defecto' data={`$${details_data?.ivaVenta}`} />
-										</div>
-										<div className='col-md-4 my-3 border-top'>
-											<div className='title my-2'>
-												<span style={{fontSize: 23, fontWeight: 600}}>Compras por Mayor</span>
-											</div>
-											<OneDetail name='Costo' data={`$${details_data?.costoCompra}`} />
-											<OneDetail name='IVA por defecto' data={`$${details_data?.ivaCompra}`} />
-										</div>
-										<div className='col-md-4 my-3 border-top'>
-											<div className='title my-2'>
-												<span style={{fontSize: 23, fontWeight: 600}}>Compra por menor</span>
-											</div>
-											<OneDetail name='Menor Costo' data={`$${details_data?.costoMenor}`} />
-											<OneDetail name='IVA por defecto' data={`$${details_data?.menorCompra}`} />
-										</div>
-									</div>
-								</div> */}
-							</div>
 						</div>
 						<div className="modal-footer">
 							<button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={() => setDetailsData(null)}>Close</button>
