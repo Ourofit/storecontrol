@@ -42,7 +42,7 @@ function DetailsProduct({ idModal="detailsproduct", details_data, setDetailsData
 										<span style={{fontSize: 20, fontWeight: '600'}}>Categoria</span>
 									</div>
 									<div className='col-6 p-1'>
-										<span style={{fontSize: 20, fontWeight: '400'}}>{details_data === null ? '' : CategoryAdd?.filter(function (x) {return x.Category_id === details_data?.Category_id;})[0].nombre}</span>
+										<span style={{fontSize: 20, fontWeight: '400'}}>{details_data === null ? '' : CategoryAdd?.find(function (x) {return x.Category_id === details_data?.Category_id;})?.nombre}</span>
 									</div>
 									<div className='col-6 p-1'>
 										<span style={{fontSize: 20, fontWeight: '600'}}>Description</span>
