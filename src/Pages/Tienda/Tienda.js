@@ -122,31 +122,20 @@ function Tienda(props) {
 									<td className='edit text-center align-middle'> 
 										{/* <IoCloseCircle style={{ display: "inline" }} onClick={() => removeExp(i.ExpenseId)} className="close_icon_ind" />
 										<AiFillEdit style={{ display: "inline" }} className="edit_icon_ind" onClick={() => seteditexp(i)}  data-toggle="modal" data-target="#expenseedit" /> */}
-										{/* {
-											Orders.map(function(ord) {
-												var flag = 0
-												if(ord.Deposito_name === i.nombre) {
-													var id_dep = Deposito.find(ele => ele.nombre === ord.Deposito_name).Deposito_id_fk
-													if(id_dep === i.Deposito_id) {
-														return <IoCloseCircle style={{ display: "inline" }} onClick={() => removetienda(i.Deposito_id)} className="close_icon_ind" />
-													} else {
-														return
-													}
-												} else {
-													return <IoCloseCircle style={{ display: "inline" }} onClick={() => removetienda(i.Deposito_id)} className="close_icon_ind" />
-												}
-											})
-										} */}
-                                        {
+                                        {/* {
 											Orders.filter(ele => ele.Deposito_name === i.nombre).length === 0
 											? <IoCloseCircle style={{ display: "inline" }} onClick={() => removetienda(i.Deposito_id)} className="close_icon_ind" />
-											: console.log(Deposito.find(ele => ele.nombre === Orders.filter(ele => ele.Deposito_name === i.nombre)[0].Deposito_name).Deposito_id_fk, i.Deposito_id)
-										}
-										{/* {
-											Deposito.find(ele => ele.nombre === Orders.filter(ele => ele.Deposito_name === i.nombre)[0].Deposito_name).Deposito_id_fk === i.Deposito_id_fk
-											? null
-											: <IoCloseCircle style={{ display: "inline" }} onClick={() => removetienda(i.Deposito_id)} className="close_icon_ind" />
+											: Deposito.find(element => element.nombre === Orders.find(ele => ele.Deposito_name === element.nombre)?.Deposito_name)?.Deposito_id_fk === i.Deposito_id
+												? null
+												: <IoCloseCircle style={{ display: "inline" }} onClick={() => removetienda(i.Deposito_id)} className="close_icon_ind" />
 										} */}
+										{
+											Deposito.find(element => element.nombre === Orders.find(ele => ele.Deposito_name === element.nombre)?.Deposito_name)?.Deposito_id_fk === i.Deposito_id
+											? null
+											: Orders.filter(ele => ele.Deposito_name === i.nombre).length === 0
+												? <IoCloseCircle style={{ display: "inline" }} onClick={() => removetienda(i.Deposito_id)} className="close_icon_ind" />
+												: null
+										}
 										{/* <IoCloseCircle style={{ display: "inline" }} onClick={() => removetienda(i.Deposito_id)} className="close_icon_ind" /> */}
 										{/* <AiFillEdit style={{ display: "inline" }} className="edit_icon_ind" data-toggle="modal" data-target="#expenseedit" /> */}
 									</td>
