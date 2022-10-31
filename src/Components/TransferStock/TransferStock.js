@@ -108,7 +108,7 @@ function TransferStock({ details_data, stocknum, setAllPro, ...props }) {
                         allproduct(item.data);
                         var m = Products;
                         m.push(item.data);
-                        // setAllPro(m);
+                        setAllPro(m);
                         if(window.desktop) {
                             await window.api.addData(m, "Products");
                         }
@@ -148,7 +148,6 @@ function TransferStock({ details_data, stocknum, setAllPro, ...props }) {
             product_one2 = pro.filter((item) => item.nombre === details_data?.nombre).filter(val => val.deposito.nombre === values.transferir)[0]
             colap = pro.findIndex((item) => item.Product_id === undefined ? Products.length - 1  : item.Product_id === product_one2.Product_id)
         }
-        // console.log(product_one2)
         // if(colap === null) colap = Products.length - 1 
 
         var i = details_data.Color.findIndex(item => values.Color === item)
@@ -171,17 +170,17 @@ function TransferStock({ details_data, stocknum, setAllPro, ...props }) {
             Products[colap].codigo.push([Math.random().toString(16).slice(2)])
             Products[colap].Image.push([])
         } else {
-            var next_val = Products[colap].Size[i].length - 1
-            if(!Products[colap].Size[i].includes(values.Size)) {
-                Products[colap].Size[i].splice(next_val, 1, values.Size)
-                Products[colap].Size[i].push('')
-                Products[colap].Stock[i].push(values.Stock)
-                Products[colap].precioVenta[i].push(details_data.precioVenta[i][j])
-                Products[colap].costoCompra[i].push(details_data.costoCompra[i][j])
-                Products[colap].costoMenor[i].push(details_data.costoMenor[i][j])
-                Products[colap].codigo[i].push(Math.random().toString(16).slice(2))
+            var next_val = Products[colap].Size[inn].length - 1
+            if(!Products[colap].Size[inn].includes(values.Size)) {
+                Products[colap].Size[inn].splice(next_val, 1, values.Size)
+                Products[colap].Size[inn].push('')
+                Products[colap].Stock[inn].push(values.Stock)
+                Products[colap].precioVenta[inn].push(details_data.precioVenta[i][j])
+                Products[colap].costoCompra[inn].push(details_data.costoCompra[i][j])
+                Products[colap].costoMenor[inn].push(details_data.costoMenor[i][j])
+                Products[colap].codigo[inn].push(Math.random().toString(16).slice(2))
             } else {
-                var st = Products[colap].Stock[inn][ijj] + values.Stock
+                var st = Products[colap].Stock[inn][ijj] !== undefined ? Products[colap].Stock[inn][ijj] + values.Stock : 0 + values.Stock
                 Products[colap].Stock[inn].splice(ijj, 1, st)
             }
         }
@@ -190,6 +189,7 @@ function TransferStock({ details_data, stocknum, setAllPro, ...props }) {
         // delete details_data.createdAt
         // var index = Products.findIndex(item => item.Product_id === details_data?.Product_id)
         // Products[index] = details_data
+        console.log(details_data.Stock, Products[colap].Stock)
         var new_pro = Products.map(item => item.Product_id === details_data?.Product_id ? details_data : item);
         allproduct(new_pro)
         if(window.desktop) {
@@ -297,7 +297,7 @@ function TransferStock({ details_data, stocknum, setAllPro, ...props }) {
                                         <Dropdown
                                             name="transferir"
                                             // dropvalues={Products.filter((item) => item.nombre === details_data?.nombre).map(val => stocknum?.deposito.nombre === val.deposito.nombre ? null : val.deposito.nombre)}
-                                            dropvalues={Deposito.map((d) => stocknum?.deposito.nombre === d.nombre ? null : d.nombre)}
+                                            dropvalues={Deposito.map((d) => stocknum?.deposito.nombre === d.nombre || d.Type === 'Master Manager' ? null : d.nombre)}
                                             value_select={
                                                 props.values.transferir
                                             }
@@ -354,6 +354,12 @@ function TransferStock({ details_data, stocknum, setAllPro, ...props }) {
                                             type="button"
                                             className="btn btn-secondary"
                                             data-dismiss="modal"
+                                            onClick={() => {
+                                                formref.current.setFieldValue("transferir", "");
+                                                formref.current.setFieldValue("Stock", "");
+                                                formref.current.setFieldValue("Color", "");
+                                                formref.current.setFieldValue("Size", "");
+                                            }}
                                         >
                                             Cancel
                                         </button>

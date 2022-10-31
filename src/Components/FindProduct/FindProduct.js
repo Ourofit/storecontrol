@@ -158,7 +158,7 @@ function FindProduct({ addorder, allpro, setAllPro, ...props }) {
 									<tbody>
 										{
 											allpro?.map((pro, index) => 
-												JSON.parse(localStorage.getItem('DepositoLogin')).Type === 'Manager' || JSON.parse(localStorage.getItem('DepositoLogin')).Type === 'Master Manager'
+												JSON.parse(localStorage.getItem('DepositoLogin')).Type === 'Master Manager'
 												? <tr key={index} style={{cursor: 'pointer'}}>
 													<th onClick={() => details(pro)} scope="row" className='text-center align-middle' data-toggle="modal" data-target="#detailsproduct">{index+1}</th>
 													<td onClick={() => details(pro)} className='align-middle' data-toggle="modal" data-target="#detailsproduct">{pro.nombre}</td>
@@ -181,7 +181,7 @@ function FindProduct({ addorder, allpro, setAllPro, ...props }) {
 													<td onClick={() => details(pro)} className='text-center align-middle' data-toggle="modal" data-target="#detailsproduct">{pro.talles}</td>
 													<td className='text-center align-middle'><button className='btn btn-primary' data-dismiss='modal' onClick={() => addorder(pro)} disabled={pro.stock <= 0}>Add</button></td> */}
 												</tr>
-												: JSON.parse(localStorage.getItem('DepositoLogin')).nombre === pro.deposito.nombre
+												: JSON.parse(localStorage.getItem('DepositoLogin')).Deposito_id_fk === pro.deposito.Deposito_id || JSON.parse(localStorage.getItem('DepositoLogin')).nombre === pro.deposito.nombre
 													? <tr key={index} style={{cursor: 'pointer'}}>
 														<th onClick={() => details(pro)} scope="row" className='text-center align-middle' data-toggle="modal" data-target="#detailsproduct">{index+1}</th>
 														<td onClick={() => details(pro)} className='align-middle' data-toggle="modal" data-target="#detailsproduct">{pro.nombre}</td>

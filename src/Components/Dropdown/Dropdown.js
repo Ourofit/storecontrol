@@ -65,13 +65,14 @@ function Dropdown({ name, dropvalues, onChange, touched, errors, value_select, i
             de.push(inputText)
             await axios.put('http://localhost:5000/deposito/employee', { Deposito_id: deposit.Deposito_id,  Employee_list: JSON.stringify(de)})
                 .then(async (item) => {
-                    console.log(de)
+                    // console.log(de)
                     var dep = {
                         Deposito_id: deposit.Deposito_id,
                         nombre: deposit.nombre,
                         Email: deposit.Email,
                         Employee_list: JSON.stringify(de),
                         Type: deposit.Type,
+                        Deposito_id_fk: deposit.Deposito_id_fk,
                         Password: deposit.Password,
                         createdAt: deposit.createdAt,
                         updatedAt: deposit.updatedAt
@@ -201,7 +202,8 @@ function Dropdown({ name, dropvalues, onChange, touched, errors, value_select, i
                                 {
                                     name === "Category_id"
                                     ? dropvalues?.map((item, index) => 
-                                        <div key={index} className="cate_option">
+                                        item !== ""
+                                        ? <div key={index} className="cate_option">
                                             <div name={item} 
                                                 className="option flex-grow-1"
                                                 onClick={() => {
@@ -220,9 +222,11 @@ function Dropdown({ name, dropvalues, onChange, touched, errors, value_select, i
                                                 : null
                                             }
                                         </div>
+                                        : null
                                     )
                                     : dropvalues?.map((item, index) => 
-                                        <div name={item} 
+                                        item !== ""
+                                        ? <div name={item} 
                                             key={index} 
                                             className={item === null ? "" : "option"} 
                                             onClick={() => {
@@ -231,6 +235,7 @@ function Dropdown({ name, dropvalues, onChange, touched, errors, value_select, i
                                                 dropingdown()
                                             }}
                                         >{item}</div>
+                                        : null
                                     )
                                 }
                             </div>

@@ -6,6 +6,7 @@ import {
     store_Category,
     store_Desposito,
     store_Products,
+    store_Orders,
 } from "../../Functions/AllFunctions";
 import axios from "axios";
 
@@ -18,7 +19,7 @@ import TransferStock from "../../Components/TransferStock/TransferStock";
 // prettier-ignore
 function Tienda(props) {
 
-    const { CategoryAdd, category, Products, Deposito, deposito, Status, allproduct, Sales_Activity, allsalesactivity, allorders } = props
+    const { CategoryAdd, category, Products, Deposito, deposito, Status, allproduct, Sales_Activity, allsalesactivity, allorders, Orders, notify } = props
 
     const [alldepo, setAllDepo] = useState(Deposito);
     const [allpro, setAllPro] = useState(Products);
@@ -33,15 +34,16 @@ function Tienda(props) {
 	useEffect(() => {
 		async function dep_method() {
 			await store_Desposito('Tienda', Status, Deposito, deposito)
-			await store_Products('Tienda', Status, Products, allproduct, setAllPro, Sales_Activity, allorders, allsalesactivity)
 			await store_Category('Tineda', Status, CategoryAdd, category)
+			await store_Products('Tienda', Status, Products, allproduct, setAllPro, Sales_Activity, allorders, allsalesactivity)
+			await store_Orders('FindProduct', Status, Orders, allorders, notify)
 		}
 		
 		if(loop.current) {
 			dep_method()
 			loop.current = false
 		}
-	}, [Deposito, Status, deposito, Products, Sales_Activity, allorders, allproduct, allsalesactivity, CategoryAdd, category])
+	}, [Deposito, Status, deposito, Products, Sales_Activity, allorders, allproduct, allsalesactivity, CategoryAdd, category, Orders, notify])
 
 	const removetienda = async (id) => {
 		var e = Deposito.filter(function (x) { return x.Deposito_id !== id })
@@ -103,7 +105,7 @@ function Tienda(props) {
 								<th scope="col" className='text-center'>Total De Productos</th>
 								<th scope="col" className='text-center'>Type</th>
 								<th scope="col" className='text-center'>Direccion</th>
-								<th scope="col" className='text-center'>Edit / Delete</th>
+								<th scope="col" className='text-center'>Delete</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -120,7 +122,32 @@ function Tienda(props) {
 									<td className='edit text-center align-middle'> 
 										{/* <IoCloseCircle style={{ display: "inline" }} onClick={() => removeExp(i.ExpenseId)} className="close_icon_ind" />
 										<AiFillEdit style={{ display: "inline" }} className="edit_icon_ind" onClick={() => seteditexp(i)}  data-toggle="modal" data-target="#expenseedit" /> */}
-                                        <IoCloseCircle style={{ display: "inline" }} onClick={() => removetienda(i.Deposito_id)} className="close_icon_ind" />
+										{/* {
+											Orders.map(function(ord) {
+												var flag = 0
+												if(ord.Deposito_name === i.nombre) {
+													var id_dep = Deposito.find(ele => ele.nombre === ord.Deposito_name).Deposito_id_fk
+													if(id_dep === i.Deposito_id) {
+														return <IoCloseCircle style={{ display: "inline" }} onClick={() => removetienda(i.Deposito_id)} className="close_icon_ind" />
+													} else {
+														return
+													}
+												} else {
+													return <IoCloseCircle style={{ display: "inline" }} onClick={() => removetienda(i.Deposito_id)} className="close_icon_ind" />
+												}
+											})
+										} */}
+                                        {
+											Orders.filter(ele => ele.Deposito_name === i.nombre).length === 0
+											? <IoCloseCircle style={{ display: "inline" }} onClick={() => removetienda(i.Deposito_id)} className="close_icon_ind" />
+											: console.log(Deposito.find(ele => ele.nombre === Orders.filter(ele => ele.Deposito_name === i.nombre)[0].Deposito_name).Deposito_id_fk, i.Deposito_id)
+										}
+										{/* {
+											Deposito.find(ele => ele.nombre === Orders.filter(ele => ele.Deposito_name === i.nombre)[0].Deposito_name).Deposito_id_fk === i.Deposito_id_fk
+											? null
+											: <IoCloseCircle style={{ display: "inline" }} onClick={() => removetienda(i.Deposito_id)} className="close_icon_ind" />
+										} */}
+										{/* <IoCloseCircle style={{ display: "inline" }} onClick={() => removetienda(i.Deposito_id)} className="close_icon_ind" /> */}
 										{/* <AiFillEdit style={{ display: "inline" }} className="edit_icon_ind" data-toggle="modal" data-target="#expenseedit" /> */}
 									</td>
 								</tr>
@@ -157,6 +184,7 @@ function Tienda(props) {
 const mapStateToProps = (state) => {
     return {
         Products: state.Products,
+        Orders: state.Orders,
         CategoryAdd: state.CategoryAdd,
         Deposito: state.Deposito,
         Status: state.Status,
@@ -193,6 +221,12 @@ const mapDispatchToProps = (dispatch) => {
         category: (val) => {
             dispatch({
                 type: "CATEGORYADD",
+                item: val,
+            });
+        },
+        notify: (val) => {
+            dispatch({
+                type: "NOTIFICATION",
                 item: val,
             });
         },

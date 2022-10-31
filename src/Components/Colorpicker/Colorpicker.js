@@ -13,7 +13,7 @@ import { useLocation } from "react-router-dom";
 function Colorpicker({colap, addorder, ...props}) {
 
     const { Products, allproduct, Status, Orders } = props
-    // console.log(Products)
+    // console.log(Products[colap])
     const [sizeerror, setSizeError] = useState()
     const [qtyerror, setQtyError] = useState()
     const [precioVentaerror, setPrecioVentaError] = useState()
@@ -53,6 +53,7 @@ function Colorpicker({colap, addorder, ...props}) {
             }
             await axios.get("http://localhost:5000/product").then(async (item) => {
                 var alldata = item.data
+                var dep = JSON.parse(localStorage.getItem("DepositoLogin"))
                 if(alldata.length > 0) {
                     if(typeof alldata[0].Color === 'string') {
                         for(var i=0; i<alldata.length; i++) {
@@ -70,6 +71,9 @@ function Colorpicker({colap, addorder, ...props}) {
                 alldata.sort(function (d1, d2) {
                     return new Date(d1.createdAt) - new Date(d2.createdAt);
                 });
+                if(dep.Type === "Manager") {
+                    alldata = alldata.filter(ele => ele.Deposito_id === dep.Deposito_id)
+                }
                 allproduct(alldata);
                 if(window.desktop) {
                     await window.api.addData(alldata, "Products")
