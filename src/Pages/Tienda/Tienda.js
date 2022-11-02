@@ -15,12 +15,14 @@ import NewTienda from "../../Components/NewTienda/NewTienda";
 import DetailsStore from "../../Components/DetailsStore/DetailsStore";
 import DetailsProduct from "../../Components/DetailsProduct/DetailsProduct";
 import TransferStock from "../../Components/TransferStock/TransferStock";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 // prettier-ignore
 function Tienda(props) {
 
     const { CategoryAdd, category, Products, Deposito, deposito, Status, allproduct, Sales_Activity, allsalesactivity, allorders, Orders, notify } = props
 
+	const [arr, setArr] = useState('desc')
     const [alldepo, setAllDepo] = useState(Deposito);
     const [allpro, setAllPro] = useState(Products);
     const [details_data, setDetailsData] = useState(null);
@@ -89,6 +91,19 @@ function Tienda(props) {
         setDetailsStore(pro);
         setCop(index)
     };
+
+	const arrange = () => {
+		setArr(arr === 'desc' ? 'asec' : 'desc')
+		if(arr === 'desc') {
+			Deposito.sort(function (d1, d2) {
+				return new Date(d1.createdAt) - new Date(d2.createdAt);
+			});
+		} else {
+			Deposito.sort(function (d1, d2) {
+				return new Date(d2.createdAt) - new Date(d1.createdAt);
+			});
+		}
+	}
     
     return (
         <div className="tienda">
@@ -100,7 +115,13 @@ function Tienda(props) {
 						<thead>
 							<tr>
 								<th scope="col" className='text-center'>ID</th>
-								<th scope="col" className='text-center'>Fecha</th>
+								<th scope="col" className='text-center' style={{ cursor: 'pointer' }} onClick={arrange}>
+									Fecha {
+										arr === 'desc' 
+										? <FontAwesomeIcon icon="angle-down" style={{ color: 'gray', fontSize: 15 }} /> 
+										: <FontAwesomeIcon icon="angle-up" style={{ color: 'gray', fontSize: 15 }} />
+									}
+								</th>
 								<th scope="col" className='text-center'>Nombre Tienda</th>
 								<th scope="col" className='text-center'>Total De Productos</th>
 								<th scope="col" className='text-center'>Type</th>
@@ -130,7 +151,7 @@ function Tienda(props) {
 												: <IoCloseCircle style={{ display: "inline" }} onClick={() => removetienda(i.Deposito_id)} className="close_icon_ind" />
 										} */}
 										{
-											Deposito.find(element => element.nombre === Orders.find(ele => ele.Deposito_name === element.nombre)?.Deposito_name)?.Deposito_id_fk === i.Deposito_id
+											Deposito.find(element => element.nombre === Orders.find(ele => ele.Deposito_name === element.nombre)?.Deposito_name && element.Type !== 'Master Manager')?.Deposito_id_fk === i.Deposito_id
 											? null
 											: Orders.filter(ele => ele.Deposito_name === i.nombre).length === 0
 												? <IoCloseCircle style={{ display: "inline" }} onClick={() => removetienda(i.Deposito_id)} className="close_icon_ind" />

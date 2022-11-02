@@ -20,6 +20,7 @@ function Orders({ setOrderDetails, setOrdering, boxes = false, employee = null, 
 
 	const { Orders } = props
 
+	const [arr, setArr] = useState('desc')
 	const [search, setSeatrch] = useState('')
 	const [allorder, setAllOrders] = useState()
 	const [details_data, setDetailsData] = useState(null)
@@ -127,6 +128,19 @@ function Orders({ setOrderDetails, setOrdering, boxes = false, employee = null, 
 		setparticular(index)
 	}
 
+	const arrange = () => {
+		setArr(arr === 'desc' ? 'asec' : 'desc')
+		if(arr === 'desc') {
+			allorder.sort(function (d1, d2) {
+				return new Date(d1.createdAt) - new Date(d2.createdAt);
+			});
+		} else {
+			allorder.sort(function (d1, d2) {
+				return new Date(d2.createdAt) - new Date(d1.createdAt);
+			});
+		}
+	}
+
 	// ----------------OVERALL DATA------------------------
 	let cantVentas = Orders.length;
 	const cobradoVentas =()=>{
@@ -200,7 +214,13 @@ function Orders({ setOrderDetails, setOrdering, boxes = false, employee = null, 
 							<th scope="col" className='text-center'>Deposito</th>
 							<th scope="col" className='text-center'>Precio Total</th>
 							<th scope="col" className='text-center'>Productos Total</th>
-							<th scope="col" className='text-center'>Fecha</th>
+							<th scope="col" className='text-center' style={{ cursor: 'pointer' }} onClick={arrange}>
+								Fecha {
+									arr === 'desc' 
+									? <FontAwesomeIcon icon="angle-down" style={{ color: 'gray', fontSize: 15 }} /> 
+									: <FontAwesomeIcon icon="angle-up" style={{ color: 'gray', fontSize: 15 }} />
+								}
+								</th>
 							<th scope="col" className='text-center'>Nombre Vendedor</th>
 							<th scope="col" className='text-center'>Estado Orden</th>
 							{

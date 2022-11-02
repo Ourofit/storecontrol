@@ -502,6 +502,9 @@ export const store_Desposito = async (naming, Status, DepositoAdd, deposito) => 
         if (Status) {
             await axios.get("http://localhost:5000/deposito").then(async (item) => {
                 console.log(`${naming} -> Deposito`)
+                item.data.sort(function (d1, d2) {
+                    return new Date(d2.createdAt) - new Date(d1.createdAt);
+                });
                 deposito(item.data);
                 if (window.desktop) {
                     await window.api.addData(item.data, "Deposito")
