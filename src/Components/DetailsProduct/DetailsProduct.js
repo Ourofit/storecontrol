@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 // import { Table } from 'react-bootstrap'
 
 // prettier-ignore
-function DetailsProduct({ idModal="detailsproduct", details_data, setDetailsData, index, stocktransfer, Products, addorder, ...props }) {
+function DetailsProduct({ idModal="detailsproduct", details_data, setDetailsData, index, stocktransfer, ordershow, Products, addorder, ...props }) {
 
 	const { CategoryAdd } = props
 
@@ -52,7 +52,7 @@ function DetailsProduct({ idModal="detailsproduct", details_data, setDetailsData
 									</div>
 								</div>
 							</div>
-							<OneDetail key={index} name={'Stock'} data={details_data} transfer={true} stocktransfer={stocktransfer} />
+							<OneDetail key={index} name={'Stock'} data={details_data} transfer={true} stocktransfer={stocktransfer} ordershow={ordershow} />
 							{
 								Products[index] !== undefined
 								? <Colorpicker colap={index} addorder={addorder} />

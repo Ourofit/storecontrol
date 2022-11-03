@@ -15,6 +15,10 @@ import DetailsProduct from "../../Components/DetailsProduct/DetailsProduct";
 import TransferStock from "../../Components/TransferStock/TransferStock";
 import PrintBarcode from "../../Components/PrintBarcode/PrintBarcode";
 import FindProduct from "../../Components/FindProduct/FindProduct";
+import ShowOrders from "../../Components/ShowOrders/ShowOrders";
+import DetailsOrder from "../../Components/DetailsOrder/DetailsOrder";
+import EditOrder from "../../Components/EditOrder/EditOrder";
+import AdminOrder from "../../Components/AdminOrder/AdminOrder";
 // import {
 //     store_Category,
 //     store_Desposito,
@@ -34,6 +38,11 @@ function Products(props) {
     const [co, setCo] = useState(null)
     const [stocknum, setStockNum] = useState();
     const [printBar, setPrintBar] = useState([]);
+    const [show_data, setShowData] = useState(null)
+
+    const [details_order, setDetailsOrder] = useState(null)
+    const [order, setOrder] = useState(null)
+	const [particular, setparticular] = useState(null)
 
     const [search_filter, setSearch_filter] = useState("Product Nombre")
 
@@ -76,6 +85,10 @@ function Products(props) {
         setAllPro(result);
     };
 
+    const particularOrder = (index) => {
+		setparticular(index)
+	}
+
     const details = (pro) => {
         var index = Products.findIndex((item) => item.Product_id === pro.Product_id)
         setDetailsData(pro);
@@ -85,6 +98,11 @@ function Products(props) {
     const stocktransfer = (val) => {
         setStockNum(val);
     };
+
+    const ordershow = (val) => {
+        var ord = Orders.filter(element => element.order_product.filter(ele => ele.Product_id === val.Product_id).length !== 0)
+        setShowData(ord)
+    }
 
     const printRef = useRef();
 
@@ -923,12 +941,24 @@ function Products(props) {
                     setDetailsData={setDetailsData}
                     index={co}
                     stocktransfer={stocktransfer}
+                    ordershow={ordershow}
                 />
                 <TransferStock
                     details_data={details_data}
                     stocknum={stocknum}
                     setAllPro={setAllPro}
                 />
+                <ShowOrders 
+                    idModal='showorders'
+                    details_data={details_data}
+                    show_data={show_data}
+                    setShowData={setShowData}
+                    setOrder={setOrder}
+                    setDetailsData={setDetailsOrder}
+                />
+                <DetailsOrder details_data={details_order} setDetailsData={setDetailsOrder} order={order} setOrder={setOrder} particularOrder={particularOrder} />
+                <EditOrder details_data={details_order} particular={particular} />
+                <AdminOrder />
                 <FindProduct setAllPro={setAllPro}/>
                 <div style={{ display: "none" }}>
                     <PrintBarcode printRef={printRef} printBar={printBar} />
