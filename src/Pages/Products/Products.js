@@ -18,7 +18,7 @@ import FindProduct from "../../Components/FindProduct/FindProduct";
 import ShowOrders from "../../Components/ShowOrders/ShowOrders";
 import DetailsOrder from "../../Components/DetailsOrder/DetailsOrder";
 import EditOrder from "../../Components/EditOrder/EditOrder";
-import AdminOrder from "../../Components/AdminOrder/AdminOrder";
+// import AdminOrder from "../../Components/AdminOrder/AdminOrder";
 // import {
 //     store_Category,
 //     store_Desposito,
@@ -958,7 +958,7 @@ function Products(props) {
                 />
                 <DetailsOrder details_data={details_order} setDetailsData={setDetailsOrder} order={order} setOrder={setOrder} particularOrder={particularOrder} />
                 <EditOrder details_data={details_order} particular={particular} />
-                <AdminOrder />
+                {/* <AdminOrder /> */}
                 <FindProduct setAllPro={setAllPro}/>
                 <div style={{ display: "none" }}>
                     <PrintBarcode printRef={printRef} printBar={printBar} />

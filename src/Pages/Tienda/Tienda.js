@@ -38,7 +38,7 @@ function Tienda(props) {
 			await store_Desposito('Tienda', Status, Deposito, deposito)
 			await store_Category('Tineda', Status, CategoryAdd, category)
 			await store_Products('Tienda', Status, Products, allproduct, setAllPro, Sales_Activity, allorders, allsalesactivity)
-			await store_Orders('FindProduct', Status, Orders, allorders, notify)
+			await store_Orders('Tienda', Status, Orders, allorders, notify)
 		}
 		
 		if(loop.current) {
