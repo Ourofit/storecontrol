@@ -40,7 +40,7 @@ function Login({...props}) {
     }
 
 	useEffect(() => {
-		async function logingIn() { 
+		async function logingIn() {
 			// await window.api.getAllData("Deposito").then(item => console.log(item))
 			if(DepositoAdd.length === 0) {
 				if(Status) {
