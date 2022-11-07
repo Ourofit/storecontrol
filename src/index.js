@@ -40,6 +40,7 @@ import {
     faArrowRightFromBracket,
     faStore,
     faUserTie,
+    faShoppingBag,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -68,7 +69,8 @@ library.add(
     faCircleMinus,
     faArrowRightFromBracket,
     faStore,
-    faUserTie
+    faUserTie,
+    faShoppingBag
 );
 
 const store = createStore(

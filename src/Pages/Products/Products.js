@@ -15,6 +15,10 @@ import DetailsProduct from "../../Components/DetailsProduct/DetailsProduct";
 import TransferStock from "../../Components/TransferStock/TransferStock";
 import PrintBarcode from "../../Components/PrintBarcode/PrintBarcode";
 import FindProduct from "../../Components/FindProduct/FindProduct";
+import ShowOrders from "../../Components/ShowOrders/ShowOrders";
+import DetailsOrder from "../../Components/DetailsOrder/DetailsOrder";
+import EditOrder from "../../Components/EditOrder/EditOrder";
+// import AdminOrder from "../../Components/AdminOrder/AdminOrder";
 // import {
 //     store_Category,
 //     store_Desposito,
@@ -34,19 +38,45 @@ function Products(props) {
     const [co, setCo] = useState(null)
     const [stocknum, setStockNum] = useState();
     const [printBar, setPrintBar] = useState([]);
+    const [show_data, setShowData] = useState(null)
+
+    const [details_order, setDetailsOrder] = useState(null)
+    const [order, setOrder] = useState(null)
+	const [particular, setparticular] = useState(null)
+
+    const [search_filter, setSearch_filter] = useState("Product Nombre")
 
     const onChange = (e) => {
         setSeatrch(e.target.value);
         var result = [];
         // setAllPro(Products)
         if (e.target.value !== "") {
-            for (var i = 0; i < Products.length; i++) {
-                if (
-                    Products[i].nombre.toUpperCase().indexOf(
-                        e.target.value.toUpperCase()
-                    ) > -1
-                ) {
-                    result.push(Products[i]);
+            if(search_filter === "Product Nombre") {
+                for (let i = 0; i < Products.length; i++) {
+                    if (
+                        Products[i].nombre.toUpperCase().indexOf(
+                            e.target.value.toUpperCase()
+                        ) > -1
+                    ) {
+                        result.push(Products[i]);
+                    }
+                }
+            } else if(search_filter === "Deposito") {
+                for (let i = 0; i < Products.length; i++) {
+                    if (
+                        Products[i].deposito.nombre.toUpperCase().indexOf(
+                            e.target.value.toUpperCase()
+                        ) > -1
+                    ) {
+                        result.push(Products[i]);
+                    }
+                }
+            } else if(search_filter === "Categoria") {
+                for (let i = 0; i < Products.length; i++) {
+                    var cat = CategoryAdd.find(ele => ele.Category_id === Products[i].Category_id).nombre
+                    if (cat.toUpperCase().indexOf(e.target.value.toUpperCase()) > -1) {
+                        result.push(Products[i]);
+                    }
                 }
             }
         } else {
@@ -54,6 +84,10 @@ function Products(props) {
         }
         setAllPro(result);
     };
+
+    const particularOrder = (index) => {
+		setparticular(index)
+	}
 
     const details = (pro) => {
         var index = Products.findIndex((item) => item.Product_id === pro.Product_id)
@@ -64,6 +98,11 @@ function Products(props) {
     const stocktransfer = (val) => {
         setStockNum(val);
     };
+
+    const ordershow = (val) => {
+        var ord = Orders.filter(element => element.order_product.filter(ele => ele.Product_id === val.Product_id).length !== 0)
+        setShowData(ord)
+    }
 
     const printRef = useRef();
 
@@ -827,8 +866,17 @@ function Products(props) {
                                     Barcode
                                 </button>
                             </div>
+                            <select className="search_select" onChange={(e) => setSearch_filter(e.target.value)}>
+                                <option name="Product Nombre" value="Product Nombre">Product Nombre</option>
+                                {
+                                    JSON.parse(localStorage.getItem("DepositoLogin")).Type !== "Manager"
+                                    ? <option name="Deposito" value="Deposito">Deposito</option>
+                                    : null
+                                }
+                                <option name="Categoria" value="Categoria">Categoria</option>
+                            </select>
                             <div className="search">
-                                <input type="text" className="txt_input" placeholder="Search by Nombre" defaultValue={search} onChange={onChange} />
+                                <input type="text" className="txt_input" placeholder={`Search by ${search_filter}`} defaultValue={search} onChange={onChange} />
                                 <button className="btn">
                                     <FontAwesomeIcon icon="search" size="lg" />
                                 </button>
@@ -893,12 +941,24 @@ function Products(props) {
                     setDetailsData={setDetailsData}
                     index={co}
                     stocktransfer={stocktransfer}
+                    ordershow={ordershow}
                 />
                 <TransferStock
                     details_data={details_data}
                     stocknum={stocknum}
                     setAllPro={setAllPro}
                 />
+                <ShowOrders 
+                    idModal='showorders'
+                    details_data={details_data}
+                    show_data={show_data}
+                    setShowData={setShowData}
+                    setOrder={setOrder}
+                    setDetailsData={setDetailsOrder}
+                />
+                <DetailsOrder details_data={details_order} setDetailsData={setDetailsOrder} order={order} setOrder={setOrder} particularOrder={particularOrder} />
+                <EditOrder details_data={details_order} particular={particular} />
+                {/* <AdminOrder /> */}
                 <FindProduct setAllPro={setAllPro}/>
                 <div style={{ display: "none" }}>
                     <PrintBarcode printRef={printRef} printBar={printBar} />

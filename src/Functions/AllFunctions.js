@@ -115,6 +115,7 @@ export const store_Products = async (naming, Status, Products, allproduct, setAl
     if(Products.length === 0) {
         if(Status) {
             await axios.get("http://localhost:5000/product").then(async (item) => {
+                var dep = JSON.parse(localStorage.getItem("DepositoLogin"))
                 console.log(`${naming} -> Products`)
                 var alldata = item.data
                 if (alldata.length > 0) {
@@ -134,6 +135,9 @@ export const store_Products = async (naming, Status, Products, allproduct, setAl
                 alldata.sort(function (d1, d2) {
                     return new Date(d1.createdAt) - new Date(d2.createdAt);
                 });
+                if(dep.Type === "Manager") {
+                    alldata = alldata.filter(ele => ele.Deposito_id === dep.Deposito_id)
+                }
                 setAllPro(alldata)
                 allproduct(alldata);
                 // await window.api.addData(alldata, "Products")
@@ -498,6 +502,9 @@ export const store_Desposito = async (naming, Status, DepositoAdd, deposito) => 
         if (Status) {
             await axios.get("http://localhost:5000/deposito").then(async (item) => {
                 console.log(`${naming} -> Deposito`)
+                item.data.sort(function (d1, d2) {
+                    return new Date(d2.createdAt) - new Date(d1.createdAt);
+                });
                 deposito(item.data);
                 if (window.desktop) {
                     await window.api.addData(item.data, "Deposito")
