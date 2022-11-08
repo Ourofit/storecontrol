@@ -8,9 +8,9 @@ import "./DetailsOrder.scss";
 import { connect } from "react-redux";
 
 // prettier-ignore
-function DetailsOrder({ details_data, setDetailsData, order, setOrder, particularOrder = null, ...props }) {
+function DetailsOrder({ details_data, setDetailsData, order, setOrder, setReturnVal, particularOrder = null, ...props }) {
 
-	const { Products, CategoryAdd, allorders, Sales_Activity, allsalesactivity, Orders, Status, allproduct } = props
+	const { Products, CategoryAdd, allorders, Orders } = props
 
 	const [product, setProduct] = useState(null)
 	// const [employee, setEmployee] = useState(null)
@@ -42,190 +42,190 @@ function DetailsOrder({ details_data, setDetailsData, order, setOrder, particula
 
 	
 
-	const returnProduct = async (val) => {
-		if(details_data[0].order_product.length === 1) {
-			setDetailsData(null)
-			setOrder(null)
-			var stock = Products.filter((p) => p.Product_id === details_data[0].order_product[0].Product_id)[0].Stock
-			var total_stock = stock[details_data[0].order_product[0].parentArray][details_data[0].order_product[0].childArray] + details_data[0].order_product[0].Qty
-			stock[details_data[0].order_product[0].parentArray][details_data[0].order_product[0].childArray] = total_stock
-			var req_data = {
-				Product_id: details_data[0].order_product[0].Product_id,
-				Stock: JSON.stringify(stock)
-			}
-			var single_pro = Products.findIndex((p) => p.Product_id === details_data[0].order_product[0].Product_id)
-			Products[single_pro].Stock = stock
-			allproduct(Products)
-			// console.log(Products[single_pro].Stock)
-			if(window.desktop) {
-				await window.api.addData(Products, "Products");
-			}
-			if(Status) {
-				await axios.put('http://localhost:5000/product/quantity', req_data)
-				await axios.delete(`http://localhost:5000/ordermaster/delete/${order.Order_id}`)
-				await axios.delete(`http://localhost:5000/orderproduct/delete/${val.Order_pro_id}`)
-				.then(async item => {
-					await axios.get('http://localhost:5000/ordermaster')
-						.then(async prod => {
-							let months_data = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-							prod.data.sort(function (d1, d2) {
-								return new Date(d2.createdAt) - new Date(d1.createdAt);
-							});
-							allorders(prod.data)
-							if(window.desktop) {
-								await window.api.addData(prod.data, "Orders")
-							}
-							var year = new Date(order.createdAt).getFullYear()
-							var month = new Date(order.createdAt).getMonth()
-							var date = new Date(order.createdAt).getDate()
-							var tot = 0
-							for(var q=0; q<prod.data.length; q++) {
-								if(new Date(prod.data[q].createdAt).toDateString() === new Date(order.createdAt).toDateString()) {
-									tot = prod.data[q].Total_price + tot
-								}
-							}
-							var index = Sales_Activity.findIndex(item => item.year === year)
-							Sales_Activity[index][months_data[month]][date-1].sales = tot
-							for(var t=0; t < Sales_Activity.length; t++) {
-								for(var m=0; m < months_data.length; m++) {
-									Sales_Activity[t][months_data[m]] = JSON.stringify(Sales_Activity[t][months_data[m]])
-								}
-							}
-							await axios.put('http://localhost:5000/salesactivity/day', {
-								Sales_id: Sales_Activity[index].Sales_id,
-								...Sales_Activity[index]
-							})
-							await axios.get('http://localhost:5000/salesactivity')
-								.then(async item => {
-									for(var t=0; t < item.data.length; t++) {
-										for(var m=0; m < months_data.length; m++) {
-											item.data[t][months_data[m]] = JSON.parse(item.data[t][months_data[m]])
-										}
-									}
-									allsalesactivity(item.data)
-								})
-						})
-				})
-			} else {
-				var ord = Orders.filter(x => x.Order_id === undefined ? x.Fecha !== order.Fecha ? x : null : x.Order_id !== order.Order_id ? x : null)
-				ord.sort(function (d1, d2) {
-					return new Date(d2.createdAt) - new Date(d1.createdAt);
-				});
-				allorders(ord)
-				if(window.desktop) {
-					await window.api.addData(ord, "Orders")
-					var ord_ret2 = []
-					await window.api.getAllData('Orders_Returns').then(async return_ord => {
-						// console.log(return_ord.Orders_Returns)
-						if(return_ord.Orders_Returns) {
-							ord_ret2 = return_ord.Orders_Returns
-						}
-						var extra = {
-							...req_data,
-							order: order,
-							del: true,
-							val: val
-						}
-						ord_ret2.push(extra)
-						// console.log(ord_ret)
-						await window.api.addData(ord_ret2, "Orders_Returns")
-					})
-				}
-			}
-		} else {
-			var stock_el = Products.filter((p) => p.Product_id === val.Product_id)[0].Stock
-			var total_stock_el = stock_el[val.parentArray][val.childArray] + val.Qty
-			stock_el[val.parentArray][val.childArray] = total_stock_el
-			var req_data_el = {
-				Product_id: val.Product_id,
-				Stock: JSON.stringify(stock_el)
-			}
-			var single_pro_el = Products.findIndex((p) => p.Product_id === val.Product_id)
-			Products[single_pro_el].Stock = stock_el
-			allproduct(Products)
-			// console.log(Products[single_pro_el].Stock)
-			if(window.desktop) {
-				await window.api.addData(Products, "Products");
-			}
-			var spec = details_data[0].order_product.filter(function(x) {return !(x.Order_pro_id === val.Order_pro_id)})
-			details_data[0].order_product = spec
-			setDetailsData(details_data)
-			setOrder({...order, Total_price: order.Total_price - val.Total_price})
-			if(Status) {
-				await axios.put('http://localhost:5000/product/quantity', req_data_el)
-				await axios.put(`http://localhost:5000/ordermaster/price`, {
-					Order_id: order.Order_id,
-					Total_price: order.Total_price - val.Total_price
-				})
-				await axios.delete(`http://localhost:5000/orderproduct/delete/${val.Order_pro_id}`)
-					.then(async item => {
-						await axios.get('http://localhost:5000/ordermaster')
-							.then( async prod => {
-								let months_data = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-								prod.data.sort(function (d1, d2) {
-									return new Date(d2.createdAt) - new Date(d1.createdAt);
-								});
-								allorders(prod.data)
-								if(window.desktop) {
-									await window.api.addData(prod.data, "Orders")
-								}
-								var year = new Date(order.createdAt).getFullYear()
-								var month = new Date(order.createdAt).getMonth()
-								var date = new Date(order.createdAt).getDate()
-								var tot = 0
-								for(var q=0; q<prod.data.length; q++) {
-									if(new Date(prod.data[q].createdAt).toDateString() === new Date(val.createdAt).toDateString()) {
-										tot = prod.data[q].Total_price + tot
-									}
-								}
-								var index = Sales_Activity.findIndex(item => item.year === year)
-								Sales_Activity[index][months_data[month]][date-1].sales = tot
-								for(var t=0; t < Sales_Activity.length; t++) {
-									for(var m=0; m < months_data.length; m++) {
-										Sales_Activity[t][months_data[m]] = JSON.stringify(Sales_Activity[t][months_data[m]])
-									}
-								}
-								await axios.put('http://localhost:5000/salesactivity/day', {
-									Sales_id: Sales_Activity[index].Sales_id,
-									...Sales_Activity[index]
-								})
-								await axios.get('http://localhost:5000/salesactivity')
-									.then(async item => {
-										for(var t=0; t < item.data.length; t++) {
-											for(var m=0; m < months_data.length; m++) {
-												item.data[t][months_data[m]] = JSON.parse(item.data[t][months_data[m]])
-											}
-										}
-										allsalesactivity(item.data)
-									})
-							})
-					})
-			} else {
-				details_data[0].Total_price = details_data[0].Total_price - val.Total_price
-				var ord2 = Orders.map(x => x.Order_id === undefined ? x.Fecha !== details_data.Fecha ? x : details_data : x.Order_id !== details_data.Order_id ? x : details_data)
-				allorders(ord2)
-				if(window.desktop) {
-					await window.api.addData(ord2, "Orders")
-					var ord_ret = []
-					await window.api.getAllData('Orders_Returns').then(async return_ord => {
-						// console.log(return_ord.Orders_Returns)
-						if(return_ord.Orders_Returns) {
-							ord_ret = return_ord.Orders_Returns
-						}
-						var extra = {
-							...req_data_el,
-							order: order,
-							del: false,
-							val: val
-						}
-						ord_ret.push(extra)
-						// console.log(ord_ret)
-						await window.api.addData(ord_ret, "Orders_Returns")
-					})
-				}
-			}
-		}
-	}
+	// const returnProduct = async (val) => {
+	// 	if(details_data[0].order_product.length === 1) {
+	// 		setDetailsData(null)
+	// 		setOrder(null)
+	// 		var stock = Products.filter((p) => p.Product_id === details_data[0].order_product[0].Product_id)[0].Stock
+	// 		var total_stock = stock[details_data[0].order_product[0].parentArray][details_data[0].order_product[0].childArray] + details_data[0].order_product[0].Qty
+	// 		stock[details_data[0].order_product[0].parentArray][details_data[0].order_product[0].childArray] = total_stock
+	// 		var req_data = {
+	// 			Product_id: details_data[0].order_product[0].Product_id,
+	// 			Stock: JSON.stringify(stock)
+	// 		}
+	// 		var single_pro = Products.findIndex((p) => p.Product_id === details_data[0].order_product[0].Product_id)
+	// 		Products[single_pro].Stock = stock
+	// 		allproduct(Products)
+	// 		// console.log(Products[single_pro].Stock)
+	// 		if(window.desktop) {
+	// 			await window.api.addData(Products, "Products");
+	// 		}
+	// 		if(Status) {
+	// 			await axios.put('http://localhost:5000/product/quantity', req_data)
+	// 			await axios.delete(`http://localhost:5000/ordermaster/delete/${order.Order_id}`)
+	// 			await axios.delete(`http://localhost:5000/orderproduct/delete/${val.Order_pro_id}`)
+	// 			.then(async item => {
+	// 				await axios.get('http://localhost:5000/ordermaster')
+	// 					.then(async prod => {
+	// 						let months_data = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+	// 						prod.data.sort(function (d1, d2) {
+	// 							return new Date(d2.createdAt) - new Date(d1.createdAt);
+	// 						});
+	// 						allorders(prod.data)
+	// 						if(window.desktop) {
+	// 							await window.api.addData(prod.data, "Orders")
+	// 						}
+	// 						var year = new Date(order.createdAt).getFullYear()
+	// 						var month = new Date(order.createdAt).getMonth()
+	// 						var date = new Date(order.createdAt).getDate()
+	// 						var tot = 0
+	// 						for(var q=0; q<prod.data.length; q++) {
+	// 							if(new Date(prod.data[q].createdAt).toDateString() === new Date(order.createdAt).toDateString()) {
+	// 								tot = prod.data[q].Total_price + tot
+	// 							}
+	// 						}
+	// 						var index = Sales_Activity.findIndex(item => item.year === year)
+	// 						Sales_Activity[index][months_data[month]][date-1].sales = tot
+	// 						for(var t=0; t < Sales_Activity.length; t++) {
+	// 							for(var m=0; m < months_data.length; m++) {
+	// 								Sales_Activity[t][months_data[m]] = JSON.stringify(Sales_Activity[t][months_data[m]])
+	// 							}
+	// 						}
+	// 						await axios.put('http://localhost:5000/salesactivity/day', {
+	// 							Sales_id: Sales_Activity[index].Sales_id,
+	// 							...Sales_Activity[index]
+	// 						})
+	// 						await axios.get('http://localhost:5000/salesactivity')
+	// 							.then(async item => {
+	// 								for(var t=0; t < item.data.length; t++) {
+	// 									for(var m=0; m < months_data.length; m++) {
+	// 										item.data[t][months_data[m]] = JSON.parse(item.data[t][months_data[m]])
+	// 									}
+	// 								}
+	// 								allsalesactivity(item.data)
+	// 							})
+	// 					})
+	// 			})
+	// 		} else {
+	// 			var ord = Orders.filter(x => x.Order_id === undefined ? x.Fecha !== order.Fecha ? x : null : x.Order_id !== order.Order_id ? x : null)
+	// 			ord.sort(function (d1, d2) {
+	// 				return new Date(d2.createdAt) - new Date(d1.createdAt);
+	// 			});
+	// 			allorders(ord)
+	// 			if(window.desktop) {
+	// 				await window.api.addData(ord, "Orders")
+	// 				var ord_ret2 = []
+	// 				await window.api.getAllData('Orders_Returns').then(async return_ord => {
+	// 					// console.log(return_ord.Orders_Returns)
+	// 					if(return_ord.Orders_Returns) {
+	// 						ord_ret2 = return_ord.Orders_Returns
+	// 					}
+	// 					var extra = {
+	// 						...req_data,
+	// 						order: order,
+	// 						del: true,
+	// 						val: val
+	// 					}
+	// 					ord_ret2.push(extra)
+	// 					// console.log(ord_ret)
+	// 					await window.api.addData(ord_ret2, "Orders_Returns")
+	// 				})
+	// 			}
+	// 		}
+	// 	} else {
+	// 		var stock_el = Products.filter((p) => p.Product_id === val.Product_id)[0].Stock
+	// 		var total_stock_el = stock_el[val.parentArray][val.childArray] + val.Qty
+	// 		stock_el[val.parentArray][val.childArray] = total_stock_el
+	// 		var req_data_el = {
+	// 			Product_id: val.Product_id,
+	// 			Stock: JSON.stringify(stock_el)
+	// 		}
+	// 		var single_pro_el = Products.findIndex((p) => p.Product_id === val.Product_id)
+	// 		Products[single_pro_el].Stock = stock_el
+	// 		allproduct(Products)
+	// 		// console.log(Products[single_pro_el].Stock)
+	// 		if(window.desktop) {
+	// 			await window.api.addData(Products, "Products");
+	// 		}
+	// 		var spec = details_data[0].order_product.filter(function(x) {return !(x.Order_pro_id === val.Order_pro_id)})
+	// 		details_data[0].order_product = spec
+	// 		setDetailsData(details_data)
+	// 		setOrder({...order, Total_price: order.Total_price - val.Total_price})
+	// 		if(Status) {
+	// 			await axios.put('http://localhost:5000/product/quantity', req_data_el)
+	// 			await axios.put(`http://localhost:5000/ordermaster/price`, {
+	// 				Order_id: order.Order_id,
+	// 				Total_price: order.Total_price - val.Total_price
+	// 			})
+	// 			await axios.delete(`http://localhost:5000/orderproduct/delete/${val.Order_pro_id}`)
+	// 				.then(async item => {
+	// 					await axios.get('http://localhost:5000/ordermaster')
+	// 						.then( async prod => {
+	// 							let months_data = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+	// 							prod.data.sort(function (d1, d2) {
+	// 								return new Date(d2.createdAt) - new Date(d1.createdAt);
+	// 							});
+	// 							allorders(prod.data)
+	// 							if(window.desktop) {
+	// 								await window.api.addData(prod.data, "Orders")
+	// 							}
+	// 							var year = new Date(order.createdAt).getFullYear()
+	// 							var month = new Date(order.createdAt).getMonth()
+	// 							var date = new Date(order.createdAt).getDate()
+	// 							var tot = 0
+	// 							for(var q=0; q<prod.data.length; q++) {
+	// 								if(new Date(prod.data[q].createdAt).toDateString() === new Date(val.createdAt).toDateString()) {
+	// 									tot = prod.data[q].Total_price + tot
+	// 								}
+	// 							}
+	// 							var index = Sales_Activity.findIndex(item => item.year === year)
+	// 							Sales_Activity[index][months_data[month]][date-1].sales = tot
+	// 							for(var t=0; t < Sales_Activity.length; t++) {
+	// 								for(var m=0; m < months_data.length; m++) {
+	// 									Sales_Activity[t][months_data[m]] = JSON.stringify(Sales_Activity[t][months_data[m]])
+	// 								}
+	// 							}
+	// 							await axios.put('http://localhost:5000/salesactivity/day', {
+	// 								Sales_id: Sales_Activity[index].Sales_id,
+	// 								...Sales_Activity[index]
+	// 							})
+	// 							await axios.get('http://localhost:5000/salesactivity')
+	// 								.then(async item => {
+	// 									for(var t=0; t < item.data.length; t++) {
+	// 										for(var m=0; m < months_data.length; m++) {
+	// 											item.data[t][months_data[m]] = JSON.parse(item.data[t][months_data[m]])
+	// 										}
+	// 									}
+	// 									allsalesactivity(item.data)
+	// 								})
+	// 						})
+	// 				})
+	// 		} else {
+	// 			details_data[0].Total_price = details_data[0].Total_price - val.Total_price
+	// 			var ord2 = Orders.map(x => x.Order_id === undefined ? x.Fecha !== details_data.Fecha ? x : details_data : x.Order_id !== details_data.Order_id ? x : details_data)
+	// 			allorders(ord2)
+	// 			if(window.desktop) {
+	// 				await window.api.addData(ord2, "Orders")
+	// 				var ord_ret = []
+	// 				await window.api.getAllData('Orders_Returns').then(async return_ord => {
+	// 					// console.log(return_ord.Orders_Returns)
+	// 					if(return_ord.Orders_Returns) {
+	// 						ord_ret = return_ord.Orders_Returns
+	// 					}
+	// 					var extra = {
+	// 						...req_data_el,
+	// 						order: order,
+	// 						del: false,
+	// 						val: val
+	// 					}
+	// 					ord_ret.push(extra)
+	// 					// console.log(ord_ret)
+	// 					await window.api.addData(ord_ret, "Orders_Returns")
+	// 				})
+	// 			}
+	// 		}
+	// 	}
+	// }
 
 	return (
 		<div className='detailsorder' ref={componentRef}>
@@ -417,7 +417,8 @@ function DetailsOrder({ details_data, setDetailsData, order, setOrder, particula
 																		<FontAwesomeIcon icon="edit" />
 																	</button> */}
 																	{/* <button className='btn text-light bg-danger'><FontAwesomeIcon icon="trash"/></button> */}
-																	<button className='btn text-light bg-danger' onClick={() => returnProduct(pro)}>Regresar</button>
+																	{/* <button className='btn text-light bg-danger' onClick={() => returnProduct(pro)}>Regresar</button> */}
+																	<button type="button" className="btn btn-primary" data-toggle='modal' data-target='#areyousure' onClick={() => setReturnVal(pro)}>Regresar</button>
 																</div>
 															</div>
 														</div>
