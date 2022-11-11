@@ -157,11 +157,6 @@ function TransferStock({ details_data, stocknum, setAllPro, ...props }) {
 
         if(!Products[colap].Color.includes(values.Color)) {
             Products[colap].Color.push(values.Color)
-        } else {
-            inn = Products[colap].Color.findIndex(item => values.Color === item)
-            ijj = Products[colap].Size[inn].findIndex(item => values.Size === item)
-        }
-        if(Products[colap].Size[i] === undefined) {
             Products[colap].Size.push([values.Size, ''])
             Products[colap].Stock.push([values.Stock])
             Products[colap].precioVenta.push([details_data.precioVenta[i][j]])
@@ -170,6 +165,8 @@ function TransferStock({ details_data, stocknum, setAllPro, ...props }) {
             Products[colap].codigo.push([Math.random().toString(16).slice(2)])
             Products[colap].Image.push([])
         } else {
+            inn = Products[colap].Color.findIndex(item => values.Color === item)
+            ijj = Products[colap].Size[inn].findIndex(item => values.Size === item)
             var next_val = Products[colap].Size[inn].length - 1
             if(!Products[colap].Size[inn].includes(values.Size)) {
                 Products[colap].Size[inn].splice(next_val, 1, values.Size)

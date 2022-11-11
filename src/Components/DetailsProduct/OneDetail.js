@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./OneDetail.scss";
 
 // prettier-ignore
-function OneDetail({ name, data, stocktransfer, ordershow, transfer=false }) {
+function OneDetail({ name, data, stocktransfer, ordershow, transfer=false, showorder=false }) {
 
     return (
         <div className='one_detail my-2'>
@@ -27,10 +27,14 @@ function OneDetail({ name, data, stocktransfer, ordershow, transfer=false }) {
                                     <button className='btn btn-primary' data-toggle='modal' data-target='#transferstock' onClick={() => stocktransfer(data)}>
                                         <FontAwesomeIcon icon="right-left"/> Transfer Stock
                                     </button>
-                                    <button className='btn btn-primary ml-2' data-toggle='modal' data-target='#showorders' onClick={() => ordershow(data)}>
-                                        <FontAwesomeIcon icon="shopping-bag"/> Show Orders
-                                    </button>
                                 </>
+                                : null
+                            }
+                            {
+                                showorder
+                                ? <button className='btn btn-primary ml-2' data-toggle='modal' data-target='#showorders' onClick={() => ordershow(data)}>
+                                    <FontAwesomeIcon icon="shopping-bag"/> Show Orders
+                                </button>
                                 : null
                             }
                         </div>
