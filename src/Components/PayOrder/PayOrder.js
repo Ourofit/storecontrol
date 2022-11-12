@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 // import NotifyAuto from "../SendMessage/NotifyAuto";
 
 // prettier-ignore
-function PayOrder({ details_data, setDetailsData, order, setOrder, ...props }) {
+function PayOrder({ details_data, setDetailsData, order, setOrder, setReturnedData, setOrderDetails=null, returned_data=null, ...props }) {
     
     const { Products, allproduct, Orders, allorders, Sales_Activity, allsalesactivity, notify, Notific, Status } = props
     // if(details_data !== null) {
@@ -84,10 +84,85 @@ function PayOrder({ details_data, setDetailsData, order, setOrder, ...props }) {
                 o['Client_name'] = client_name
                 if(Status){
                     if(Orders.find(ele => ele.Order_id === o.Order_id) !== undefined) {
-                        console.log('update')
                         await axios.put('http://localhost:5000/ordermaster/update', o)
                             .then(async (item) => {
-                                console.log(item.data)
+                                var data_ord = []
+                                for(var d=0; d<details_data.length; d++) {
+                                    if(details_data[d].Order_pro_id === undefined) {
+                                        data_ord.push(details_data[d])
+                                    }
+                                }
+                                await axios.post('http://localhost:5000/orderproduct/new', data_ord)
+                                    .then(async (item2) => {
+                                        for(let i=0; i<data_ord.length; i++) {
+                                            var stock = Products.filter((p) => p.Product_id === data_ord[i].Product_id)[0].Stock
+                                            var total_stock = stock[data_ord[i].parentArray][data_ord[i].childArray] - data_ord[i].Qty
+                                            stock[data_ord[i].parentArray][data_ord[i].childArray] = total_stock
+                                            var req_data = {
+                                                Product_id: data_ord[i].Product_id,
+                                                Stock: JSON.stringify(stock)
+                                            }
+    
+                                            delete data_ord[i].Order_id
+                                            var pro_index = Products.findIndex(x => x.Product_id === data_ord[i].Product_id)
+                                            Products[pro_index].Stock = stock
+                                            allproduct(Products)
+                                            if(window.desktop) {
+                                                await window.api.addData(Products, "Products")
+                                            }
+    
+                                            await axios.put('http://localhost:5000/product/quantity', req_data)
+                                            await axios.get('http://localhost:5000/ordermaster')
+                                                .then(async prod => {
+                                                    prod.data.sort(function (d1, d2) {
+                                                        return new Date(d2.createdAt) - new Date(d1.createdAt);
+                                                    });
+                                                    allorders(prod.data)
+                                                    if(window.desktop) {
+                                                        await window.api.addData(prod.data, "Orders")
+                                                    }
+                                                    var da = new Date()
+                                                    var year = da.getFullYear()
+                                                    var month = da.getMonth()
+                                                    var date = da.getDate()
+                                                    var tot = 0
+                                                    for(var q=0; q<prod.data.length; q++) {
+                                                        if(new Date(prod.data[q].createdAt).toDateString() === new Date().toDateString()) {
+                                                            tot = prod.data[q].Total_price + tot
+                                                        }
+                                                    }
+                                                    var index = Sales_Activity.findIndex(item => item.year === year)
+                                                    if(typeof Sales_Activity[index][months_data[month]] === 'string') {
+                                                        for(var w=0; w < Sales_Activity.length; w++) {
+                                                            for(var e=0; e < months_data.length; e++) {
+                                                                Sales_Activity[w][months_data[e]] = JSON.parse(Sales_Activity[w][months_data[e]])
+                                                            }
+                                                        }
+                                                    }
+                                                    Sales_Activity[index][months_data[month]][date-1].sales = tot
+                                                    for(var t=0; t < Sales_Activity.length; t++) {
+                                                        for(var m=0; m < months_data.length; m++) {
+                                                            Sales_Activity[t][months_data[m]] = JSON.stringify(Sales_Activity[t][months_data[m]])
+                                                        }
+                                                    }
+                                                    await axios.put('http://localhost:5000/salesactivity/day', {
+                                                        Sales_id: Sales_Activity[index].Sales_id,
+                                                        ...Sales_Activity[index]
+                                                    })
+                                                    await axios.get('http://localhost:5000/salesactivity')
+                                                        .then(async item => {
+                                                            if(typeof Sales_Activity[index][months_data[month]] === 'string') {
+                                                                for(var t=0; t < item.data.length; t++) {
+                                                                    for(var m=0; m < months_data.length; m++) {
+                                                                        item.data[t][months_data[m]] = JSON.parse(item.data[t][months_data[m]])
+                                                                    }
+                                                                }
+                                                            }
+                                                            allsalesactivity(item.data)
+                                                        })
+                                                })
+                                        }
+                                    })
                             })
                     } else {
                         await axios.post('http://localhost:5000/ordermaster/new', o)
@@ -267,6 +342,7 @@ function PayOrder({ details_data, setDetailsData, order, setOrder, ...props }) {
                 setPayment(null)
                 setDetailsData(null)
                 setOrder(null)
+                setReturnedData(null)
             }
         } else {
             if(client_name === '') {

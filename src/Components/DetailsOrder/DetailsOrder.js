@@ -8,7 +8,8 @@ import "./DetailsOrder.scss";
 import { connect } from "react-redux";
 
 // prettier-ignore
-function DetailsOrder({ details_data, setDetailsData, order, setOrder, setReturnVal, particularOrder = null, ...props }) {
+function DetailsOrder({ name, details_data, setDetailsData, order, setOrder, setReturnVal, particularOrder = null, ...props }) {
+	console.log(name)
 
 	const { Products, CategoryAdd, allorders, Orders } = props
 
@@ -359,7 +360,6 @@ function DetailsOrder({ details_data, setDetailsData, order, setOrder, setReturn
 															<div className='col-md-2'>
 																<div className='image_display'>
 																	<div className='image_outside'>
-																	
 																		{
 																			Products.filter(pro2 => pro2.Product_id === pro.Product_id)[0].Image.length === 0 ||
 																			Products.filter(pro2 => pro2.Product_id === pro.Product_id)[0].Image[0].length === 0

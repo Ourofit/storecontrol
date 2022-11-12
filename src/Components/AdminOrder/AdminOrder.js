@@ -154,8 +154,9 @@ function AdminOrder({ setOrderReturn, setReturnedData, order_return = null, retu
 
 	useEffect(() => {
         if(order_return !== null && returned_data !== null) {
-            var price = order_return?.Total_price - returned_data.Total_price
-            order_return.Total_price = price
+			// console.log(order_return?.Total_price - returned_data.Total_price)
+            // var price = order_return?.Total_price - returned_data.Total_price
+            // order_return.Total_price = price
             setDetailsData(order_return?.order_product.filter(ele => ele.Order_pro_id !== returned_data.Order_pro_id))
             setOrder(order_return)
             setPaymentType(order_return.Tipo_de_Cliente)
@@ -295,11 +296,12 @@ function AdminOrder({ setOrderReturn, setReturnedData, order_return = null, retu
 							</div>
 							{
 								!refund
-								? <DetailsOrder details_data={order_details} setDetailsData={setOrderDetails} order={ordering} setOrder={setOrdering} particularOrder={particularOrder} />
+								? <DetailsOrder name="AdminOrders" details_data={order_details} setDetailsData={setOrderDetails} order={ordering} setOrder={setOrdering} particularOrder={particularOrder} />
 								: null
 							}
+							{console.log(order_details)}
 							<EditOrder details_data={order_details} particular={particular} />
-							<PayOrder details_data={details_data} setDetailsData={setDetailsData} order={order} setOrder={setOrder} />
+							<PayOrder details_data={details_data} setDetailsData={setDetailsData} setOrderDetails={setOrderDetails} order={order} setOrder={setOrder} returned_data={returned_data} setReturnedData={setReturnedData} />
 							<AreYouSure />
 							<SendMessage />
 						</div>

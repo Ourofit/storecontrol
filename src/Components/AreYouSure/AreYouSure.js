@@ -12,7 +12,7 @@ function AreYouSure({ returnProduct, return_val, setReturnedData }) {
     }
 
     const Submit = () => {
-        // returnProduct(return_val)
+        returnProduct(return_val)
         setReturnedData(return_val)
     }
 
@@ -69,10 +69,10 @@ function AreYouSure({ returnProduct, return_val, setReturnedData }) {
                                         {
                                             return_type === 'Devolver el Producto'
                                             ? <button type="button" className="btn btn-primary" data-dismiss="modal" onClick={() => returnProduct(return_val)}>
-                                                {return_type}
+                                                Submit
                                             </button>
                                             : <button type="button" className="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#adminorder" onClick={() => Submit()}>
-                                                {return_type}
+                                                Submit
                                             </button>
                                         }
                                     {/* </div> */}
