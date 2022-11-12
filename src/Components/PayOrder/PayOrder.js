@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 // import NotifyAuto from "../SendMessage/NotifyAuto";
 
 // prettier-ignore
-function PayOrder({ details_data, setDetailsData, order, setOrder, setReturnedData, setOrderDetails=null, returned_data=null, ...props }) {
+function PayOrder({ details_data, setDetailsData, order, setOrder, setReturnedData, setOrderReturn, setOrder_Data, setOrderDetails=null, returned_data=null, ...props }) {
     
     const { Products, allproduct, Orders, allorders, Sales_Activity, allsalesactivity, notify, Notific, Status } = props
     // if(details_data !== null) {
@@ -118,6 +118,8 @@ function PayOrder({ details_data, setDetailsData, order, setOrder, setReturnedDa
                                                         return new Date(d2.createdAt) - new Date(d1.createdAt);
                                                     });
                                                     allorders(prod.data)
+                                                    setOrder_Data([prod.data.find(ele => ele.Order_id === order.Order_id)])
+                                                    // setOrderReturn(prod.data.find(ele => ele.Order_id === order.Order_id))
                                                     if(window.desktop) {
                                                         await window.api.addData(prod.data, "Orders")
                                                     }
@@ -341,7 +343,7 @@ function PayOrder({ details_data, setDetailsData, order, setOrder, setReturnedDa
                 setClientName('')
                 setPayment(null)
                 setDetailsData(null)
-                setOrder(null)
+                // setOrder(null)
                 setReturnedData(null)
             }
         } else {

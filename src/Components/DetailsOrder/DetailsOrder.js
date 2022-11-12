@@ -8,8 +8,7 @@ import "./DetailsOrder.scss";
 import { connect } from "react-redux";
 
 // prettier-ignore
-function DetailsOrder({ name, details_data, setDetailsData, order, setOrder, setReturnVal, particularOrder = null, ...props }) {
-	console.log(name)
+function DetailsOrder({ details_data, setDetailsData, order, setOrder, setReturnVal, particularOrder = null, ...props }) {
 
 	const { Products, CategoryAdd, allorders, Orders } = props
 
@@ -256,6 +255,7 @@ function DetailsOrder({ name, details_data, setDetailsData, order, setOrder, set
 											<div className='col-md'>
 												<div className='order_id'>
 													<span>Orden ID: </span>
+													{console.log('order',order)}
 													<span>{order?.Order_id}</span>
 												</div>
 												<div className='order_client my-1'>
@@ -352,6 +352,7 @@ function DetailsOrder({ name, details_data, setDetailsData, order, setOrder, set
 										</div>
 									</div>
 									<div>
+										{/* {console.log(details_data)} */}
 										{
 											details_data?.map((item, index) =>
 												item.order_product.map((pro, i) =>

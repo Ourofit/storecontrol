@@ -5,7 +5,7 @@ import { useReactToPrint } from "react-to-print";
 import "./AdminOrder.scss";
 import OrderList from "../../Components/OrderList/OrderList";
 // import NewProduct from '../../Components/NewProduct/NewProduct'
-import DetailsOrder from "../../Components/DetailsOrder/DetailsOrder";
+// import DetailsOrder from "../../Components/DetailsOrder/DetailsOrder";
 import Orders from "../../Pages/Orders/Orders";
 import EditOrder from "../../Components/EditOrder/EditOrder";
 // import { Link } from 'react-router-dom'
@@ -17,7 +17,7 @@ import { connect } from "react-redux";
 // import axios from "axios";
 // import { Order_master } from "../../Data/Order_master";
 // prettier-ignore
-function AdminOrder({ setOrderReturn, setReturnedData, order_return = null, returned_data = null, ...props }) {
+function AdminOrder({ setOrderReturn, setReturnedData, setOrder_Data, order_return = null, returned_data = null, ...props }) {
     const { Products } = props
 	const [allpro, setAllPro] = useState(Products)
 
@@ -25,8 +25,8 @@ function AdminOrder({ setOrderReturn, setReturnedData, order_return = null, retu
 	const [order, setOrder] = useState()
 
 	const [order_details, setOrderDetails] = useState(null)
-	const [ordering, setOrdering] = useState(null)
-	const [particular, setparticular] = useState(null)
+	const [, setOrdering] = useState(null)
+	const [particular,] = useState(null)
 	
 	// const [productinsert, setProductInsert] = useState(null)
 	const [paymentType, setPaymentType] = useState('Compras por Mayor')
@@ -45,9 +45,9 @@ function AdminOrder({ setOrderReturn, setReturnedData, order_return = null, retu
 		setOrder(null)
 	}
 
-	const particularOrder = (index) => {
-		setparticular(index)
-	}
+	// const particularOrder = (index) => {
+	// 	setparticular(index)
+	// }
 
 	const componentRef = useRef()
 
@@ -294,14 +294,13 @@ function AdminOrder({ setOrderReturn, setReturnedData, order_return = null, retu
 									</div>
 								</div>
 							</div>
-							{
+							{/* {
 								!refund
 								? <DetailsOrder name="AdminOrders" details_data={order_details} setDetailsData={setOrderDetails} order={ordering} setOrder={setOrdering} particularOrder={particularOrder} />
 								: null
-							}
-							{console.log(order_details)}
+							} */}
 							<EditOrder details_data={order_details} particular={particular} />
-							<PayOrder details_data={details_data} setDetailsData={setDetailsData} setOrderDetails={setOrderDetails} order={order} setOrder={setOrder} returned_data={returned_data} setReturnedData={setReturnedData} />
+							<PayOrder details_data={details_data} setDetailsData={setDetailsData} setOrder_Data={setOrder_Data} setOrderDetails={setOrderDetails} order={order} setOrder={setOrder} setOrderReturn={setOrderReturn} returned_data={returned_data} setReturnedData={setReturnedData} />
 							<AreYouSure />
 							<SendMessage />
 						</div>
