@@ -119,7 +119,13 @@ function PayOrder({ details_data, setDetailsData, order, setOrder, setReturnedDa
                                                     });
                                                     allorders(prod.data)
                                                     setOrder_Data([prod.data.find(ele => ele.Order_id === order.Order_id)])
-                                                    // setOrderReturn(prod.data.find(ele => ele.Order_id === order.Order_id))
+                                                    // console.log('PayOrder', prod.data.find(ele => ele.Order_id === order.Order_id).order_product)
+                                                    // setDetailsData(prod.data.find(ele => ele.Order_id === order.Order_id).order_product)
+                                                    setOrderReturn({
+                                                        ...order, 
+                                                        order_product: prod.data.find(ele => ele.Order_id === order.Order_id).order_product,
+                                                        Total_price: prod.data.find(ele => ele.Order_id === order.Order_id).Total_price
+                                                    })
                                                     if(window.desktop) {
                                                         await window.api.addData(prod.data, "Orders")
                                                     }
@@ -343,7 +349,7 @@ function PayOrder({ details_data, setDetailsData, order, setOrder, setReturnedDa
                 setClientName('')
                 setPayment(null)
                 setDetailsData(null)
-                // setOrder(null)
+                setOrder(null)
                 setReturnedData(null)
             }
         } else {

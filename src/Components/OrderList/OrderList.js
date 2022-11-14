@@ -14,16 +14,39 @@ import Dropdown from "../Dropdown/Dropdown";
 // prettier-ignore
 function OrderList({ details_data, setDetailsData, order, setOrder, particularOrder, componentRef, handlePrint, paymentType, setPaymentType, addorder, client_name, setClientName, deposito_err, setDepositoErr, employee_name, setEmployeeName, allpro, setAllPro, ...props }) {
 
-	const { Products, CategoryAdd, allproduct, category, DepositoAdd, Status } = props
+	const { Products, CategoryAdd, DepositoAdd, Status, Orders } = props
 	const [product, setProduct] = useState(null)
 	const [employee, setEmployee] = useState(null)
 	const [employee_err,] = useState('Required')
 	const loop = useRef(true)
 
 	useEffect(() => {
+		// console.log('--------OrderList--------')
+		var result = []
 		if(order?.Employee_name !== undefined) {
 			setEmployeeName(order.Employee_name)
 			setPaymentType(order.Tipo_de_Cliente)
+			if(order?.order_product !== undefined) {
+				for(var k=0; k < order?.order_product.length; k++) {
+					var pro1
+					for(var l=0; l < Products.length; l++) {
+						if(Products[l].Product_id === order?.order_product[k]?.Product_id) {
+							pro1 = Products[l]
+						}
+					}
+					result.push(pro1)
+				}
+			} else {
+				var pro
+				for(var i=0; i < details_data?.length; i++) {
+					for(var p=0; p < Products.length; p++) {
+						if(Products[p].Product_id === details_data[i]?.Product_id) {
+							pro = Products[p]
+						}
+					}
+				}
+				result.push(pro)
+			}
 		}
 		async function pro_method() {
 			
@@ -32,16 +55,7 @@ function OrderList({ details_data, setDetailsData, order, setOrder, particularOr
 			pro_method()
 			loop.current = false
 		}
-		var result = []
-		for(let i=0; i < details_data?.length; i++) {
-			var pro
-			for(var j=0; j < Products.length; j++) {
-				if(Products[j].Product_id === details_data[i]?.Product_id) {
-					pro = Products[j]
-				}
-			}
-			result.push(pro)
-		}
+		// console.log('OrderList', details_data, result)
 		var DepositoLogin = JSON.parse(localStorage.getItem('DepositoLogin'))
 		var deposit = DepositoAdd.find(item => item.Deposito_id === DepositoLogin.Deposito_id)
 		// console.log(deposit)
@@ -102,7 +116,7 @@ function OrderList({ details_data, setDetailsData, order, setOrder, particularOr
 		return() => {
 			window.removeEventListener('keydown', handleBarcode)
 		}
-	}, [CategoryAdd.length, Products, addorder, allproduct, category, details_data, setDepositoErr, setAllPro, DepositoAdd, Status, setPaymentType, setEmployeeName, order])
+	}, [Products, addorder, details_data, setDepositoErr, DepositoAdd, Status, setPaymentType, setEmployeeName, order, setDetailsData, Orders])
 
 	const qtychange = (val, code, pro) => {
 		var pricing = 0
@@ -310,9 +324,11 @@ function OrderList({ details_data, setDetailsData, order, setOrder, particularOr
 						</div>
 					</div>
 					<div>
+						{/* {console.log('OrderList Main', details_data)} */}
 						{
 							details_data?.map((item, index) => 
 								<div className='productorder' key={index}>
+									{/* {console.log('OrderList Loop', product[index]?.Product_id, item.Product_id, index)} */}
 									<div className='row'>
 										<div className='col-md-2'>
 											<div className='image_display'>

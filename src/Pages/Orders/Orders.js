@@ -30,9 +30,27 @@ function Orders({ setOrderDetails, setOrdering, boxes = false, employee = null, 
 	const [searching_val, ] = useState('Nombre Cliente')
 	const [return_val, setReturnVal] = useState()
 	const [returned_data, setReturnedData] = useState(null)
+	const [product, setProduct] = useState(null)
 	const loop = useRef(true)
 
 	useEffect(() => {
+		var result = []
+		// console.log('---------Order----------')
+		if (details_data !== null) {
+			for (var i = 0; i < details_data[0].order_product.length; i++) {
+				var pro
+				for (var j = 0; j < Products.length; j++) {
+					// console.log(Products[j].Product_id, details_data[0].order_product[i].Product_id)
+					if (Products[j].Product_id === details_data[0].order_product[i].Product_id) {
+						pro = Products[j]
+					}
+				}
+				result.push(pro)
+			}
+		}
+		// console.log('Order', details_data, result)
+		setProduct(result)
+
 		async function order_data() {
 			// await store_Orders('Orders', Status, Orders, allorders, notify)
 			// if(Orders.length === 0) {
@@ -92,7 +110,7 @@ function Orders({ setOrderDetails, setOrdering, boxes = false, employee = null, 
 			}
 		}
 		order_storing()
-	}, [Orders, employee])
+	}, [Orders, employee, Products, details_data])
 
 	const onChange = (e) => {
 		setSeatrch(e.target.value)
@@ -251,7 +269,9 @@ function Orders({ setOrderDetails, setOrdering, boxes = false, employee = null, 
 			}
 			var spec = details_data[0].order_product.filter(function(x) {return !(x.Order_pro_id === val.Order_pro_id)})
 			details_data[0].order_product = spec
+			var prod = product.filter(ele => ele.Product_id !== val.Product_id)
 			setDetailsData(details_data)
+			setProduct(prod)
 			setOrder({...order, Total_price: order.Total_price - val.Total_price})
 			if(Status) {
 				await axios.put('http://localhost:5000/product/quantity', req_data_el)
@@ -456,7 +476,7 @@ function Orders({ setOrderDetails, setOrdering, boxes = false, employee = null, 
 				{
 					employee === null
 						? <>
-							<DetailsOrder details_data={details_data} setDetailsData={setDetailsData} order={order} setOrder={setOrder} particularOrder={particularOrder} setReturnVal={setReturnVal} />
+							<DetailsOrder details_data={details_data} setDetailsData={setDetailsData} order={order} setOrder={setOrder} particularOrder={particularOrder} setReturnVal={setReturnVal} product={product} />
 							<AreYouSure returnProduct={returnProduct} return_val={return_val} setReturnedData={setReturnedData} />
 							<EditOrder details_data={details_data} particular={particular} />
 							<AdminOrder setOrder_Data={setDetailsData} returned_data={returned_data} order_return={order} setOrderReturn={setOrder} setReturnedData={setReturnedData} />

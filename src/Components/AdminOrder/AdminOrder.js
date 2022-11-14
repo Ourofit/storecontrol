@@ -123,6 +123,7 @@ function AdminOrder({ setOrderReturn, setReturnedData, setOrder_Data, order_retu
 							]);
 							setOrder({
 								...order,
+								order_product: details_data[i].order_product,
 								Total_price: order.Total_price + pricing,
 							});
 						} else {
@@ -153,6 +154,7 @@ function AdminOrder({ setOrderReturn, setReturnedData, setOrder_Data, order_retu
 	const loop = useRef(true)
 
 	useEffect(() => {
+		// console.log(order_return, returned_data)
         if(order_return !== null && returned_data !== null) {
 			// console.log(order_return?.Total_price - returned_data.Total_price)
             // var price = order_return?.Total_price - returned_data.Total_price
@@ -161,7 +163,12 @@ function AdminOrder({ setOrderReturn, setReturnedData, setOrder_Data, order_retu
             setOrder(order_return)
             setPaymentType(order_return.Tipo_de_Cliente)
             setEmployeeName(order_return.Employee_name)
-        }
+        } else {
+			setDetailsData(null)
+			setOrder(null)
+			setPaymentType('Compras por Mayor')
+            setEmployeeName('')
+		}
         async function pro_method() {
         }
         if (loop.current) {

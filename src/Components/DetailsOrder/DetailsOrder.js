@@ -8,31 +8,47 @@ import "./DetailsOrder.scss";
 import { connect } from "react-redux";
 
 // prettier-ignore
-function DetailsOrder({ details_data, setDetailsData, order, setOrder, setReturnVal, particularOrder = null, ...props }) {
+function DetailsOrder({ details_data, setDetailsData, order, setOrder, setReturnVal, product, particularOrder = null, ...props }) {
 
 	const { Products, CategoryAdd, allorders, Orders } = props
 
-	const [product, setProduct] = useState(null)
+	const [product2, setProduct2] = useState(null)
 	// const [employee, setEmployee] = useState(null)
 
 	useEffect(() => {
-		var result = []
-		if (details_data !== null) {
-			for (var i = 0; i < details_data[0].order_product.length; i++) {
-				var pro
-				for (var j = 0; j < Products.length; j++) {
-					// console.log(Products[j].Product_id, details_data[0].order_product[i].Product_id)
-					if (Products[j].Product_id === details_data[0].order_product[i].Product_id) {
-						pro = Products[j]
-					}
-				}
-				result.push(pro)
-			}
-		}
+		// var result = []
+		// console.log('---------DetailsOrder----------')
+		// if(order?.order_product !== undefined) {
+		// 	for (var k = 0; k < order?.order_product.length; k++) {
+		// 		var pro1
+		// 		for (var l = 0; l < Products.length; l++) {
+		// 			// console.log(Products[j].Product_id, details_data[0].order_product[i].Product_id)
+		// 			if (Products[l].Product_id === order?.order_product[k].Product_id) {
+		// 				pro1 = Products[l]
+		// 			}
+		// 		}
+		// 		result.push(pro1)
+		// 	}
+		// } else {
+		// 	if (details_data !== null) {
+		// 		for (var i = 0; i < details_data[0].order_product.length; i++) {
+		// 			var pro
+		// 			for (var j = 0; j < Products.length; j++) {
+		// 				// console.log(Products[j].Product_id, details_data[0].order_product[i].Product_id)
+		// 				if (Products[j].Product_id === details_data[0].order_product[i].Product_id) {
+		// 					pro = Products[j]
+		// 				}
+		// 			}
+		// 			result.push(pro)
+		// 		}
+		// 	}
+		// }
+		// console.log('DetailsOrder', details_data, result)
 		// setOrder(Orders.filter(item => item.Order_id === order?.Order_id))
 		// setEmployee(Employee?.filter(function(x){return x.Employee_id === order?.Employee_id})[0])
-		setProduct(result)
-	}, [details_data, order, Products, Orders])
+		// setProduct(result)
+	}, [])
+	// console.log(product)
 
 	const componentRef = useRef();
 
@@ -255,7 +271,6 @@ function DetailsOrder({ details_data, setDetailsData, order, setOrder, setReturn
 											<div className='col-md'>
 												<div className='order_id'>
 													<span>Orden ID: </span>
-													{console.log('order',order)}
 													<span>{order?.Order_id}</span>
 												</div>
 												<div className='order_client my-1'>
@@ -352,11 +367,12 @@ function DetailsOrder({ details_data, setDetailsData, order, setOrder, setReturn
 										</div>
 									</div>
 									<div>
-										{/* {console.log(details_data)} */}
+										{/* {console.log('DetailsOrder', details_data)} */}
 										{
 											details_data?.map((item, index) =>
 												item.order_product.map((pro, i) =>
 													<div className='productorder' key={i}>
+														{/* {console.log(product[i]?.Product_id, pro.Product_id)} */}
 														<div className='row'>
 															<div className='col-md-2'>
 																<div className='image_display'>
