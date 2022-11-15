@@ -94,6 +94,11 @@ function PayOrder({ details_data, setDetailsData, order, setOrder, setReturnedDa
                                 }
                                 await axios.post('http://localhost:5000/orderproduct/new', data_ord)
                                     .then(async (item2) => {
+                                        var items_order = details_data.filter(ele => ele.Order_pro_id !== undefined)
+                                        for(var q=0; q < item2.data.length; q++) {
+                                            items_order.push(item2.data[q])
+                                        }
+                                        setDetailsData(items_order)
                                         for(let i=0; i<data_ord.length; i++) {
                                             var stock = Products.filter((p) => p.Product_id === data_ord[i].Product_id)[0].Stock
                                             var total_stock = stock[data_ord[i].parentArray][data_ord[i].childArray] - data_ord[i].Qty
@@ -123,7 +128,7 @@ function PayOrder({ details_data, setDetailsData, order, setOrder, setReturnedDa
                                                     // setDetailsData(prod.data.find(ele => ele.Order_id === order.Order_id).order_product)
                                                     setOrderReturn({
                                                         ...order, 
-                                                        order_product: prod.data.find(ele => ele.Order_id === order.Order_id).order_product,
+                                                        order_product: items_order,
                                                         Total_price: prod.data.find(ele => ele.Order_id === order.Order_id).Total_price
                                                     })
                                                     if(window.desktop) {

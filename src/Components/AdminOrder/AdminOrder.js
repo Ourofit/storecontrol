@@ -123,7 +123,15 @@ function AdminOrder({ setOrderReturn, setReturnedData, setOrder_Data, order_retu
 							]);
 							setOrder({
 								...order,
-								order_product: details_data[i].order_product,
+								order_product: [
+									...details_data.slice(0, i),
+									{
+										...details_data[i],
+										Qty: details_data[i].Qty + 1,
+										Total_price: pricing * (details_data[i].Qty + 1),
+									},
+									...details_data.slice(i + 1, details_data.length),
+								],
 								Total_price: order.Total_price + pricing,
 							});
 						} else {
@@ -144,6 +152,7 @@ function AdminOrder({ setOrderReturn, setReturnedData, setOrder_Data, order_retu
 					setDetailsData([...details_data, order_pro2]);
 					setOrder({
 						...order,
+						order_product: [...details_data, order_pro2],
 						Total_price: order.Total_price + pricing,
 					});
 				}
