@@ -17,7 +17,7 @@ import { connect } from "react-redux";
 // import axios from "axios";
 // import { Order_master } from "../../Data/Order_master";
 // prettier-ignore
-function AdminOrder({ setOrderReturn, setReturnedData, setOrder_Data, order_return = null, returned_data = null, ...props }) {
+function AdminOrder({ setOrderReturn, setReturnedData, setOrder_Data, returnProduct, return_val, order_return = null, returned_data = null, ...props }) {
     const { Products } = props
 	const [allpro, setAllPro] = useState(Products)
 
@@ -241,9 +241,13 @@ function AdminOrder({ setOrderReturn, setReturnedData, setOrder_Data, order_retu
 									</div>
 									<div className='col-md-3 d-flex flex-column justify-content-between'>
 										<div>
-											<div className='new_order_btn my-2'>
-												<button className='btn btn_all btn-success w-100' onClick={neworder}>Nueva Orden</button>
-											</div>
+											{
+												order_return !== null && returned_data !== null
+												? null
+												: <div className='new_order_btn my-2'>
+													<button className='btn btn_all btn-success w-100' onClick={neworder}>Nueva Orden</button>
+												</div>
+											}
 											{/* <div className='new_product_btn my-2'>
 												<NewProduct details_data={productinsert} setDetailsData={setProductInsert}  />
 											</div> */}
@@ -264,9 +268,13 @@ function AdminOrder({ setOrderReturn, setReturnedData, setOrder_Data, order_retu
 											</div> */}
 										</div>
 										<div>
-											<div className='cancel_order_btn my-2'>
-												<button className='btn btn_all btn-danger w-100' onClick={cancelorder}>Cancel Order</button>
-											</div>
+											{
+												order_return !== null && returned_data !== null
+												? null
+												: <div className='cancel_order_btn my-2'>
+													<button className='btn btn_all btn-danger w-100' onClick={cancelorder}>Cancel Order</button>
+												</div>
+											}
 											{/* <div className='logout_btn my-2'>
 												<Link to='/' className='btn btn_all btn-primary w-100 d-flex justify-content-center align-items-center'>Logout</Link>
 											</div> */}
@@ -316,7 +324,7 @@ function AdminOrder({ setOrderReturn, setReturnedData, setOrder_Data, order_retu
 								: null
 							} */}
 							<EditOrder details_data={order_details} particular={particular} />
-							<PayOrder details_data={details_data} setDetailsData={setDetailsData} setOrder_Data={setOrder_Data} setOrderDetails={setOrderDetails} order={order} setOrder={setOrder} setOrderReturn={setOrderReturn} returned_data={returned_data} setReturnedData={setReturnedData} />
+							<PayOrder details_data={details_data} setDetailsData={setDetailsData} setOrder_Data={setOrder_Data} setOrderDetails={setOrderDetails} order={order} setOrder={setOrder} setOrderReturn={setOrderReturn} returned_data={returned_data} setReturnedData={setReturnedData} returnProduct={returnProduct} return_val={return_val} />
 							<AreYouSure />
 							<SendMessage />
 						</div>

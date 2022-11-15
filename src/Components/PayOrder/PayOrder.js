@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 // import NotifyAuto from "../SendMessage/NotifyAuto";
 
 // prettier-ignore
-function PayOrder({ details_data, setDetailsData, order, setOrder, setReturnedData, setOrderReturn, setOrder_Data, setOrderDetails=null, returned_data=null, ...props }) {
+function PayOrder({ details_data, setDetailsData, order, setOrder, setReturnedData, setOrderReturn, setOrder_Data, returnProduct, return_val, setOrderDetails=null, returned_data=null, ...props }) {
     
     const { Products, allproduct, Orders, allorders, Sales_Activity, allsalesactivity, notify, Notific, Status } = props
     // if(details_data !== null) {

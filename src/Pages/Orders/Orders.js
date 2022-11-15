@@ -479,7 +479,7 @@ function Orders({ setOrderDetails, setOrdering, boxes = false, employee = null, 
 							<DetailsOrder details_data={details_data} setDetailsData={setDetailsData} order={order} setOrder={setOrder} particularOrder={particularOrder} setReturnVal={setReturnVal} product={product} />
 							<AreYouSure returnProduct={returnProduct} return_val={return_val} setReturnedData={setReturnedData} />
 							<EditOrder details_data={details_data} particular={particular} />
-							<AdminOrder setOrder_Data={setDetailsData} returned_data={returned_data} order_return={order} setOrderReturn={setOrder} setReturnedData={setReturnedData} />
+							<AdminOrder setOrder_Data={setDetailsData} returned_data={returned_data} order_return={order} setOrderReturn={setOrder} setReturnedData={setReturnedData} returnProduct={returnProduct} return_val={return_val} />
 						</>
 						: null
 				}
