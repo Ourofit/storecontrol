@@ -19,6 +19,7 @@ function OrderList({ details_data, setDetailsData, order, setOrder, particularOr
 	const [employee, setEmployee] = useState(null)
 	const [employee_err,] = useState('Required')
 	const loop = useRef(true)
+	// console.log(order, details_data, product)
 
 	useEffect(() => {
 		// console.log('--------OrderList--------')
@@ -254,7 +255,7 @@ function OrderList({ details_data, setDetailsData, order, setOrder, particularOr
 								<div className='order_client my-1'>
 									{/* <span>Nombre Vendedor: </span> */}
 									{
-										order
+										order?.createdAt
 										? <>
 											<span>Nombre Vendedor: </span>
 											<span>{order.Employee_name}</span>
@@ -284,7 +285,7 @@ function OrderList({ details_data, setDetailsData, order, setOrder, particularOr
 								<div className='order_payment'>
 									<span>Tipo de Cliente:</span>
 									{
-										order
+										order?.createdAt
 										? <span>{order.Tipo_de_Cliente}</span>
 										: <div>
 											<div className='py-2 d-flex align-items-center'>

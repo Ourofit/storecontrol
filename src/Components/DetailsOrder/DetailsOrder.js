@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useReactToPrint } from "react-to-print";
 import axios from "axios";
@@ -8,11 +8,11 @@ import "./DetailsOrder.scss";
 import { connect } from "react-redux";
 
 // prettier-ignore
-function DetailsOrder({ details_data, setDetailsData, order, setOrder, setReturnVal, product, particularOrder = null, ...props }) {
+function DetailsOrder({ details_data, setDetailsData, order, setOrder, product, setReturnVal=null, particularOrder = null, ...props }) {
 
-	const { Products, CategoryAdd, allorders, Orders } = props
+	const { Products, CategoryAdd, allorders } = props
 
-	const [product2, setProduct2] = useState(null)
+	// const [product2, setProduct2] = useState(null)
 	// const [employee, setEmployee] = useState(null)
 
 	useEffect(() => {
@@ -55,8 +55,6 @@ function DetailsOrder({ details_data, setDetailsData, order, setOrder, setReturn
 	const handlePrint = useReactToPrint({
 		content: () => componentRef.current,
 	});
-
-	
 
 	// const returnProduct = async (val) => {
 	// 	if(details_data[0].order_product.length === 1) {
@@ -386,7 +384,7 @@ function DetailsOrder({ details_data, setDetailsData, order, setOrder, setReturn
 																	</div>
 																</div>
 															</div>
-															<div className='col-md-8'>
+															<div className={setReturnVal !== null ? 'col-md-8' : 'col-md-10'}>
 																<div className='product_data'>
 																	<div className='container-fluid d-flex flex-column justify-content-between h-100'>
 																		<div className='row'>
@@ -428,16 +426,20 @@ function DetailsOrder({ details_data, setDetailsData, order, setOrder, setReturn
 																	</div>
 																</div>
 															</div>
-															<div className='col-md-2'>
-																<div className='delete_btn'>
-																	{/* <button className='btn border border-dark' data-toggle='modal' data-target='#editorder' onClick={() => particularOrder(i)}>
-																		<FontAwesomeIcon icon="edit" />
-																	</button> */}
-																	{/* <button className='btn text-light bg-danger'><FontAwesomeIcon icon="trash"/></button> */}
-																	{/* <button className='btn text-light bg-danger' onClick={() => returnProduct(pro)}>Regresar</button> */}
-																	<button type="button" className="btn btn-primary" data-toggle='modal' data-target='#areyousure' onClick={() => setReturnVal(pro)}>Regresar</button>
+															{
+																setReturnVal !== null
+																? <div className='col-md-2'>
+																	<div className='delete_btn'>
+																		{/* <button className='btn border border-dark' data-toggle='modal' data-target='#editorder' onClick={() => particularOrder(i)}>
+																			<FontAwesomeIcon icon="edit" />
+																		</button> */}
+																		{/* <button className='btn text-light bg-danger'><FontAwesomeIcon icon="trash"/></button> */}
+																		{/* <button className='btn text-light bg-danger' onClick={() => returnProduct(pro)}>Regresar</button> */}
+																		<button type="button" className="btn btn-primary" data-toggle='modal' data-target='#areyousure' onClick={() => setReturnVal(pro)}>Regresar</button>
+																	</div>
 																</div>
-															</div>
+																: null
+															}
 														</div>
 													</div>
 												)

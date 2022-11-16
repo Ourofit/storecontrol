@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Overall from "../../Components/Overall/Overall";
 import { useReactToPrint } from "react-to-print";
@@ -43,8 +43,30 @@ function Products(props) {
     const [details_order, setDetailsOrder] = useState(null)
     const [order, setOrder] = useState(null)
 	const [particular, setparticular] = useState(null)
+    const [product, setProduct] = useState(null)
 
     const [search_filter, setSearch_filter] = useState("Product Nombre")
+
+    useEffect(() => {
+        var result = []
+		// console.log('---------Order----------')
+		if (details_data !== null && show_data !== null) {
+            for(var l=0; l < show_data.length; l++) {
+                for (var i = 0; i < show_data[l].order_product.length; i++) {
+                    var pro
+                    for (var j = 0; j < Products.length; j++) {
+                        // console.log(Products[j].Product_id, details_data[0].order_product[i].Product_id)
+                        if (Products[j].Product_id === show_data[l].order_product[i].Product_id) {
+                            pro = Products[j]
+                        }
+                    }
+                    result.push(pro)
+                }
+            }
+		}
+		// console.log('Order', details_data, result)
+		setProduct(result)
+    }, [Products, details_data, show_data])
 
     const onChange = (e) => {
         setSeatrch(e.target.value);
@@ -956,8 +978,10 @@ function Products(props) {
                     setOrder={setOrder}
                     setDetailsData={setDetailsOrder}
                 />
-                <DetailsOrder details_data={details_order} setDetailsData={setDetailsOrder} order={order} setOrder={setOrder} particularOrder={particularOrder} />
+                {/* <DetailsOrder details_data={details_data} setDetailsData={setDetailsData} order={order} setOrder={setOrder} particularOrder={particularOrder} setReturnVal={setReturnVal} product={product} /> */}
+                <DetailsOrder details_data={details_order} setDetailsData={setDetailsOrder} order={order} setOrder={setOrder} particularOrder={particularOrder} product={product} />
                 <EditOrder details_data={details_order} particular={particular} />
+                {/* <AreYouSure /> */}
                 {/* <AdminOrder /> */}
                 <FindProduct setAllPro={setAllPro}/>
                 <div style={{ display: "none" }}>
