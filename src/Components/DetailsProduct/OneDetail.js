@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./OneDetail.scss";
 
 // prettier-ignore
-function OneDetail({ name, data, stocktransfer, ordershow, transfer=false }) {
+function  OneDetail({ name, data, stocktransfer, ordershow, transfer=false }) {
 
     return (
         <div className='one_detail my-2'>

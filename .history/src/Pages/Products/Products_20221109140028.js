@@ -962,7 +962,7 @@ function Products(props) {
 
                 />
                 <AddExhibited
-                 idModal='addexhibited'
+                 idModal='modal_exhibited'
 
                 
                 />

@@ -19,7 +19,6 @@ import ShowOrders from "../../Components/ShowOrders/ShowOrders";
 import DetailsOrder from "../../Components/DetailsOrder/DetailsOrder";
 import EditOrder from "../../Components/EditOrder/EditOrder";
 import Exhibited from "../../Components/Exhibited/Exhibited";
-import AddExhibited from "../../Components/AddExhibited/AddExhibited";
 // import AdminOrder from "../../Components/AdminOrder/AdminOrder";
 // import {
 //     store_Category,
@@ -960,11 +959,6 @@ function Products(props) {
                 <Exhibited
                     idModal='modal_exhibited'
 
-                />
-                <AddExhibited
-                 idModal='addexhibited'
-
-                
                 />
                 <ShowOrders
                     idModal='showorders'

@@ -44,7 +44,7 @@ function Home(props) {
     const [details_data, setDetailsData] = useState(null)
 	const [stocknum, setStockNum] = useState()
     const [co, setCo] = useState(null)
-    const[idMod,] = useState("idModalDash");
+    const[idMod] = useState("idModalDash");
 
     const details = (pro, index) => {
 		setDetailsData(pro)
@@ -374,6 +374,7 @@ totalBalance += totalVentas - totalexpenses
                     </div>
                 </div>
             </div>
+          
             <DetailsProduct details_data={details_data} idModal={idMod} setDetailsData={setDetailsData} index={co} stocktransfer={stocktransfer} />
             <TransferStock details_data={details_data} stocknum={stocknum} />
         </div>

@@ -962,8 +962,7 @@ function Products(props) {
 
                 />
                 <AddExhibited
-                 idModal='addexhibited'
-
+                
                 
                 />
                 <ShowOrders

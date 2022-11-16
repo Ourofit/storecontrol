@@ -295,7 +295,7 @@ function TransferStock({ details_data, stocknum, setAllPro, ...props }) {
                                             data={stocknum?.deposito.nombre}
                                         />
                                         <Dropdown
-                                            name="transferir"
+                                            name="transferir"  
                                             // dropvalues={Products.filter((item) => item.nombre === details_data?.nombre).map(val => stocknum?.deposito.nombre === val.deposito.nombre ? null : val.deposito.nombre)}
                                             dropvalues={Deposito.map((d) => stocknum?.deposito.nombre === d.nombre || d.Type === 'Master Manager' ? null : d.nombre)}
                                             value_select={

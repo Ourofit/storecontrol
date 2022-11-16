@@ -695,7 +695,7 @@ function Colorpicker({colap, addorder, ...props}) {
                             <td className='text-center align-middle'>{Products[colap].codigo[i][j]}</td>
                             {
                                 loc || adminloc
-                                ? <td className='text-center align-middle'><button className='btn btn-primary' data-dismiss='modal' onClick={() => addorder(Products[colap], Products[colap].codigo[i][j], i, j)} disabled={Products[colap].Stock[i][j] <= 0}>Add</button></td>
+                                ? <td className='text-center align-middle'><button className='btn btn-primary' onClick={() => addorder(Products[colap], Products[colap].codigo[i][j], i, j)} disabled={Products[colap].Stock[i][j] <= 0}>Add</button></td>
                                 : <td className="edit text-center align-middle">
                                     <IoCloseCircle 
                                         style={{

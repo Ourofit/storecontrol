@@ -962,10 +962,6 @@ function Products(props) {
 
                 />
                 <AddExhibited
-                 idModal='addexhibited'
-
-                
-                />
                 <ShowOrders
                     idModal='showorders'
                     details_data={details_data}
