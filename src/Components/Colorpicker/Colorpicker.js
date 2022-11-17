@@ -259,8 +259,11 @@ function Colorpicker({colap, addorder, ...props}) {
                     if(document.getElementsByName('s')[parseInt(e.target.className)].value === '') {
                         document.getElementsByClassName('editsizeerror'+e.target.className)[0].style.display = 'block'
                     }
-                    if(e.target.value === '') {
+                    if(document.getElementsByName('q')[parseInt(e.target.className)].value === '') {
                         document.getElementsByClassName('editqtyerror'+e.target.className)[0].style.display = 'block'
+                    }
+                    if(e.target.value === '') {
+                        document.getElementsByClassName('editprecioVentaerror'+e.target.className)[0].style.display = 'block'
                     }
                 }
             }
@@ -301,8 +304,14 @@ function Colorpicker({colap, addorder, ...props}) {
                     if(document.getElementsByName('s')[parseInt(e.target.className)].value === '') {
                         document.getElementsByClassName('editsizeerror'+e.target.className)[0].style.display = 'block'
                     }
-                    if(e.target.value === '') {
+                    if(document.getElementsByName('q')[parseInt(e.target.className)].value === '') {
                         document.getElementsByClassName('editqtyerror'+e.target.className)[0].style.display = 'block'
+                    }
+                    if(document.getElementsByName('pv')[parseInt(e.target.className)].value === '') {
+                        document.getElementsByClassName('editprecioVentaerror'+e.target.className)[0].style.display = 'block'
+                    }
+                    if(e.target.value === '') {
+                        document.getElementsByClassName('editcostoCompraerror'+e.target.className)[0].style.display = 'block'
                     }
                 }
             }
@@ -398,72 +407,26 @@ function Colorpicker({colap, addorder, ...props}) {
                 //     // }
                 // }
             } else if(e.target.name === 'cm') {
-                var si = document.getElementsByName('s')[0].value
-                var qt = document.getElementsByName('q')[0].value
-                var pvs = document.getElementsByName('pv')[0].value
-                var ccs = document.getElementsByName('cc')[0].value
-                var editserror = document.getElementsByClassName('editsizeerror'+e.target.className)[0].innerHTML
-                if(e.target.value !== "" && si !== "" && qt !== "" && pvs !== "" && ccs !== "" && editserror !== 'Already Exist') {
-                    // console.log(oldPro[colap].Size[i][sec_j]+colap+i+sec_j)
-                    document.getElementsByClassName(oldPro[colap].Size[i][sec_j]+colap+i+sec_j)[sec_tot].nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.innerHTML = parseInt(e.target.value)
-                    document.getElementsByClassName(oldPro[colap].Size[i][sec_j]+colap+i+sec_j)[sec_tot].nextElementSibling.nextElementSibling.nextElementSibling.innerHTML = parseInt(ccs)
-                    document.getElementsByClassName(oldPro[colap].Size[i][sec_j]+colap+i+sec_j)[sec_tot].nextElementSibling.nextElementSibling.innerHTML = parseInt(pvs)
-                    document.getElementsByClassName(oldPro[colap].Size[i][sec_j]+colap+i+sec_j)[sec_tot].nextElementSibling.innerHTML = parseInt(qt)
-                    document.getElementsByClassName(oldPro[colap].Size[i][sec_j]+colap+i+sec_j)[sec_tot].innerHTML = si
-                    
-                    Products[colap].Size[parseInt(e.target.className)].splice(sec_j, 1, si)
-                    Products[colap].Stock[parseInt(e.target.className)][sec_j] = parseInt(qt)
-                    Products[colap].precioVenta[parseInt(e.target.className)][sec_j] = parseInt(pvs)
-                    Products[colap].costoCompra[parseInt(e.target.className)][sec_j] = parseInt(ccs)
-                    Products[colap].costoMenor[parseInt(e.target.className)][sec_j] = parseInt(e.target.value)
-                    
-                    setu('size')
-                    upd('size')
-                    await mainedit('update')
-                    
-                    setOldPro(Products)
-                    
-                    var lengt = document.getElementsByClassName('edit_icon_ind').length
-                    for(var c=0; c<lengt; c++) {
-                        document.getElementsByClassName('edit_icon_ind')[c].style.display = 'inline'
-                        var flag2 = 0
-                        for(var z=0; z<Orders.length; z++) {
-                            for(var y=0; y<Orders[z].order_product.length; y++) {
-                                if(Orders[z].order_product[y].code === Products[colap].codigo[parseInt(e.target.className)][sec_j]) {
-                                    // console.log(Orders[z].order_product[y].Product_id, Products[c].Product_id)
-                                    flag2 = 1
-                                    break
-                                }
-                            }
-                        }
-                        if(flag2 === 0) {
-                            document.getElementsByClassName('close_icon_ind')[c].style.display = 'inline'
-                        }
-                    }
-                    
+                var editqtyerror3 = document.getElementsByClassName('edit'+e.target.id+'error'+e.target.className)[0].innerHTML
+                if(e.target.value !== "" || (e.target.value !== "" && document.getElementsByName('s')[parseInt(e.target.className)].value !== '' && editqtyerror3 === 'Required')) {
+                    document.getElementsByName('co')[0].focus()
                 } else {
-                    if(si === '') {
-                        document.getElementsByClassName('editsizeerror'+e.target.className)[0].innerHTML = 'Required'
+                    if(document.getElementsByName('s')[parseInt(e.target.className)].value === '') {
                         document.getElementsByClassName('editsizeerror'+e.target.className)[0].style.display = 'block'
                     }
-                    if(qt === '') {
-                        document.getElementsByClassName('editqtyerror'+e.target.className)[0].innerHTML = 'Required'
+                    if(document.getElementsByName('q')[parseInt(e.target.className)].value === '') {
                         document.getElementsByClassName('editqtyerror'+e.target.className)[0].style.display = 'block'
                     }
-                    if(pvs === '') {
-                        document.getElementsByClassName('editprecioVentaerror'+e.target.className)[0].innerHTML = 'Required'
+                    if(document.getElementsByName('pv')[parseInt(e.target.className)].value === '') {
                         document.getElementsByClassName('editprecioVentaerror'+e.target.className)[0].style.display = 'block'
                     }
-                    if(ccs === '') {
-                        document.getElementsByClassName('editcostoCompraerror'+e.target.className)[0].innerHTML = 'Required'
+                    if(document.getElementsByName('cc')[parseInt(e.target.className)].value === '') {
                         document.getElementsByClassName('editcostoCompraerror'+e.target.className)[0].style.display = 'block'
                     }
                     if(e.target.value === '') {
-                        document.getElementsByClassName('editcostoMenorerror'+e.target.className)[0].innerHTML = 'Required'
                         document.getElementsByClassName('editcostoMenorerror'+e.target.className)[0].style.display = 'block'
                     }
                 }
-
             }
 
             if(e.target.name === "codigo") {
@@ -527,6 +490,79 @@ function Colorpicker({colap, addorder, ...props}) {
                     //     document.getElementsByClassName('precioVentaerror'+e.target.className)[0].style.display = 'block'
                     // }
                 }
+            } else if(e.target.name === 'co') {
+                var si = document.getElementsByName('s')[0].value
+                var qt = document.getElementsByName('q')[0].value
+                var pvs = document.getElementsByName('pv')[0].value
+                var ccs = document.getElementsByName('cc')[0].value
+                var cms = document.getElementsByName('cm')[0].value
+                var editserror = document.getElementsByClassName('editsizeerror'+e.target.className)[0].innerHTML
+                if(e.target.value !== "" && si !== "" && qt !== "" && pvs !== "" && ccs !== "" && cms !== "" && editserror !== 'Already Exist') {
+                    // console.log(document.getElementsByClassName(oldPro[colap].Size[i][sec_j]+colap+i+sec_j)[sec_tot].nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.innerHTML)
+                    document.getElementsByClassName(oldPro[colap].Size[i][sec_j]+colap+i+sec_j)[sec_tot].nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.innerHTML = e.target.value
+                    document.getElementsByClassName(oldPro[colap].Size[i][sec_j]+colap+i+sec_j)[sec_tot].nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.innerHTML = parseInt(cms)
+                    document.getElementsByClassName(oldPro[colap].Size[i][sec_j]+colap+i+sec_j)[sec_tot].nextElementSibling.nextElementSibling.nextElementSibling.innerHTML = parseInt(ccs)
+                    document.getElementsByClassName(oldPro[colap].Size[i][sec_j]+colap+i+sec_j)[sec_tot].nextElementSibling.nextElementSibling.innerHTML = parseInt(pvs)
+                    document.getElementsByClassName(oldPro[colap].Size[i][sec_j]+colap+i+sec_j)[sec_tot].nextElementSibling.innerHTML = parseInt(qt)
+                    document.getElementsByClassName(oldPro[colap].Size[i][sec_j]+colap+i+sec_j)[sec_tot].innerHTML = si
+                    
+                    Products[colap].Size[parseInt(e.target.className)].splice(sec_j, 1, si)
+                    Products[colap].Stock[parseInt(e.target.className)][sec_j] = parseInt(qt)
+                    Products[colap].precioVenta[parseInt(e.target.className)][sec_j] = parseInt(pvs)
+                    Products[colap].costoCompra[parseInt(e.target.className)][sec_j] = parseInt(ccs)
+                    Products[colap].costoMenor[parseInt(e.target.className)][sec_j] = parseInt(cms)
+                    Products[colap].codigo[parseInt(e.target.className)][sec_j] = e.target.value
+                    
+                    setu('size')
+                    upd('size')
+                    await mainedit('update')
+                    
+                    setOldPro(Products)
+                    
+                    var lengt = document.getElementsByClassName('edit_icon_ind').length
+                    for(var c=0; c<lengt; c++) {
+                        document.getElementsByClassName('edit_icon_ind')[c].style.display = 'inline'
+                        var flag2 = 0
+                        for(var z=0; z<Orders.length; z++) {
+                            for(var y=0; y<Orders[z].order_product.length; y++) {
+                                if(Orders[z].order_product[y].code === Products[colap].codigo[parseInt(e.target.className)][sec_j]) {
+                                    // console.log(Orders[z].order_product[y].Product_id, Products[c].Product_id)
+                                    flag2 = 1
+                                    break
+                                }
+                            }
+                        }
+                        if(flag2 === 0) {
+                            document.getElementsByClassName('close_icon_ind')[c].style.display = 'inline'
+                        }
+                    }
+                    
+                } else {
+                    if(si === '') {
+                        document.getElementsByClassName('editsizeerror'+e.target.className)[0].innerHTML = 'Required'
+                        document.getElementsByClassName('editsizeerror'+e.target.className)[0].style.display = 'block'
+                    }
+                    if(qt === '') {
+                        document.getElementsByClassName('editqtyerror'+e.target.className)[0].innerHTML = 'Required'
+                        document.getElementsByClassName('editqtyerror'+e.target.className)[0].style.display = 'block'
+                    }
+                    if(pvs === '') {
+                        document.getElementsByClassName('editprecioVentaerror'+e.target.className)[0].innerHTML = 'Required'
+                        document.getElementsByClassName('editprecioVentaerror'+e.target.className)[0].style.display = 'block'
+                    }
+                    if(ccs === '') {
+                        document.getElementsByClassName('editcostoCompraerror'+e.target.className)[0].innerHTML = 'Required'
+                        document.getElementsByClassName('editcostoCompraerror'+e.target.className)[0].style.display = 'block'
+                    }
+                    if(cms === '') {
+                        document.getElementsByClassName('editcostoMenorerror'+e.target.className)[0].innerHTML = 'Required'
+                        document.getElementsByClassName('editcostoMenorerror'+e.target.className)[0].style.display = 'block'
+                    }
+                    if(e.target.value === '') {
+                        document.getElementsByClassName('editcodigoerror'+e.target.className)[0].innerHTML = 'Required'
+                        document.getElementsByClassName('editcodigoerror'+e.target.className)[0].style.display = 'block'
+                    }
+                }
             }
         }
     }
@@ -577,6 +613,14 @@ function Colorpicker({colap, addorder, ...props}) {
                             // console.log(m,v)
                             // console.log(tot)
                             // console.log(document.getElementsByClassName(Products[colap].Size[m][v])[tot].parentElement)
+
+                            document.getElementsByClassName(Products[colap].Size[i][j]+colap+i+j)[tot].nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.innerHTML = `
+                                <input style="width: 100px" type="text" min="0" placeholder="Enter Codigo" id="codigo" name="co" class=${i} value=${Products[colap].codigo[i][j]} />
+                                <div style="color: red; display: none;" class=${'editcodigoerror'+i}></div>
+                            `
+                            var codigo_input = document.getElementById('codigo')
+                            codigo_input.addEventListener('keyup', (e) => diff_record(e, i, j))
+                            codigo_input.addEventListener('input', change_error)
 
                             document.getElementsByClassName(Products[colap].Size[i][j]+colap+i+j)[tot].nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.innerHTML = `
                                 <input style="width: 100px" type="number" min="0" placeholder="Enter Costo Menor" id="costoMenor" name="cm" class=${i} value=${Products[colap].costoMenor[i][j]} />
@@ -629,6 +673,14 @@ function Colorpicker({colap, addorder, ...props}) {
                 a = m
             }
         } else {
+            document.getElementsByClassName(Products[colap].Size[i][j]+colap+i+j)[tot].nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.innerHTML = `
+                <input style="width: 100px" type="text" min="0" placeholder="Enter Codigo" id="codigo" name="co" class=${i} value=${Products[colap].codigo[i][j]} />
+                <div style="color: red; display: none;" class=${'editcodigoerror'+i}></div>
+            `
+            var co_input = document.getElementById('codigo')
+            co_input.addEventListener('keyup', (e) => diff_record(e, i, j))
+            co_input.addEventListener('input', change_error)
+
             document.getElementsByClassName(Products[colap].Size[i][j]+colap+i+j)[tot].nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.innerHTML = `
                 <input style="width: 100px" type="number" min="0" placeholder="Enter Costo Menor" id="costoMenor" name="cm" class=${i} value=${Products[colap].costoMenor[i][j]} />
                 <div style="color: red; display: none;" class=${'editcostoMenorerror'+i}></div>
@@ -754,6 +806,10 @@ function Colorpicker({colap, addorder, ...props}) {
                             <td>
                                 <input style={{width: '100px'}} type="number" min={0} placeholder="Enter Costo Menor" name="costoMenor" className={i} onKeyUp={diff_record} onChange={change_error} />
                                 <div style={{color: 'red', display: 'none'}} className={'costoMenorerror'+i}>{costoMenorerror}</div>
+                            </td>
+                            <td>
+                                <input style={{width: '100px'}} type="text" min={0} placeholder="Enter Codigo" name="codigo" className={i} onKeyUp={diff_record} onChange={change_error} />
+                                <div style={{color: 'red', display: 'none'}} className={'codigoerror'+i}>{codigoerror}</div>
                             </td>
                         </tr>
                     )
@@ -942,6 +998,16 @@ function Colorpicker({colap, addorder, ...props}) {
                     setCostoCompraError('')
                 }
             }
+        } else if(e.target.name === "cc") {
+            var p_leng5 = Products[colap].Size[parseInt(e.target.className)].length
+            for(var h=0; h<p_leng5-1; h++) {
+                if(e.target.value === "") {
+                    document.getElementsByClassName('edit'+e.target.id+'error'+e.target.className)[0].style.display = 'block'
+                    document.getElementsByClassName('edit'+e.target.id+'error'+e.target.className)[0].innerHTML = 'Required'
+                } else {
+                    document.getElementsByClassName('edit'+e.target.id+'error'+e.target.className)[0].innerHTML = ''
+                }
+            }
         }
 
         if(e.target.name === "costoMenor") {
@@ -954,6 +1020,16 @@ function Colorpicker({colap, addorder, ...props}) {
                     setCostoMenorError('')
                 }
             }
+        } else if(e.target.name === "cm") {
+            var p_leng6 = Products[colap].Size[parseInt(e.target.className)].length
+            for(var y=0; y<p_leng6-1; y++) {
+                if(e.target.value === "") {
+                    document.getElementsByClassName('edit'+e.target.id+'error'+e.target.className)[0].style.display = 'block'
+                    document.getElementsByClassName('edit'+e.target.id+'error'+e.target.className)[0].innerHTML = 'Required'
+                } else {
+                    document.getElementsByClassName('edit'+e.target.id+'error'+e.target.className)[0].innerHTML = ''
+                }
+            }
         }
 
         if(e.target.name === "codigo") {
@@ -964,6 +1040,16 @@ function Colorpicker({colap, addorder, ...props}) {
                     setCodigoError('Required')
                 } else {
                     setCodigoError('')
+                }
+            }
+        } else if(e.target.name === "co") {
+            var p_leng7 = Products[colap].Size[parseInt(e.target.className)].length
+            for(var m=0; m<p_leng7-1; m++) {
+                if(e.target.value === "") {
+                    document.getElementsByClassName('edit'+e.target.id+'error'+e.target.className)[0].style.display = 'block'
+                    document.getElementsByClassName('edit'+e.target.id+'error'+e.target.className)[0].innerHTML = 'Required'
+                } else {
+                    document.getElementsByClassName('edit'+e.target.id+'error'+e.target.className)[0].innerHTML = ''
                 }
             }
         }
