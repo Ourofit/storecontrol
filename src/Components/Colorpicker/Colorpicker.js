@@ -19,7 +19,7 @@ function Colorpicker({colap, addorder, ...props}) {
     const [precioVentaerror, setPrecioVentaError] = useState()
     const [costoCompraerror, setCostoCompraError] = useState()
     const [costoMenorerror, setCostoMenorError] = useState()
-    const [, setPriceError] = useState()
+    const [codigoerror, setCodigoError] = useState()
     const [u, setu] = useState('color')
     const [colorerror, setColorError] = useState()
     const [img_store, setImg_store] = useState([])
@@ -204,7 +204,7 @@ function Colorpicker({colap, addorder, ...props}) {
                         document.getElementsByName('precioVenta')[parseInt(e.target.className)].focus()
                     }
                 } else {
-                    console.log(document.getElementsByClassName('sizeerror'+e.target.className)[0].style.display)
+                    // console.log(document.getElementsByClassName('sizeerror'+e.target.className)[0].style.display)
                     if(document.getElementsByName('size')[parseInt(e.target.className)].value === '') {
                         setSizeError('Required')
                         document.getElementsByClassName('sizeerror'+e.target.className)[0].style.display = 'block'
@@ -259,8 +259,11 @@ function Colorpicker({colap, addorder, ...props}) {
                     if(document.getElementsByName('s')[parseInt(e.target.className)].value === '') {
                         document.getElementsByClassName('editsizeerror'+e.target.className)[0].style.display = 'block'
                     }
-                    if(e.target.value === '') {
+                    if(document.getElementsByName('q')[parseInt(e.target.className)].value === '') {
                         document.getElementsByClassName('editqtyerror'+e.target.className)[0].style.display = 'block'
+                    }
+                    if(e.target.value === '') {
+                        document.getElementsByClassName('editprecioVentaerror'+e.target.className)[0].style.display = 'block'
                     }
                 }
             }
@@ -301,27 +304,146 @@ function Colorpicker({colap, addorder, ...props}) {
                     if(document.getElementsByName('s')[parseInt(e.target.className)].value === '') {
                         document.getElementsByClassName('editsizeerror'+e.target.className)[0].style.display = 'block'
                     }
-                    if(e.target.value === '') {
+                    if(document.getElementsByName('q')[parseInt(e.target.className)].value === '') {
                         document.getElementsByClassName('editqtyerror'+e.target.className)[0].style.display = 'block'
+                    }
+                    if(document.getElementsByName('pv')[parseInt(e.target.className)].value === '') {
+                        document.getElementsByClassName('editprecioVentaerror'+e.target.className)[0].style.display = 'block'
+                    }
+                    if(e.target.value === '') {
+                        document.getElementsByClassName('editcostoCompraerror'+e.target.className)[0].style.display = 'block'
                     }
                 }
             }
             
-            if(e.target.name === "costoMenor") {
+            if(e.target.name === "costoMenor") { //--------------
+                if(e.target.value !== "" && 
+                    document.getElementsByName('size')[parseInt(e.target.className)].value !== ''  && 
+                    document.getElementsByName('qty')[parseInt(e.target.className)].value !== ''  && 
+                    document.getElementsByName('precioVenta')[parseInt(e.target.className)].value !== '' &&
+                    document.getElementsByName('costoCompra')[parseInt(e.target.className)].value !== '') {
+                    if(colap === 0) {
+                        document.getElementsByName('codigo')[parseInt(e.target.className)+colap].focus()
+                    } else {
+                        document.getElementsByName('codigo')[parseInt(e.target.className)].focus()
+                    }
+                } else {
+                    if(document.getElementsByName('size')[parseInt(e.target.className)].value === '') {
+                        setSizeError('Required')
+                        document.getElementsByClassName('sizeerror'+e.target.className)[0].style.display = 'block'
+                    }
+                    if(document.getElementsByName('qty')[parseInt(e.target.className)].value === '') {
+                        setQtyError('Required')
+                        document.getElementsByClassName('qtyerror'+e.target.className)[0].style.display = 'block'
+                    }
+                    if(document.getElementsByName('precioVenta')[parseInt(e.target.className)].value === '') {
+                        setPrecioVentaError('Required')
+                        document.getElementsByClassName('precioVentaerror'+e.target.className)[0].style.display = 'block'
+                    }
+                    if(document.getElementsByName('costoCompra')[parseInt(e.target.className)].value === '') {
+                        setCostoCompraError('Required')
+                        document.getElementsByClassName('costoCompraerror'+e.target.className)[0].style.display = 'block'
+                    }
+                    if(e.target.value === '') {
+                        setCostoMenorError('Required')
+                        document.getElementsByClassName('costoMenorerror'+e.target.className)[0].style.display = 'block'
+                    }
+                }
+                
                 // console.log(parseInt(e.target.className), pro_len)
+                // var s = document.getElementsByName('size')[parseInt(e.target.className)].value
+                // var q = document.getElementsByName('qty')[parseInt(e.target.className)].value
+                // var pv = document.getElementsByName('precioVenta')[parseInt(e.target.className)].value
+                // var cc = document.getElementsByName('costoCompra')[parseInt(e.target.className)].value
+                // if(e.target.value !== "" && s !== "" && q !== "" && sizeerror !== 'Already Exist') {
+                //     var len = Products[colap].Size[parseInt(e.target.className)].length
+
+                //     Products[colap].Size[parseInt(e.target.className)].splice(len-1, 0, s)
+                //     Products[colap].Stock[parseInt(e.target.className)][len-1] = parseInt(q)
+                //     Products[colap].precioVenta[parseInt(e.target.className)][len-1] = parseInt(pv)
+                //     Products[colap].costoCompra[parseInt(e.target.className)][len-1] = parseInt(cc)
+                //     Products[colap].costoMenor[parseInt(e.target.className)][len-1] = parseInt(e.target.value)
+                //     Products[colap].codigo[parseInt(e.target.className)][len-1] = Math.random().toString(16).slice(2)
+                //     // console.log(Products[colap])
+                //     setu('size')
+
+                //     await mainedit('update')
+
+                //     // storeproduct()
+
+                //     document.getElementsByName('size')[parseInt(e.target.className)].focus()
+                // } else {
+                //     if(document.getElementsByName('size')[parseInt(e.target.className)].value === '') {
+                //         setSizeError('Required')
+                //         document.getElementsByClassName('sizeerror'+e.target.className)[0].style.display = 'block'
+                //     }
+                //     if(document.getElementsByName('qty')[parseInt(e.target.className)].value === '') {
+                //         setQtyError('Required')
+                //         document.getElementsByClassName('qtyerror'+e.target.className)[0].style.display = 'block'
+                //     }
+                //     if(document.getElementsByName('precioVenta')[parseInt(e.target.className)].value === '') {
+                //         setPrecioVentaError('Required')
+                //         document.getElementsByClassName('precioVentaerror'+e.target.className)[0].style.display = 'block'
+                //     }
+                //     if(document.getElementsByName('costoCompra')[parseInt(e.target.className)].value === '') {
+                //         setCostoCompraError('Required')
+                //         document.getElementsByClassName('costoCompraerror'+e.target.className)[0].style.display = 'block'
+                //     }
+                //     if(e.target.value === '') {
+                //         setCostoMenorError('Required')
+                //         document.getElementsByClassName('costoMenorerror'+e.target.className)[0].style.display = 'block'
+                //     }
+                //     // if(s === '') {
+                //     //     setSizeError('Required')
+                //     //     document.getElementsByClassName('sizeerror'+e.target.className)[0].style.display = 'block'
+                //     // }
+                //     // if(q === '') {
+                //     //     setQtyError('Required')
+                //     //     document.getElementsByClassName('qtyerror'+e.target.className)[0].style.display = 'block'
+                //     // }
+                //     // if(e.target.value === '') {
+                //     //     setPrecioVentaError('Required')
+                //     //     document.getElementsByClassName('precioVentaerror'+e.target.className)[0].style.display = 'block'
+                //     // }
+                // }
+            } else if(e.target.name === 'cm') {
+                var editqtyerror3 = document.getElementsByClassName('edit'+e.target.id+'error'+e.target.className)[0].innerHTML
+                if(e.target.value !== "" || (e.target.value !== "" && document.getElementsByName('s')[parseInt(e.target.className)].value !== '' && editqtyerror3 === 'Required')) {
+                    document.getElementsByName('co')[0].focus()
+                } else {
+                    if(document.getElementsByName('s')[parseInt(e.target.className)].value === '') {
+                        document.getElementsByClassName('editsizeerror'+e.target.className)[0].style.display = 'block'
+                    }
+                    if(document.getElementsByName('q')[parseInt(e.target.className)].value === '') {
+                        document.getElementsByClassName('editqtyerror'+e.target.className)[0].style.display = 'block'
+                    }
+                    if(document.getElementsByName('pv')[parseInt(e.target.className)].value === '') {
+                        document.getElementsByClassName('editprecioVentaerror'+e.target.className)[0].style.display = 'block'
+                    }
+                    if(document.getElementsByName('cc')[parseInt(e.target.className)].value === '') {
+                        document.getElementsByClassName('editcostoCompraerror'+e.target.className)[0].style.display = 'block'
+                    }
+                    if(e.target.value === '') {
+                        document.getElementsByClassName('editcostoMenorerror'+e.target.className)[0].style.display = 'block'
+                    }
+                }
+            }
+
+            if(e.target.name === "codigo") {
                 var s = document.getElementsByName('size')[parseInt(e.target.className)].value
                 var q = document.getElementsByName('qty')[parseInt(e.target.className)].value
                 var pv = document.getElementsByName('precioVenta')[parseInt(e.target.className)].value
                 var cc = document.getElementsByName('costoCompra')[parseInt(e.target.className)].value
-                if(e.target.value !== "" && s !== "" && q !== "" && sizeerror !== 'Already Exist') {
+                var cm = document.getElementsByName('costoMenor')[parseInt(e.target.className)].value
+                if(e.target.value !== "" && s !== "" && q !== "" && pv !== "" && cc !== '' && cm !== '' && sizeerror !== 'Already Exist') {
                     var len = Products[colap].Size[parseInt(e.target.className)].length
 
                     Products[colap].Size[parseInt(e.target.className)].splice(len-1, 0, s)
                     Products[colap].Stock[parseInt(e.target.className)][len-1] = parseInt(q)
                     Products[colap].precioVenta[parseInt(e.target.className)][len-1] = parseInt(pv)
                     Products[colap].costoCompra[parseInt(e.target.className)][len-1] = parseInt(cc)
-                    Products[colap].costoMenor[parseInt(e.target.className)][len-1] = parseInt(e.target.value)
-                    Products[colap].codigo[parseInt(e.target.className)][len-1] = Math.random().toString(16).slice(2)
+                    Products[colap].costoMenor[parseInt(e.target.className)][len-1] = parseInt(cm)
+                    Products[colap].codigo[parseInt(e.target.className)][len-1] = e.target.value
                     // console.log(Products[colap])
                     setu('size')
 
@@ -347,9 +469,13 @@ function Colorpicker({colap, addorder, ...props}) {
                         setCostoCompraError('Required')
                         document.getElementsByClassName('costoCompraerror'+e.target.className)[0].style.display = 'block'
                     }
-                    if(e.target.value === '') {
+                    if(document.getElementsByName('costoMenor')[parseInt(e.target.className)].value === '') {
                         setCostoMenorError('Required')
                         document.getElementsByClassName('costoMenorerror'+e.target.className)[0].style.display = 'block'
+                    }
+                    if(e.target.value === '') {
+                        setCodigoError('Required')
+                        document.getElementsByClassName('codigoerror'+e.target.className)[0].style.display = 'block'
                     }
                     // if(s === '') {
                     //     setSizeError('Required')
@@ -364,15 +490,17 @@ function Colorpicker({colap, addorder, ...props}) {
                     //     document.getElementsByClassName('precioVentaerror'+e.target.className)[0].style.display = 'block'
                     // }
                 }
-            } else if(e.target.name === 'cm') {
+            } else if(e.target.name === 'co') {
                 var si = document.getElementsByName('s')[0].value
                 var qt = document.getElementsByName('q')[0].value
                 var pvs = document.getElementsByName('pv')[0].value
                 var ccs = document.getElementsByName('cc')[0].value
+                var cms = document.getElementsByName('cm')[0].value
                 var editserror = document.getElementsByClassName('editsizeerror'+e.target.className)[0].innerHTML
-                if(e.target.value !== "" && si !== "" && qt !== "" && pvs !== "" && ccs !== "" && editserror !== 'Already Exist') {
-                    // console.log(oldPro[colap].Size[i][sec_j]+colap+i+sec_j)
-                    document.getElementsByClassName(oldPro[colap].Size[i][sec_j]+colap+i+sec_j)[sec_tot].nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.innerHTML = parseInt(e.target.value)
+                if(e.target.value !== "" && si !== "" && qt !== "" && pvs !== "" && ccs !== "" && cms !== "" && editserror !== 'Already Exist') {
+                    // console.log(document.getElementsByClassName(oldPro[colap].Size[i][sec_j]+colap+i+sec_j)[sec_tot].nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.innerHTML)
+                    document.getElementsByClassName(oldPro[colap].Size[i][sec_j]+colap+i+sec_j)[sec_tot].nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.innerHTML = e.target.value
+                    document.getElementsByClassName(oldPro[colap].Size[i][sec_j]+colap+i+sec_j)[sec_tot].nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.innerHTML = parseInt(cms)
                     document.getElementsByClassName(oldPro[colap].Size[i][sec_j]+colap+i+sec_j)[sec_tot].nextElementSibling.nextElementSibling.nextElementSibling.innerHTML = parseInt(ccs)
                     document.getElementsByClassName(oldPro[colap].Size[i][sec_j]+colap+i+sec_j)[sec_tot].nextElementSibling.nextElementSibling.innerHTML = parseInt(pvs)
                     document.getElementsByClassName(oldPro[colap].Size[i][sec_j]+colap+i+sec_j)[sec_tot].nextElementSibling.innerHTML = parseInt(qt)
@@ -382,7 +510,8 @@ function Colorpicker({colap, addorder, ...props}) {
                     Products[colap].Stock[parseInt(e.target.className)][sec_j] = parseInt(qt)
                     Products[colap].precioVenta[parseInt(e.target.className)][sec_j] = parseInt(pvs)
                     Products[colap].costoCompra[parseInt(e.target.className)][sec_j] = parseInt(ccs)
-                    Products[colap].costoMenor[parseInt(e.target.className)][sec_j] = parseInt(e.target.value)
+                    Products[colap].costoMenor[parseInt(e.target.className)][sec_j] = parseInt(cms)
+                    Products[colap].codigo[parseInt(e.target.className)][sec_j] = e.target.value
                     
                     setu('size')
                     upd('size')
@@ -425,12 +554,15 @@ function Colorpicker({colap, addorder, ...props}) {
                         document.getElementsByClassName('editcostoCompraerror'+e.target.className)[0].innerHTML = 'Required'
                         document.getElementsByClassName('editcostoCompraerror'+e.target.className)[0].style.display = 'block'
                     }
-                    if(e.target.value === '') {
+                    if(cms === '') {
                         document.getElementsByClassName('editcostoMenorerror'+e.target.className)[0].innerHTML = 'Required'
                         document.getElementsByClassName('editcostoMenorerror'+e.target.className)[0].style.display = 'block'
                     }
+                    if(e.target.value === '') {
+                        document.getElementsByClassName('editcodigoerror'+e.target.className)[0].innerHTML = 'Required'
+                        document.getElementsByClassName('editcodigoerror'+e.target.className)[0].style.display = 'block'
+                    }
                 }
-
             }
         }
     }
@@ -481,6 +613,14 @@ function Colorpicker({colap, addorder, ...props}) {
                             // console.log(m,v)
                             // console.log(tot)
                             // console.log(document.getElementsByClassName(Products[colap].Size[m][v])[tot].parentElement)
+
+                            document.getElementsByClassName(Products[colap].Size[i][j]+colap+i+j)[tot].nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.innerHTML = `
+                                <input style="width: 100px" type="text" min="0" placeholder="Enter Codigo" id="codigo" name="co" class=${i} value=${Products[colap].codigo[i][j]} />
+                                <div style="color: red; display: none;" class=${'editcodigoerror'+i}></div>
+                            `
+                            var codigo_input = document.getElementById('codigo')
+                            codigo_input.addEventListener('keyup', (e) => diff_record(e, i, j))
+                            codigo_input.addEventListener('input', change_error)
 
                             document.getElementsByClassName(Products[colap].Size[i][j]+colap+i+j)[tot].nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.innerHTML = `
                                 <input style="width: 100px" type="number" min="0" placeholder="Enter Costo Menor" id="costoMenor" name="cm" class=${i} value=${Products[colap].costoMenor[i][j]} />
@@ -533,6 +673,14 @@ function Colorpicker({colap, addorder, ...props}) {
                 a = m
             }
         } else {
+            document.getElementsByClassName(Products[colap].Size[i][j]+colap+i+j)[tot].nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.innerHTML = `
+                <input style="width: 100px" type="text" min="0" placeholder="Enter Codigo" id="codigo" name="co" class=${i} value=${Products[colap].codigo[i][j]} />
+                <div style="color: red; display: none;" class=${'editcodigoerror'+i}></div>
+            `
+            var co_input = document.getElementById('codigo')
+            co_input.addEventListener('keyup', (e) => diff_record(e, i, j))
+            co_input.addEventListener('input', change_error)
+
             document.getElementsByClassName(Products[colap].Size[i][j]+colap+i+j)[tot].nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.innerHTML = `
                 <input style="width: 100px" type="number" min="0" placeholder="Enter Costo Menor" id="costoMenor" name="cm" class=${i} value=${Products[colap].costoMenor[i][j]} />
                 <div style="color: red; display: none;" class=${'editcostoMenorerror'+i}></div>
@@ -659,6 +807,10 @@ function Colorpicker({colap, addorder, ...props}) {
                                 <input style={{width: '100px'}} type="number" min={0} placeholder="Enter Costo Menor" name="costoMenor" className={i} onKeyUp={diff_record} onChange={change_error} />
                                 <div style={{color: 'red', display: 'none'}} className={'costoMenorerror'+i}>{costoMenorerror}</div>
                             </td>
+                            <td>
+                                <input style={{width: '100px'}} type="text" min={0} placeholder="Enter Codigo" name="codigo" className={i} onKeyUp={diff_record} onChange={change_error} />
+                                <div style={{color: 'red', display: 'none'}} className={'codigoerror'+i}>{codigoerror}</div>
+                            </td>
                         </tr>
                     )
                 )
@@ -737,6 +889,10 @@ function Colorpicker({colap, addorder, ...props}) {
                                 <input style={{width: '100px'}} type="number" min={0} placeholder="Enter Costo Menor" name="costoMenor" className={i} onKeyUp={diff_record} onChange={change_error} />
                                 <div style={{color: 'red', display: 'none'}} className={'costoMenorerror'+i}>{costoMenorerror}</div>
                             </td>
+                            <td className='text-center align-middle'>
+                                <input style={{width: '100px'}} type="text" min={0} placeholder="Enter Codigo" name="codigo" className={i} onKeyUp={diff_record} onChange={change_error} />
+                                <div style={{color: 'red', display: 'none'}} className={'codigoerror'+i}>{codigoerror}</div>
+                            </td>
                         </tr>
                     )
                 )
@@ -810,19 +966,85 @@ function Colorpicker({colap, addorder, ...props}) {
             }
         }
 
-        if(e.target.name === "price") {
+        if(e.target.name === "precioVenta") {
             var p_leng = Products[colap].Size[parseInt(e.target.className)].length
             for(var r=0; r<p_leng-1; r++) {
                 if(e.target.value === "") {
                     document.getElementsByClassName(e.target.name+'error'+e.target.className)[0].style.display = 'block'
-                    setPriceError('Required')
+                    setPrecioVentaError('Required')
                 } else {
-                    setPriceError('')
+                    setPrecioVentaError('')
                 }
             }
-        } else if(e.target.name === "p") {
+        } else if(e.target.name === "pv") {
             var p_leng1 = Products[colap].Size[parseInt(e.target.className)].length
             for(var s=0; s<p_leng1-1; s++) {
+                if(e.target.value === "") {
+                    document.getElementsByClassName('edit'+e.target.id+'error'+e.target.className)[0].style.display = 'block'
+                    document.getElementsByClassName('edit'+e.target.id+'error'+e.target.className)[0].innerHTML = 'Required'
+                } else {
+                    document.getElementsByClassName('edit'+e.target.id+'error'+e.target.className)[0].innerHTML = ''
+                }
+            }
+        }
+
+        if(e.target.name === "costoCompra") {
+            var p_leng2 = Products[colap].Size[parseInt(e.target.className)].length
+            for(var t=0; t<p_leng2-1; t++) {
+                if(e.target.value === "") {
+                    document.getElementsByClassName(e.target.name+'error'+e.target.className)[0].style.display = 'block'
+                    setCostoCompraError('Required')
+                } else {
+                    setCostoCompraError('')
+                }
+            }
+        } else if(e.target.name === "cc") {
+            var p_leng5 = Products[colap].Size[parseInt(e.target.className)].length
+            for(var h=0; h<p_leng5-1; h++) {
+                if(e.target.value === "") {
+                    document.getElementsByClassName('edit'+e.target.id+'error'+e.target.className)[0].style.display = 'block'
+                    document.getElementsByClassName('edit'+e.target.id+'error'+e.target.className)[0].innerHTML = 'Required'
+                } else {
+                    document.getElementsByClassName('edit'+e.target.id+'error'+e.target.className)[0].innerHTML = ''
+                }
+            }
+        }
+
+        if(e.target.name === "costoMenor") {
+            var p_leng3 = Products[colap].Size[parseInt(e.target.className)].length
+            for(var u=0; u<p_leng3-1; u++) {
+                if(e.target.value === "") {
+                    document.getElementsByClassName(e.target.name+'error'+e.target.className)[0].style.display = 'block'
+                    setCostoMenorError('Required')
+                } else {
+                    setCostoMenorError('')
+                }
+            }
+        } else if(e.target.name === "cm") {
+            var p_leng6 = Products[colap].Size[parseInt(e.target.className)].length
+            for(var y=0; y<p_leng6-1; y++) {
+                if(e.target.value === "") {
+                    document.getElementsByClassName('edit'+e.target.id+'error'+e.target.className)[0].style.display = 'block'
+                    document.getElementsByClassName('edit'+e.target.id+'error'+e.target.className)[0].innerHTML = 'Required'
+                } else {
+                    document.getElementsByClassName('edit'+e.target.id+'error'+e.target.className)[0].innerHTML = ''
+                }
+            }
+        }
+
+        if(e.target.name === "codigo") {
+            var p_leng4 = Products[colap].Size[parseInt(e.target.className)].length
+            for(var z=0; z<p_leng4-1; z++) {
+                if(e.target.value === "") {
+                    document.getElementsByClassName(e.target.name+'error'+e.target.className)[0].style.display = 'block'
+                    setCodigoError('Required')
+                } else {
+                    setCodigoError('')
+                }
+            }
+        } else if(e.target.name === "co") {
+            var p_leng7 = Products[colap].Size[parseInt(e.target.className)].length
+            for(var m=0; m<p_leng7-1; m++) {
                 if(e.target.value === "") {
                     document.getElementsByClassName('edit'+e.target.id+'error'+e.target.className)[0].style.display = 'block'
                     document.getElementsByClassName('edit'+e.target.id+'error'+e.target.className)[0].innerHTML = 'Required'

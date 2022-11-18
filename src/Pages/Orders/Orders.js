@@ -27,10 +27,22 @@ function Orders({ setOrderDetails, setOrdering, boxes = false, employee = null, 
 	const [details_data, setDetailsData] = useState(null)
 	const [order, setOrder] = useState(null)
 	const [particular, setparticular] = useState(null)
-	const [searching_val, ] = useState('Nombre Cliente')
+	const [searching_val, setSearching_val] = useState('Nombre Cliente')
 	const [return_val, setReturnVal] = useState()
 	const [returned_data, setReturnedData] = useState(null)
 	const [product, setProduct] = useState(null)
+
+	const [year_sel, setYear_sel] = useState()
+	const [month_sel, setMonth_sel] = useState()
+	const [day_sel, setDay_sel] = useState()
+
+	const [month_dis, setMonth_dis] = useState(true)
+	const [day_dis, setDay_dis] = useState(true)
+
+	const [year, setYear] = useState('')
+	const [month, setMonth] = useState('')
+	const [day, setDay] = useState('')
+
 	const loop = useRef(true)
 
 	useEffect(() => {
@@ -52,6 +64,10 @@ function Orders({ setOrderDetails, setOrdering, boxes = false, employee = null, 
 		setProduct(result)
 
 		async function order_data() {
+			var y = Orders.map(ele => new Date(ele.Fecha).getFullYear())
+			var whole_year = []
+			y.filter(yea => !whole_year.includes(yea) ? whole_year.push(yea) : null)
+			setYear_sel(whole_year)
 			// await store_Orders('Orders', Status, Orders, allorders, notify)
 			// if(Orders.length === 0) {
 			// 	if(Status) {
@@ -91,7 +107,7 @@ function Orders({ setOrderDetails, setOrdering, boxes = false, employee = null, 
 			// 	}
 			// }
 		}
-		if (loop.current) {
+		if (loop.current && Orders.length !== 0) {
 			order_data()
 			loop.current = false
 		}
@@ -349,6 +365,55 @@ function Orders({ setOrderDetails, setOrdering, boxes = false, employee = null, 
 		}
 	}
 
+	const makeNumArr = num => new Array(num).fill("").map((_, i) => i + 1);
+
+	const sorting_year = (e) => {
+		setYear(e.target.value)
+		if(e.target.value === 'All') {
+			setAllOrders(Orders)
+			setMonth_dis(true)
+			setDay_dis(true)
+		} else {
+			setAllOrders(Orders.filter(ele => new Date(ele.Fecha).getFullYear() === parseInt(e.target.value)))
+			setMonth_dis(false)
+		}
+		setMonth('')
+		setDay('')
+		setMonth_sel(["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"])
+	}
+
+	const sorting_month = (e) => {
+		setMonth(e.target.value)
+		if(e.target.value === 'All') {
+			setAllOrders(Orders.filter(ele => new Date(ele.Fecha).getFullYear() === parseInt(year)))
+			setDay_dis(true)
+		} else {
+			setAllOrders(Orders.filter(ele => 
+				new Date(ele.Fecha).getFullYear() === parseInt(year) &&
+				new Date(ele.Fecha).getMonth() === month_sel.indexOf(e.target.value)
+			))
+			setDay_dis(false)
+		}
+		setDay('')
+		setDay_sel(makeNumArr(new Date(year, month_sel.indexOf(e.target.value)+1, 0).getDate()))
+	}
+
+	const sorting_day = (e) => {
+		setDay(e.target.value)
+		if(e.target.value === 'All') {
+			setAllOrders(Orders.filter(ele => 
+				new Date(ele.Fecha).getFullYear() === parseInt(year) &&
+				new Date(ele.Fecha).getMonth() === month_sel.indexOf(month)
+			))
+		} else {
+			setAllOrders(Orders.filter(ele => 
+				new Date(ele.Fecha).getFullYear() === parseInt(year) &&
+				new Date(ele.Fecha).getMonth() === month_sel.indexOf(month) &&
+				new Date(ele.Fecha).getDate() === parseInt(e.target.value)
+			))
+		}
+	}
+
 	// ----------------OVERALL DATA------------------------
 	let cantVentas = Orders.length;
 	const cobradoVentas =()=>{
@@ -398,14 +463,70 @@ function Orders({ setOrderDetails, setOrdering, boxes = false, employee = null, 
 								{/* <NewProduct details_data={details_data} setDetailsData={setDetailsData}  /> */}
 								<button type='button' className='btn btn-dark' data-toggle='modal' data-target='#adminorder'>Nueva Venta</button>
 							</div>
-							<div className='col-md text-right my-2'>
-								<div className='d-flex justify-content-end'>
-									<div className='search'>
-										<input type='text' className='txt_input' placeholder={`Search by ${searching_val}`} defaultValue={search} onChange={onChange} />
-										<button className='btn'>
-											<FontAwesomeIcon icon="search" size='lg' />
-										</button>
-									</div>
+							<div className='col-md text-right my-2 d-flex justify-content-end align-items-center'>
+								<div className="d-flex justify-content-end">
+									<select className="search_day" onChange={(e) => setSearching_val(e.target.value)}>
+										<option name="Nombre Cliente" value="Nombre Cliente">Nombre Cliente</option>
+										{
+											JSON.parse(localStorage.getItem("DepositoLogin")).Type !== "Manager"
+											? <option name="Deposito" value="Deposito">Deposito</option>
+											: null
+										}
+										<option name="Date" value="Date">Date</option>
+										{/* <option name="Categoria" value="Categoria">Categoria</option> */}
+									</select>
+									{
+										searching_val !== 'Date'
+										? <div className='d-flex justify-content-end'>
+											<div className='search'>
+												<input type='text' className='txt_input' placeholder={`Search by ${searching_val}`} defaultValue={search} onChange={onChange} />
+												<button className='btn'>
+													<FontAwesomeIcon icon="search" size='lg' />
+												</button>
+											</div>
+										</div>
+										: <div>
+											<select className="p-1" value={year} onChange={sorting_year}>
+												<option value='' disabled>Year</option>
+												{
+													year_sel
+													? <>
+														<option value='All'>All</option>
+														{
+															year_sel?.map(yea => <option value={yea} key={yea}>{yea}</option>)
+														}
+													</>
+													: null
+												}
+											</select>
+											<select className="p-1" value={month} onChange={sorting_month} disabled={month_dis}>
+												<option value='' disabled>Month</option>
+												{
+													month_sel
+													? <>
+														<option value='All'>All</option>
+														{
+															month_sel?.map(mont => <option value={mont} key={mont}>{mont}</option>)
+														}
+													</>
+													: null
+												}
+											</select>
+											<select className="p-1" value={day} onChange={sorting_day} disabled={day_dis}>
+												<option value={''} disabled>Day</option>
+												{
+													day_sel
+													? <>
+														<option value='All'>All</option>
+														{day_sel?.map(da => 
+															<option value={da} key={da}>{da}</option>
+														)}
+													</>
+													: null
+												}
+											</select>
+										</div>
+									}
 								</div>
 							</div>
 						</div>
