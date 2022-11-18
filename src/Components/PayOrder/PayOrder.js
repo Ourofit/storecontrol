@@ -8,8 +8,7 @@ import { connect } from "react-redux";
 // import NotifyAuto from "../SendMessage/NotifyAuto";
 
 // prettier-ignore
-function PayOrder({ details_data, setDetailsData, order, setOrder, ...props }) {
-    // console.log('order', order)
+function PayOrder({ details_data, setDetailsData, order, setOrder, setOrderReturn, setOrder_Data, returnProduct, return_val, setReturnedData=null, setOrderDetails=null, returned_data=null, ...props }) {
     
     const { Products, allproduct, Orders, allorders, Sales_Activity, allsalesactivity, notify, Notific, Status } = props
     // if(details_data !== null) {
@@ -36,6 +35,10 @@ function PayOrder({ details_data, setDetailsData, order, setOrder, ...props }) {
     }
 
     useEffect(() => {
+        if(order?.Metodo_de_Pago !== undefined) {
+            setPayment(order.Metodo_de_Pago)
+            setClientName(order.Client_name)
+        }
         async function fetchSale() {
             if(Sales_Activity.length === 0) {
                 if(Status) {
@@ -62,7 +65,7 @@ function PayOrder({ details_data, setDetailsData, order, setOrder, ...props }) {
             fetchSale()
             loop.current = false
         }
-    }, [Sales_Activity, allsalesactivity, Status])
+    }, [Sales_Activity, allsalesactivity, Status, order])
 
     const createOrder = async (e, val) => {
         e.preventDefault()
@@ -80,110 +83,206 @@ function PayOrder({ details_data, setDetailsData, order, setOrder, ...props }) {
                 o['Metodo_de_Pago'] = payment
                 o['Client_name'] = client_name
                 if(Status){
-                    await axios.post('http://localhost:5000/ordermaster/new', o)
-                        .then(async (item) => {
-                            for(let i=0; i<details_data.length; i++) {
-                                details_data[i].Order_id = item.data.Order_id
-                            }
-                            await axios.post('http://localhost:5000/orderproduct/new', details_data)
-                                .then(async (item2) => {
-                                    for(let i=0; i<details_data.length; i++) {
-                                        var stock = Products.filter((p) => p.Product_id === details_data[i].Product_id)[0].Stock
-                                        var total_stock = stock[details_data[i].parentArray][details_data[i].childArray] - details_data[i].Qty
-                                        stock[details_data[i].parentArray][details_data[i].childArray] = total_stock
-                                        var req_data = {
-                                            Product_id: details_data[i].Product_id,
-                                            Stock: JSON.stringify(stock)
-                                        }
-
-                                        delete details_data[i].Order_id
-                                        var pro_index = Products.findIndex(x => x.Product_id === details_data[i].Product_id)
-                                        Products[pro_index].Stock = stock
-                                        allproduct(Products)
-                                        if(window.desktop) {
-                                            await window.api.addData(Products, "Products")
-                                        }
-                                        
-                                        await axios.put('http://localhost:5000/product/quantity', req_data)
-                                        await axios.get('http://localhost:5000/ordermaster')
-                                            .then(async prod => {
-                                                prod.data.sort(function (d1, d2) {
-                                                    return new Date(d2.createdAt) - new Date(d1.createdAt);
-                                                });
-                                                allorders(prod.data)
-                                                if(window.desktop) {
-                                                    await window.api.addData(prod.data, "Orders")
-                                                }
-                                                var d = new Date()
-                                                var year = d.getFullYear()
-                                                var month = d.getMonth()
-                                                var date = d.getDate()
-                                                var tot = 0
-                                                for(var q=0; q<prod.data.length; q++) {
-                                                    if(new Date(prod.data[q].createdAt).toDateString() === new Date().toDateString()) {
-                                                        tot = prod.data[q].Total_price + tot
-                                                    }
-                                                }
-                                                var index = Sales_Activity.findIndex(item => item.year === year)
-                                                if(typeof Sales_Activity[index][months_data[month]] === 'string') {
-                                                    for(var w=0; w < Sales_Activity.length; w++) {
-                                                        for(var e=0; e < months_data.length; e++) {
-                                                            Sales_Activity[w][months_data[e]] = JSON.parse(Sales_Activity[w][months_data[e]])
-                                                        }
-                                                    }
-                                                }
-                                                Sales_Activity[index][months_data[month]][date-1].sales = tot
-                                                for(var t=0; t < Sales_Activity.length; t++) {
-                                                    for(var m=0; m < months_data.length; m++) {
-                                                        Sales_Activity[t][months_data[m]] = JSON.stringify(Sales_Activity[t][months_data[m]])
-                                                    }
-                                                }
-                                                await axios.put('http://localhost:5000/salesactivity/day', {
-                                                    Sales_id: Sales_Activity[index].Sales_id,
-                                                    ...Sales_Activity[index]
-                                                })
-                                                await axios.get('http://localhost:5000/salesactivity')
-                                                    .then(async item => {
-                                                        if(typeof Sales_Activity[index][months_data[month]] === 'string') {
-                                                            for(var t=0; t < item.data.length; t++) {
-                                                                for(var m=0; m < months_data.length; m++) {
-                                                                    item.data[t][months_data[m]] = JSON.parse(item.data[t][months_data[m]])
-                                                                }
-                                                            }
-                                                        }
-                                                        allsalesactivity(item.data)
-                                                    })
-                                            })
+                    if(Orders.find(ele => ele.Order_id === o.Order_id) !== undefined) {
+                        await axios.put('http://localhost:5000/ordermaster/update', o)
+                            .then(async (item) => {
+                                var data_ord = []
+                                for(var d=0; d<details_data.length; d++) {
+                                    if(details_data[d].Order_pro_id === undefined) {
+                                        data_ord.push(details_data[d])
                                     }
-                                })
-                                //-----------------Notification---------------------
-                                for(let i=0; i<details_data.length; i++) {
-                                    var code = Products?.filter((p) => p.Product_id === details_data[i]?.Product_id)[0]
-                                    for(var c=0; c<code.codigo.length; c++) {
-                                        var index_code = code.codigo[c].findIndex(s => s === details_data[i].code)
-                                        if(index_code !== -1) {
-                                            var nombre = code.nombre
-                                            var Stock = code.Stock[c][index_code]
-                                            var Color = code.Color[c]
-                                            var Size = code.Size[c][index_code]
-                                            if(Stock <= 3) {
-                                                axios.post("http://localhost:5000/notification/new",{
-                                                    Title: Stock === 0 ? 'Stock danger' : Stock <= 3 ? 'Stock warning': null,
-                                                    Message:  Stock === 0 ? `El producto de ${nombre} (${Color}, ${Size}) se agoto. cargue mas stock !` : Stock <= 3 ? `El producto de ${nombre} (${Color}, ${Size}) se esta apunto de acabar. cargue mas stock !`:  null,
-                                                    Date: new Date().toLocaleString()
-                                                }).then((item) => {
-                                                    var note = Notific
-                                                    note.push(item.data)
-                                                    note.sort(function (d1, d2) {
+                                }
+                                await axios.post('http://localhost:5000/orderproduct/new', data_ord)
+                                    .then(async (item2) => {
+                                        var items_order = details_data.filter(ele => ele.Order_pro_id !== undefined)
+                                        for(var q=0; q < item2.data.length; q++) {
+                                            items_order.push(item2.data[q])
+                                        }
+                                        setDetailsData(items_order)
+                                        for(let i=0; i<data_ord.length; i++) {
+                                            var stock = Products.filter((p) => p.Product_id === data_ord[i].Product_id)[0].Stock
+                                            var total_stock = stock[data_ord[i].parentArray][data_ord[i].childArray] - data_ord[i].Qty
+                                            stock[data_ord[i].parentArray][data_ord[i].childArray] = total_stock
+                                            var req_data = {
+                                                Product_id: data_ord[i].Product_id,
+                                                Stock: JSON.stringify(stock)
+                                            }
+    
+                                            delete data_ord[i].Order_id
+                                            var pro_index = Products.findIndex(x => x.Product_id === data_ord[i].Product_id)
+                                            Products[pro_index].Stock = stock
+                                            allproduct(Products)
+                                            if(window.desktop) {
+                                                await window.api.addData(Products, "Products")
+                                            }
+    
+                                            await axios.put('http://localhost:5000/product/quantity', req_data)
+                                            await axios.get('http://localhost:5000/ordermaster')
+                                                .then(async prod => {
+                                                    prod.data.sort(function (d1, d2) {
                                                         return new Date(d2.createdAt) - new Date(d1.createdAt);
                                                     });
-                                                    notify(note);
-                                                }).catch((err) => { console.log(err) })
+                                                    allorders(prod.data)
+                                                    setOrder_Data([prod.data.find(ele => ele.Order_id === order.Order_id)])
+                                                    // console.log('PayOrder', prod.data.find(ele => ele.Order_id === order.Order_id).order_product)
+                                                    // setDetailsData(prod.data.find(ele => ele.Order_id === order.Order_id).order_product)
+                                                    setOrderReturn({
+                                                        ...order, 
+                                                        order_product: items_order,
+                                                        Total_price: prod.data.find(ele => ele.Order_id === order.Order_id).Total_price
+                                                    })
+                                                    if(window.desktop) {
+                                                        await window.api.addData(prod.data, "Orders")
+                                                    }
+                                                    var da = new Date()
+                                                    var year = da.getFullYear()
+                                                    var month = da.getMonth()
+                                                    var date = da.getDate()
+                                                    var tot = 0
+                                                    for(var q=0; q<prod.data.length; q++) {
+                                                        if(new Date(prod.data[q].createdAt).toDateString() === new Date().toDateString()) {
+                                                            tot = prod.data[q].Total_price + tot
+                                                        }
+                                                    }
+                                                    var index = Sales_Activity.findIndex(item => item.year === year)
+                                                    if(typeof Sales_Activity[index][months_data[month]] === 'string') {
+                                                        for(var w=0; w < Sales_Activity.length; w++) {
+                                                            for(var e=0; e < months_data.length; e++) {
+                                                                Sales_Activity[w][months_data[e]] = JSON.parse(Sales_Activity[w][months_data[e]])
+                                                            }
+                                                        }
+                                                    }
+                                                    Sales_Activity[index][months_data[month]][date-1].sales = tot
+                                                    for(var t=0; t < Sales_Activity.length; t++) {
+                                                        for(var m=0; m < months_data.length; m++) {
+                                                            Sales_Activity[t][months_data[m]] = JSON.stringify(Sales_Activity[t][months_data[m]])
+                                                        }
+                                                    }
+                                                    await axios.put('http://localhost:5000/salesactivity/day', {
+                                                        Sales_id: Sales_Activity[index].Sales_id,
+                                                        ...Sales_Activity[index]
+                                                    })
+                                                    await axios.get('http://localhost:5000/salesactivity')
+                                                        .then(async item => {
+                                                            if(typeof Sales_Activity[index][months_data[month]] === 'string') {
+                                                                for(var t=0; t < item.data.length; t++) {
+                                                                    for(var m=0; m < months_data.length; m++) {
+                                                                        item.data[t][months_data[m]] = JSON.parse(item.data[t][months_data[m]])
+                                                                    }
+                                                                }
+                                                            }
+                                                            allsalesactivity(item.data)
+                                                        })
+                                                })
+                                        }
+                                    })
+                            })
+                    } else {
+                        await axios.post('http://localhost:5000/ordermaster/new', o)
+                            .then(async (item) => {
+                                for(let i=0; i<details_data.length; i++) {
+                                    details_data[i].Order_id = item.data.Order_id
+                                }
+                                await axios.post('http://localhost:5000/orderproduct/new', details_data)
+                                    .then(async (item2) => {
+                                        for(let i=0; i<details_data.length; i++) {
+                                            var stock = Products.filter((p) => p.Product_id === details_data[i].Product_id)[0].Stock
+                                            var total_stock = stock[details_data[i].parentArray][details_data[i].childArray] - details_data[i].Qty
+                                            stock[details_data[i].parentArray][details_data[i].childArray] = total_stock
+                                            var req_data = {
+                                                Product_id: details_data[i].Product_id,
+                                                Stock: JSON.stringify(stock)
+                                            }
+    
+                                            delete details_data[i].Order_id
+                                            var pro_index = Products.findIndex(x => x.Product_id === details_data[i].Product_id)
+                                            Products[pro_index].Stock = stock
+                                            allproduct(Products)
+                                            if(window.desktop) {
+                                                await window.api.addData(Products, "Products")
+                                            }
+                                            
+                                            await axios.put('http://localhost:5000/product/quantity', req_data)
+                                            await axios.get('http://localhost:5000/ordermaster')
+                                                .then(async prod => {
+                                                    prod.data.sort(function (d1, d2) {
+                                                        return new Date(d2.createdAt) - new Date(d1.createdAt);
+                                                    });
+                                                    allorders(prod.data)
+                                                    if(window.desktop) {
+                                                        await window.api.addData(prod.data, "Orders")
+                                                    }
+                                                    var d = new Date()
+                                                    var year = d.getFullYear()
+                                                    var month = d.getMonth()
+                                                    var date = d.getDate()
+                                                    var tot = 0
+                                                    for(var q=0; q<prod.data.length; q++) {
+                                                        if(new Date(prod.data[q].createdAt).toDateString() === new Date().toDateString()) {
+                                                            tot = prod.data[q].Total_price + tot
+                                                        }
+                                                    }
+                                                    var index = Sales_Activity.findIndex(item => item.year === year)
+                                                    if(typeof Sales_Activity[index][months_data[month]] === 'string') {
+                                                        for(var w=0; w < Sales_Activity.length; w++) {
+                                                            for(var e=0; e < months_data.length; e++) {
+                                                                Sales_Activity[w][months_data[e]] = JSON.parse(Sales_Activity[w][months_data[e]])
+                                                            }
+                                                        }
+                                                    }
+                                                    Sales_Activity[index][months_data[month]][date-1].sales = tot
+                                                    for(var t=0; t < Sales_Activity.length; t++) {
+                                                        for(var m=0; m < months_data.length; m++) {
+                                                            Sales_Activity[t][months_data[m]] = JSON.stringify(Sales_Activity[t][months_data[m]])
+                                                        }
+                                                    }
+                                                    await axios.put('http://localhost:5000/salesactivity/day', {
+                                                        Sales_id: Sales_Activity[index].Sales_id,
+                                                        ...Sales_Activity[index]
+                                                    })
+                                                    await axios.get('http://localhost:5000/salesactivity')
+                                                        .then(async item => {
+                                                            if(typeof Sales_Activity[index][months_data[month]] === 'string') {
+                                                                for(var t=0; t < item.data.length; t++) {
+                                                                    for(var m=0; m < months_data.length; m++) {
+                                                                        item.data[t][months_data[m]] = JSON.parse(item.data[t][months_data[m]])
+                                                                    }
+                                                                }
+                                                            }
+                                                            allsalesactivity(item.data)
+                                                        })
+                                                })
+                                        }
+                                    })
+                                    //-----------------Notification---------------------
+                                    for(let i=0; i<details_data.length; i++) {
+                                        var code = Products?.filter((p) => p.Product_id === details_data[i]?.Product_id)[0]
+                                        for(var c=0; c<code.codigo.length; c++) {
+                                            var index_code = code.codigo[c].findIndex(s => s === details_data[i].code)
+                                            if(index_code !== -1) {
+                                                var nombre = code.nombre
+                                                var Stock = code.Stock[c][index_code]
+                                                var Color = code.Color[c]
+                                                var Size = code.Size[c][index_code]
+                                                if(Stock <= 3) {
+                                                    axios.post("http://localhost:5000/notification/new",{
+                                                        Title: Stock === 0 ? 'Stock danger' : Stock <= 3 ? 'Stock warning': null,
+                                                        Message:  Stock === 0 ? `El producto de ${nombre} (${Color}, ${Size}) se agoto. cargue mas stock !` : Stock <= 3 ? `El producto de ${nombre} (${Color}, ${Size}) se esta apunto de acabar. cargue mas stock !`:  null,
+                                                        Date: new Date().toLocaleString()
+                                                    }).then((item) => {
+                                                        var note = Notific
+                                                        note.push(item.data)
+                                                        note.sort(function (d1, d2) {
+                                                            return new Date(d2.createdAt) - new Date(d1.createdAt);
+                                                        });
+                                                        notify(note);
+                                                    }).catch((err) => { console.log(err) })
+                                                }
                                             }
                                         }
                                     }
-                                }
-                        })
+                            })
+                    }
                 } else {
                     // console.log(o)
                     // console.log(details_data)
@@ -256,6 +355,9 @@ function PayOrder({ details_data, setDetailsData, order, setOrder, ...props }) {
                 setPayment(null)
                 setDetailsData(null)
                 setOrder(null)
+                if(setReturnedData !== null) {
+                    setReturnedData(null)
+                }
             }
         } else {
             if(client_name === '') {
@@ -268,102 +370,198 @@ function PayOrder({ details_data, setDetailsData, order, setOrder, ...props }) {
                 // o['Metodo_de_Pago'] = payment
                 o['Client_name'] = client_name
                 if(Status){
-                    await axios.post('http://localhost:5000/ordermaster/new', o)
-                        .then(async (item) => {
-                            for(let i=0; i<details_data.length; i++) {
-                                details_data[i].Order_id = item.data.Order_id
-                            }
-                            await axios.post('http://localhost:5000/orderproduct/new', details_data)
-                                .then(async (item2) => {
-                                    for(let i=0; i<details_data.length; i++) {
-                                        var stock = Products.filter((p) => p.Product_id === details_data[i].Product_id)[0].Stock
-                                        var total_stock = stock[details_data[i].parentArray][details_data[i].childArray] - details_data[i].Qty
-                                        stock[details_data[i].parentArray][details_data[i].childArray] = total_stock
-                                        var req_data = {
-                                            Product_id: details_data[i].Product_id,
-                                            Stock: JSON.stringify(stock)
-                                        }
-                                   
-                                        await axios.put('http://localhost:5000/product/quantity', req_data)
-                                        await axios.get('http://localhost:5000/ordermaster')
-                                            .then(async prod => {
-                                                prod.data.sort(function (d1, d2) {
-                                                    return new Date(d2.createdAt) - new Date(d1.createdAt);
-                                                });
-                                                allorders(prod.data)
-                                                if(window.desktop) {
-                                                    await window.api.addData(prod.data, "Orders")
-                                                }
-                                                var d = new Date()
-                                                var year = d.getFullYear()
-                                                var month = d.getMonth()
-                                                var date = d.getDate()
-                                                var tot = 0
-                                                for(var q=0; q<prod.data.length; q++) {
-                                                    if(new Date(prod.data[q].createdAt).toDateString() === new Date().toDateString()) {
-                                                        tot = prod.data[q].Total_price + tot
-                                                    }
-                                                }
-                                                var index = Sales_Activity.findIndex(item => item.year === year)
-                                                if(typeof Sales_Activity[index][months_data[month]] === 'string') {
-                                                    for(var w=0; w < Sales_Activity.length; w++) {
-                                                        for(var e=0; e < months_data.length; e++) {
-                                                            Sales_Activity[w][months_data[e]] = JSON.parse(Sales_Activity[w][months_data[e]])
-                                                        }
-                                                    }
-                                                }
-                                                Sales_Activity[index][months_data[month]][date-1].sales = tot
-                                                for(var t=0; t < Sales_Activity.length; t++) {
-                                                    for(var m=0; m < months_data.length; m++) {
-                                                        Sales_Activity[t][months_data[m]] = JSON.stringify(Sales_Activity[t][months_data[m]])
-                                                    }
-                                                }
-                                                await axios.put('http://localhost:5000/salesactivity/day', {
-                                                    Sales_id: Sales_Activity[index].Sales_id,
-                                                    ...Sales_Activity[index]
-                                                })
-                                                await axios.get('http://localhost:5000/salesactivity')
-                                                    .then(async item => {
-                                                        if(typeof Sales_Activity[index][months_data[month]] === 'string') {
-                                                            for(var t=0; t < item.data.length; t++) {
-                                                                for(var m=0; m < months_data.length; m++) {
-                                                                    item.data[t][months_data[m]] = JSON.parse(item.data[t][months_data[m]])
-                                                                }
-                                                            }
-                                                        }
-                                                        allsalesactivity(item.data)
-                                                    })
-                                            })
+                    if(Orders.find(ele => ele.Order_id === o.Order_id) !== undefined) {
+                        await axios.put('http://localhost:5000/ordermaster/update', o)
+                            .then(async (item) => {
+                                var data_ord = []
+                                for(var d=0; d<details_data.length; d++) {
+                                    if(details_data[d].Order_pro_id === undefined) {
+                                        data_ord.push(details_data[d])
                                     }
-                                })
-                                //-----------------Notification---------------------
-                                for(let i=0; i<details_data.length; i++) {
-                                    var code = Products?.filter((p) => p.Product_id === details_data[i]?.Product_id)[0]
-                                    for(var c=0; c<code.codigo.length; c++) {
-                                        var index_code = code.codigo[c].findIndex(s => s === details_data[i].code)
-                                        if(index_code !== -1) {
-                                            var nombre = code.nombre
-                                            var Stock = code.Stock[c][index_code]
-                                            var Color = code.Color[c]
-                                            var Size = code.Size[c][index_code]
-                                            if(Stock <= 3) {
-                                                axios.post("http://localhost:5000/notification/new",{
-                                                    Title: Stock === 0 ? 'Stock danger' : Stock <= 3 ? 'Stock warning': null,
-                                                    Message:  Stock === 0 ? `El producto de ${nombre} (${Color}, ${Size}) se agoto. cargue mas stock !` : Stock <= 3 ? `El producto de ${nombre} (${Color}, ${Size}) se esta apunto de acabar. cargue mas stock !`:  null,
-                                                    Date: new Date().toLocaleString()
-                                                }).then((item) => {
-                                                    var note = Notific
-                                                    note.push(item.data)
-                                                    note.sort(function (d1, d2) {
+                                }
+                                await axios.post('http://localhost:5000/orderproduct/new', data_ord)
+                                    .then(async (item2) => {
+                                        var items_order = details_data.filter(ele => ele.Order_pro_id !== undefined)
+                                        for(var q=0; q < item2.data.length; q++) {
+                                            items_order.push(item2.data[q])
+                                        }
+                                        setDetailsData(items_order)
+                                        for(let i=0; i<data_ord.length; i++) {
+                                            var stock = Products.filter((p) => p.Product_id === data_ord[i].Product_id)[0].Stock
+                                            var total_stock = stock[data_ord[i].parentArray][data_ord[i].childArray] - data_ord[i].Qty
+                                            stock[data_ord[i].parentArray][data_ord[i].childArray] = total_stock
+                                            var req_data = {
+                                                Product_id: data_ord[i].Product_id,
+                                                Stock: JSON.stringify(stock)
+                                            }
+    
+                                            delete data_ord[i].Order_id
+                                            var pro_index = Products.findIndex(x => x.Product_id === data_ord[i].Product_id)
+                                            Products[pro_index].Stock = stock
+                                            allproduct(Products)
+                                            if(window.desktop) {
+                                                await window.api.addData(Products, "Products")
+                                            }
+    
+                                            await axios.put('http://localhost:5000/product/quantity', req_data)
+                                            await axios.get('http://localhost:5000/ordermaster')
+                                                .then(async prod => {
+                                                    prod.data.sort(function (d1, d2) {
                                                         return new Date(d2.createdAt) - new Date(d1.createdAt);
                                                     });
-                                                    notify(note);
-                                                }).catch((err) => { console.log(err) })
+                                                    allorders(prod.data)
+                                                    setOrder_Data([prod.data.find(ele => ele.Order_id === order.Order_id)])
+                                                    // console.log('PayOrder', prod.data.find(ele => ele.Order_id === order.Order_id).order_product)
+                                                    // setDetailsData(prod.data.find(ele => ele.Order_id === order.Order_id).order_product)
+                                                    setOrderReturn({
+                                                        ...order, 
+                                                        order_product: items_order,
+                                                        Total_price: prod.data.find(ele => ele.Order_id === order.Order_id).Total_price
+                                                    })
+                                                    if(window.desktop) {
+                                                        await window.api.addData(prod.data, "Orders")
+                                                    }
+                                                    var da = new Date()
+                                                    var year = da.getFullYear()
+                                                    var month = da.getMonth()
+                                                    var date = da.getDate()
+                                                    var tot = 0
+                                                    for(var q=0; q<prod.data.length; q++) {
+                                                        if(new Date(prod.data[q].createdAt).toDateString() === new Date().toDateString()) {
+                                                            tot = prod.data[q].Total_price + tot
+                                                        }
+                                                    }
+                                                    var index = Sales_Activity.findIndex(item => item.year === year)
+                                                    if(typeof Sales_Activity[index][months_data[month]] === 'string') {
+                                                        for(var w=0; w < Sales_Activity.length; w++) {
+                                                            for(var e=0; e < months_data.length; e++) {
+                                                                Sales_Activity[w][months_data[e]] = JSON.parse(Sales_Activity[w][months_data[e]])
+                                                            }
+                                                        }
+                                                    }
+                                                    Sales_Activity[index][months_data[month]][date-1].sales = tot
+                                                    for(var t=0; t < Sales_Activity.length; t++) {
+                                                        for(var m=0; m < months_data.length; m++) {
+                                                            Sales_Activity[t][months_data[m]] = JSON.stringify(Sales_Activity[t][months_data[m]])
+                                                        }
+                                                    }
+                                                    await axios.put('http://localhost:5000/salesactivity/day', {
+                                                        Sales_id: Sales_Activity[index].Sales_id,
+                                                        ...Sales_Activity[index]
+                                                    })
+                                                    await axios.get('http://localhost:5000/salesactivity')
+                                                        .then(async item => {
+                                                            if(typeof Sales_Activity[index][months_data[month]] === 'string') {
+                                                                for(var t=0; t < item.data.length; t++) {
+                                                                    for(var m=0; m < months_data.length; m++) {
+                                                                        item.data[t][months_data[m]] = JSON.parse(item.data[t][months_data[m]])
+                                                                    }
+                                                                }
+                                                            }
+                                                            allsalesactivity(item.data)
+                                                        })
+                                                })
+                                        }
+                                    })
+                            })
+                    } else {
+                        await axios.post('http://localhost:5000/ordermaster/new', o)
+                            .then(async (item) => {
+                                for(let i=0; i<details_data.length; i++) {
+                                    details_data[i].Order_id = item.data.Order_id
+                                }
+                                await axios.post('http://localhost:5000/orderproduct/new', details_data)
+                                    .then(async (item2) => {
+                                        for(let i=0; i<details_data.length; i++) {
+                                            var stock = Products.filter((p) => p.Product_id === details_data[i].Product_id)[0].Stock
+                                            var total_stock = stock[details_data[i].parentArray][details_data[i].childArray] - details_data[i].Qty
+                                            stock[details_data[i].parentArray][details_data[i].childArray] = total_stock
+                                            var req_data = {
+                                                Product_id: details_data[i].Product_id,
+                                                Stock: JSON.stringify(stock)
+                                            }
+                                       
+                                            await axios.put('http://localhost:5000/product/quantity', req_data)
+                                            await axios.get('http://localhost:5000/ordermaster')
+                                                .then(async prod => {
+                                                    prod.data.sort(function (d1, d2) {
+                                                        return new Date(d2.createdAt) - new Date(d1.createdAt);
+                                                    });
+                                                    allorders(prod.data)
+                                                    if(window.desktop) {
+                                                        await window.api.addData(prod.data, "Orders")
+                                                    }
+                                                    var d = new Date()
+                                                    var year = d.getFullYear()
+                                                    var month = d.getMonth()
+                                                    var date = d.getDate()
+                                                    var tot = 0
+                                                    for(var q=0; q<prod.data.length; q++) {
+                                                        if(new Date(prod.data[q].createdAt).toDateString() === new Date().toDateString()) {
+                                                            tot = prod.data[q].Total_price + tot
+                                                        }
+                                                    }
+                                                    var index = Sales_Activity.findIndex(item => item.year === year)
+                                                    if(typeof Sales_Activity[index][months_data[month]] === 'string') {
+                                                        for(var w=0; w < Sales_Activity.length; w++) {
+                                                            for(var e=0; e < months_data.length; e++) {
+                                                                Sales_Activity[w][months_data[e]] = JSON.parse(Sales_Activity[w][months_data[e]])
+                                                            }
+                                                        }
+                                                    }
+                                                    Sales_Activity[index][months_data[month]][date-1].sales = tot
+                                                    for(var t=0; t < Sales_Activity.length; t++) {
+                                                        for(var m=0; m < months_data.length; m++) {
+                                                            Sales_Activity[t][months_data[m]] = JSON.stringify(Sales_Activity[t][months_data[m]])
+                                                        }
+                                                    }
+                                                    await axios.put('http://localhost:5000/salesactivity/day', {
+                                                        Sales_id: Sales_Activity[index].Sales_id,
+                                                        ...Sales_Activity[index]
+                                                    })
+                                                    await axios.get('http://localhost:5000/salesactivity')
+                                                        .then(async item => {
+                                                            if(typeof Sales_Activity[index][months_data[month]] === 'string') {
+                                                                for(var t=0; t < item.data.length; t++) {
+                                                                    for(var m=0; m < months_data.length; m++) {
+                                                                        item.data[t][months_data[m]] = JSON.parse(item.data[t][months_data[m]])
+                                                                    }
+                                                                }
+                                                            }
+                                                            allsalesactivity(item.data)
+                                                        })
+                                                })
+                                        }
+                                    })
+                                    //-----------------Notification---------------------
+                                    for(let i=0; i<details_data.length; i++) {
+                                        var code = Products?.filter((p) => p.Product_id === details_data[i]?.Product_id)[0]
+                                        for(var c=0; c<code.codigo.length; c++) {
+                                            var index_code = code.codigo[c].findIndex(s => s === details_data[i].code)
+                                            if(index_code !== -1) {
+                                                var nombre = code.nombre
+                                                var Stock = code.Stock[c][index_code]
+                                                var Color = code.Color[c]
+                                                var Size = code.Size[c][index_code]
+                                                if(Stock <= 3) {
+                                                    axios.post("http://localhost:5000/notification/new",{
+                                                        Title: Stock === 0 ? 'Stock danger' : Stock <= 3 ? 'Stock warning': null,
+                                                        Message:  Stock === 0 ? `El producto de ${nombre} (${Color}, ${Size}) se agoto. cargue mas stock !` : Stock <= 3 ? `El producto de ${nombre} (${Color}, ${Size}) se esta apunto de acabar. cargue mas stock !`:  null,
+                                                        Date: new Date().toLocaleString()
+                                                    }).then((item) => {
+                                                        var note = Notific
+                                                        note.push(item.data)
+                                                        note.sort(function (d1, d2) {
+                                                            return new Date(d2.createdAt) - new Date(d1.createdAt);
+                                                        });
+                                                        notify(note);
+                                                    }).catch((err) => { console.log(err) })
+                                                }
                                             }
                                         }
                                     }
-                                }
-                        })
+                            })
+                    }
                 } else {
                     // console.log(o)
                     // console.log(details_data)
@@ -434,6 +632,9 @@ function PayOrder({ details_data, setDetailsData, order, setOrder, ...props }) {
                 setPayment(null)
                 setDetailsData(null)
                 setOrder(null)
+                if(setReturnedData !== null) {
+                    setReturnedData(null)
+                }
             }
         }
     }
@@ -455,16 +656,20 @@ function PayOrder({ details_data, setDetailsData, order, setOrder, ...props }) {
                                     <div className="col-12">
                                         <div className='order_client my-1'>
                                             <span>Nombre Cliente: </span>
-                                            <input 
-                                                type='text' 
-                                                placeholder='Nombre Cliente' 
-                                                className='input_box' 
-                                                value={client_name} 
-                                                onChange={(e) => {
-                                                    setErrorMsg(false)
-                                                    setClientName(e.target.value)
-                                                }} 
-                                            />
+                                            {
+                                                order?.Metodo_de_Pago !== undefined
+                                                ? <span>{order.Client_name}</span>
+                                                : <input 
+                                                    type='text' 
+                                                    placeholder='Nombre Cliente' 
+                                                    className='input_box' 
+                                                    value={client_name} 
+                                                    onChange={(e) => {
+                                                        setErrorMsg(false)
+                                                        setClientName(e.target.value)
+                                                    }} 
+                                                />
+                                            }
                                             {errormsg ? <div><span style={{color: 'red', fontSize: 18}}>Required</span></div> : null}
                                         </div>
                                     </div>
@@ -478,7 +683,7 @@ function PayOrder({ details_data, setDetailsData, order, setOrder, ...props }) {
                                             <div>
                                                 <span style={{fontSize: 20}}>Pago con Tarjeta</span>
                                             </div>
-                                            <input className="form-check-input" type="radio" name="payment" value='Pago con Tarjeta' id="card" onChange={onChange} />
+                                            <input className="form-check-input" type="radio" name="payment" value='Pago con Tarjeta' id="card" onChange={onChange} checked={payment === 'Pago con Tarjeta'} />
                                         </label>
                                     </div>
                                     <div className='col-md d-flex flex-column justify-content-center align-items-center'>
@@ -489,7 +694,7 @@ function PayOrder({ details_data, setDetailsData, order, setOrder, ...props }) {
                                             <div>
                                                 <span style={{fontSize: 20}}>Pago con Efectivo</span>
                                             </div>
-                                            <input className="form-check-input" type="radio" name="payment" value='Pago con Efectivo' id="cash" onChange={onChange} />
+                                            <input className="form-check-input" type="radio" name="payment" value='Pago con Efectivo' id="cash" onChange={onChange} checked={payment === 'Pago con Efectivo'} />
                                         </label>
                                     </div>
                                 </div>
