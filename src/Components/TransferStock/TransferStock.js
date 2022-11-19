@@ -17,16 +17,25 @@ function TransferStock({ details_data, stocknum, setAllPro, ...props }) {
     const [sizing, setSizing] = useState(null);
     const [preval, setPreVal] = useState(null);
     const [maxstock, setMaxStock] = useState(0);
+    const [transferir_show, setTransferir_show] = useState(true)
 
     const formref = useRef();
 
     const validate = (values) => {
         const errors = {};
 
-        if (!values.transferir) {
-            errors.transferir = "Required";
-        } else if (values.transferir === stocknum.deposito.nombre) {
-            errors.transferir = "no se puede transferir a la misma tienda";
+        if (parseInt(values.exhibit) === 1) {
+            setTransferir_show(false)
+        } else {
+            setTransferir_show(true)
+        }
+        
+        if(transferir_show) {
+            if (!values.transferir) {
+                errors.transferir = "Required";
+            } else if (values.transferir === stocknum.deposito.nombre) {
+                errors.transferir = "no se puede transferir a la misma tienda";
+            }
         }
 
         if (!values.Stock) {
@@ -39,23 +48,13 @@ function TransferStock({ details_data, stocknum, setAllPro, ...props }) {
             if (values.Color !== preval) {
                 setPreVal(values.Color);
                 formref.current.setFieldValue("Size", "");
-                setSizing(
-                    details_data.Size[
-                        details_data?.Color.indexOf(values.Color)
-                    ].map((size) => size)
-                );
+                setSizing(details_data.Size[details_data?.Color.indexOf(values.Color)].map((size) => size));
             }
         }
 
         if (values.Size) {
-            var ind = details_data.Size[
-                details_data?.Color.indexOf(values.Color)
-            ].indexOf(values.Size);
-            setMaxStock(
-                details_data.Stock[details_data?.Color.indexOf(values.Color)][
-                    ind
-                ]
-            );
+            var ind = details_data.Size[details_data?.Color.indexOf(values.Color)].indexOf(values.Size);
+            setMaxStock(details_data.Stock[details_data?.Color.indexOf(values.Color)][ind]);
         }
 
         if (!values.Color) errors.Color = "Required";
@@ -65,6 +64,7 @@ function TransferStock({ details_data, stocknum, setAllPro, ...props }) {
     };
 
     const initialValues = {
+        exhibit: 0,
         transferir: "",
         Stock: "",
         Color: "",
@@ -72,82 +72,106 @@ function TransferStock({ details_data, stocknum, setAllPro, ...props }) {
     };
 
     const onSubmit = async (values, { resetForm }) => {
-        var product_one = Products.filter((item) => item.nombre === details_data?.nombre).filter(val => val.deposito.nombre === values.transferir)[0]
-        var pro = [...Products]
-        if(product_one === undefined) {
-            var inti = {
-                Product_id: uuidv4(),
-                nombre: details_data.nombre,
-                codigo: JSON.stringify([]),
-                description: details_data.description,
-                Image: JSON.stringify([]),
-                Color: JSON.stringify([]),
-                Size: JSON.stringify([]),
-                Stock: JSON.stringify([]),
-                precioVenta: JSON.stringify([]),
-                costoCompra: JSON.stringify([]),
-                costoMenor: JSON.stringify([]),
-                Category_id: details_data.Category_id,
-            }
-            if(Status) {
-                await axios.post("http://localhost:5000/product/new", {
+        var product_one
+        var pro
+        var final_color = values.Color
+        if(transferir_show) {
+            product_one = Products.filter((item) => item.nombre === details_data?.nombre).filter(val => val.deposito.nombre === values.transferir)[0]
+            pro = [...Products]
+            if(product_one === undefined) {
+                var inti = {
+                    Product_id: uuidv4(),
+                    nombre: details_data.nombre,
+                    codigo: JSON.stringify([]),
+                    description: details_data.description,
+                    Image: JSON.stringify([]),
+                    Color: JSON.stringify([]),
+                    Size: JSON.stringify([]),
+                    Stock: JSON.stringify([]),
+                    precioVenta: JSON.stringify([]),
+                    costoCompra: JSON.stringify([]),
+                    costoMenor: JSON.stringify([]),
+                    Category_id: details_data.Category_id,
+                }
+                if(Status) {
+                    await axios.post("http://localhost:5000/product/new", {
+                            ...inti,
+                            Deposito_id: Deposito.filter(item => item.nombre === values.transferir)[0].Deposito_id
+                        })
+                        .then(async (item) => {
+                            item.data.codigo = JSON.parse(item.data.codigo);
+                            item.data.Color = JSON.parse(item.data.Color);
+                            item.data.Size = JSON.parse(item.data.Size);
+                            item.data.Stock = JSON.parse(item.data.Stock);
+                            item.data.precioVenta = JSON.parse(item.data.precioVenta);
+                            item.data.costoCompra = JSON.parse(item.data.costoCompra);
+                            item.data.costoMenor = JSON.parse(item.data.costoMenor);
+                            item.data.deposito = Deposito.filter(item => item.nombre === values.transferir)[0]
+                            item.data.Image = JSON.parse(item.data.Image);
+            
+                            allproduct(item.data);
+                            var m = Products;
+                            m.push(item.data);
+                            setAllPro(m);
+                            if(window.desktop) {
+                                await window.api.addData(m, "Products");
+                            }
+                            // resetForm();
+                        });
+                } else {
+                    var pro_data = {
                         ...inti,
+                        codigo: JSON.parse(inti.codigo),
+                        Color: JSON.parse(inti.Color),
+                        Size: JSON.parse(inti.Size),
+                        Stock: JSON.parse(inti.Stock),
+                        precioVenta: JSON.parse(inti.precioVenta),
+                        costoCompra: JSON.parse(inti.costoCompra),
+                        costoMenor: JSON.parse(inti.costoMenor),
+                        deposito: Deposito.filter(item => item.nombre === values.transferir)[0],
+                        Image: JSON.parse(inti.Image),
                         Deposito_id: Deposito.filter(item => item.nombre === values.transferir)[0].Deposito_id
-                    })
-                    .then(async (item) => {
-                        item.data.codigo = JSON.parse(item.data.codigo);
-                        item.data.Color = JSON.parse(item.data.Color);
-                        item.data.Size = JSON.parse(item.data.Size);
-                        item.data.Stock = JSON.parse(item.data.Stock);
-                        item.data.precioVenta = JSON.parse(item.data.precioVenta);
-                        item.data.costoCompra = JSON.parse(item.data.costoCompra);
-                        item.data.costoMenor = JSON.parse(item.data.costoMenor);
-                        item.data.deposito = Deposito.filter(item => item.nombre === values.transferir)[0]
-                        item.data.Image = JSON.parse(item.data.Image);
-        
-                        allproduct(item.data);
-                        var m = Products;
-                        m.push(item.data);
-                        setAllPro(m);
-                        if(window.desktop) {
-                            await window.api.addData(m, "Products");
-                        }
-                        // resetForm();
-                    });
-            } else {
-                var pro_data = {
-                    ...inti,
-                    codigo: JSON.parse(inti.codigo),
-                    Color: JSON.parse(inti.Color),
-                    Size: JSON.parse(inti.Size),
-                    Stock: JSON.parse(inti.Stock),
-                    precioVenta: JSON.parse(inti.precioVenta),
-                    costoCompra: JSON.parse(inti.costoCompra),
-                    costoMenor: JSON.parse(inti.costoMenor),
-                    deposito: Deposito.filter(item => item.nombre === values.transferir)[0],
-                    Image: JSON.parse(inti.Image),
-                    Deposito_id: Deposito.filter(item => item.nombre === values.transferir)[0].Deposito_id
+                    }
+                    pro.push(pro_data)
+                    console.log(pro)
+                    Products.push(pro_data)
+                    allproduct(pro)
+                    setAllPro(pro);
+                    if(window.desktop) {
+                        await window.api.addData(pro, "Products");
+                    }
+                    // resetForm();
                 }
-                pro.push(pro_data)
-                console.log(pro)
-                Products.push(pro_data)
-                allproduct(pro)
-                setAllPro(pro);
-                if(window.desktop) {
-                    await window.api.addData(pro, "Products");
-                }
-                // resetForm();
             }
+        } else {
+            if(values.Color.split('(').length < 2) {
+                final_color = values.Color+" (Exhibit)"
+            } else {
+                final_color = values.Color.split(' (')[0]
+            }
+            // product_one = Products.filter((item) => item.nombre === details_data?.nombre).filter(val => val.deposito.nombre === details_data.nombre)[0]
         }
+        // console.log(Products.filter((item) => item.nombre === details_data?.nombre))
         var product_one2 = {}
         var colap = 0
         if(Status) {
-            product_one2 = Products.filter((item) => item.nombre === details_data?.nombre).filter(val => val.deposito.nombre === values.transferir)[0]
+            product_one2 = {}
+            if(transferir_show) {
+                product_one2 = Products.filter((item) => item.nombre === details_data?.nombre).filter(val => val.deposito.nombre === values.transferir)[0]
+            } else {
+                product_one2 = details_data
+            }
             colap = Products.findIndex((item) => item.Product_id === undefined ? Products.length - 1  : item.Product_id === product_one2.Product_id)
         } else {
-            product_one2 = pro.filter((item) => item.nombre === details_data?.nombre).filter(val => val.deposito.nombre === values.transferir)[0]
+            product_one2 = {}
+            if(transferir_show) {
+                product_one2 = Products.filter((item) => item.nombre === details_data?.nombre).filter(val => val.deposito.nombre === values.transferir)[0]
+            } else {
+                product_one2 = details_data
+            }
             colap = pro.findIndex((item) => item.Product_id === undefined ? Products.length - 1  : item.Product_id === product_one2.Product_id)
         }
+        console.log(Products[colap])
         // if(colap === null) colap = Products.length - 1 
 
         var i = details_data.Color.findIndex(item => values.Color === item)
@@ -155,8 +179,8 @@ function TransferStock({ details_data, stocknum, setAllPro, ...props }) {
         var inn = 0
         var ijj = 0
 
-        if(!Products[colap].Color.includes(values.Color)) {
-            Products[colap].Color.push(values.Color)
+        if(!Products[colap].Color.includes(final_color)) {
+            Products[colap].Color.push(final_color)
             Products[colap].Size.push([values.Size, ''])
             Products[colap].Stock.push([values.Stock])
             Products[colap].precioVenta.push([details_data.precioVenta[i][j]])
@@ -165,7 +189,7 @@ function TransferStock({ details_data, stocknum, setAllPro, ...props }) {
             Products[colap].codigo.push([Math.random().toString(16).slice(2)])
             Products[colap].Image.push([])
         } else {
-            inn = Products[colap].Color.findIndex(item => values.Color === item)
+            inn = Products[colap].Color.findIndex(item => final_color === item)
             ijj = Products[colap].Size[inn].findIndex(item => values.Size === item)
             var next_val = Products[colap].Size[inn].length - 1
             if(!Products[colap].Size[inn].includes(values.Size)) {
@@ -287,22 +311,36 @@ function TransferStock({ details_data, stocknum, setAllPro, ...props }) {
                             {(props) => (
                                 <Form>
                                     <div className="modal-body">
+                                        <div className="d-flex justify-content-around">
+                                            <div>
+                                                <input type="radio" id="notexhibit" name="exhibit" value={0} onChange={props.handleChange} defaultChecked={props.values.exhibit === 0} />
+                                                <label htmlFor="notexhibit" style={{marginLeft: 5}}>Not Exhibit</label>
+                                            </div>
+                                            <div>
+                                                <input type="radio" id="exhibit1" name="exhibit" value={1} onChange={props.handleChange} defaultChecked={props.values.exhibit !== 0} />
+                                                <label htmlFor="exhibit1" style={{marginLeft: 5}}>Exhibit</label>
+                                            </div>
+                                        </div>
                                         <OneDetail
                                             name="Deposito"
                                             data={stocknum?.deposito.nombre}
                                         />
-                                        <Dropdown
-                                            name="transferir"
-                                            // dropvalues={Products.filter((item) => item.nombre === details_data?.nombre).map(val => stocknum?.deposito.nombre === val.deposito.nombre ? null : val.deposito.nombre)}
-                                            dropvalues={Deposito.map((d) => stocknum?.deposito.nombre === d.nombre || d.Type === 'Master Manager' ? null : d.nombre)}
-                                            value_select={
-                                                props.values.transferir
-                                            }
-                                            onBlur={props.handleBlur}
-                                            onChange={settingval}
-                                            touched={props.touched.transferir}
-                                            errors={props.errors.transferir}
-                                        />
+                                        {
+                                            transferir_show
+                                            ? <Dropdown
+                                                name="transferir"
+                                                // dropvalues={Products.filter((item) => item.nombre === details_data?.nombre).map(val => stocknum?.deposito.nombre === val.deposito.nombre ? null : val.deposito.nombre)}
+                                                dropvalues={Deposito.map((d) => stocknum?.deposito.nombre === d.nombre || d.Type === 'Master Manager' ? null : d.nombre)}
+                                                value_select={
+                                                    props.values.transferir
+                                                }
+                                                onBlur={props.handleBlur}
+                                                onChange={settingval}
+                                                touched={props.touched.transferir}
+                                                errors={props.errors.transferir}
+                                            />
+                                            : null
+                                        }
                                         <Dropdown
                                             name="Color"
                                             dropvalues={details_data?.Color.map(
