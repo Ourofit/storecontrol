@@ -42,6 +42,7 @@ import {
     faUserTie,
     faShoppingBag,
     faCrown,
+    faTurnDown,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -72,7 +73,8 @@ library.add(
     faStore,
     faUserTie,
     faShoppingBag,
-    faCrown
+    faCrown,
+    faTurnDown
 );
 
 const store = createStore(

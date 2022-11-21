@@ -171,7 +171,7 @@ function TransferStock({ details_data, stocknum, setAllPro, ...props }) {
             }
             colap = pro.findIndex((item) => item.Product_id === undefined ? Products.length - 1  : item.Product_id === product_one2.Product_id)
         }
-        console.log(Products[colap])
+        // console.log(Products[colap])
         // if(colap === null) colap = Products.length - 1 
 
         var i = details_data.Color.findIndex(item => values.Color === item)
@@ -186,7 +186,7 @@ function TransferStock({ details_data, stocknum, setAllPro, ...props }) {
             Products[colap].precioVenta.push([details_data.precioVenta[i][j]])
             Products[colap].costoCompra.push([details_data.costoCompra[i][j]])
             Products[colap].costoMenor.push([details_data.costoMenor[i][j]])
-            Products[colap].codigo.push([Math.random().toString(16).slice(2)])
+            Products[colap].codigo.push([details_data.codigo[i][j]])
             Products[colap].Image.push([])
         } else {
             inn = Products[colap].Color.findIndex(item => final_color === item)
@@ -199,7 +199,8 @@ function TransferStock({ details_data, stocknum, setAllPro, ...props }) {
                 Products[colap].precioVenta[inn].push(details_data.precioVenta[i][j])
                 Products[colap].costoCompra[inn].push(details_data.costoCompra[i][j])
                 Products[colap].costoMenor[inn].push(details_data.costoMenor[i][j])
-                Products[colap].codigo[inn].push(Math.random().toString(16).slice(2))
+                // Products[colap].codigo[inn].push(Math.random().toString(16).slice(2))
+                Products[colap].codigo[inn].push(details_data.codigo[i][j])
             } else {
                 var st = Products[colap].Stock[inn][ijj] !== undefined ? Products[colap].Stock[inn][ijj] + values.Stock : 0 + values.Stock
                 Products[colap].Stock[inn].splice(ijj, 1, st)
@@ -210,7 +211,7 @@ function TransferStock({ details_data, stocknum, setAllPro, ...props }) {
         // delete details_data.createdAt
         // var index = Products.findIndex(item => item.Product_id === details_data?.Product_id)
         // Products[index] = details_data
-        console.log(details_data.Stock, Products[colap].Stock)
+        // console.log(details_data.Stock, Products[colap].Stock)
         var new_pro = Products.map(item => item.Product_id === details_data?.Product_id ? details_data : item);
         allproduct(new_pro)
         if(window.desktop) {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import axios from "axios";
 
@@ -12,14 +12,71 @@ import Dropdown from "../Dropdown/Dropdown";
 // import { Order_master } from '../../Data/Order_master'
 
 // prettier-ignore
-function OrderList({ details_data, setDetailsData, order, setOrder, particularOrder, componentRef, handlePrint, paymentType, setPaymentType, addorder, client_name, setClientName, deposito_err, setDepositoErr, employee_name, setEmployeeName, allpro, setAllPro, ...props }) {
+function OrderList({ moreOrder, details_data, setDetailsData, order, setOrder, particularOrder, componentRef, handlePrint, paymentType, setPaymentType, addorder, client_name, setClientName, deposito_err, setDepositoErr, employee_name, setEmployeeName, allpro, setAllPro, setMoreOrder, ...props }) {
 
 	const { Products, CategoryAdd, DepositoAdd, Status, Orders } = props
 	const [product, setProduct] = useState(null)
 	const [employee, setEmployee] = useState(null)
 	const [employee_err,] = useState('Required')
+	const [barc, setBarc] = useState('')
 	const loop = useRef(true)
-	// console.log(order, details_data, product)
+
+	const handleBarcode = useCallback((event) => {
+		var DepositoLogin = JSON.parse(localStorage.getItem('DepositoLogin'))
+		// var barc = ''
+		// setBarc(barc+event.key)
+		if(event.code === 'Enter') {
+			var pro_arr = []
+			var scan
+			var flag = 0
+			var prod = Products.filter(item => item.deposito.nombre === DepositoLogin.nombre)
+			// console.log(prod)
+			for(var j=0; j < prod.length; j++) {
+				// if(prod[j].deposito.nombre === Employee[0].deposito.nombre) {
+					// console.log(prod[j].deposito.nombre, Employee[0].deposito.nombre)
+					// setDepositoErr(false)
+					for(var h=0; h<prod[j].codigo.length; h++) {
+						for(var r=0; r<prod[j].codigo[h].length; r++) {
+							// console.log(prod[j].codigo[h][r], barc)
+							if(prod[j].codigo[h][r] === barc) {
+								if(prod[j].Stock[h][r] !== 0) {
+									setDepositoErr('')
+									scan = prod[j]
+									// addorder(scan, barc, h, r)
+									pro_arr.push({scan: scan, barc: barc, h: h, r: r})
+									console.log(h, r)
+									flag = 0
+								} else {
+									setDepositoErr(`No hay existencias en ${DepositoLogin.nombre}`)
+								}
+								// return
+							} else {
+								flag = 1
+							}
+						}
+					}
+					// flag = 0
+					// return
+				// } else {
+				// 	flag = 1
+				// }
+			}
+			if(pro_arr.length > 1) {
+				document.getElementById('modalproduct').removeAttribute('aria-hidden')
+				document.getElementById('modalproduct').classList.add('show')
+				document.getElementById('modalproduct').style.display = 'block'
+			}
+			setMoreOrder(pro_arr)
+			if(flag === 1) {
+				setDepositoErr(`El producto no está presente en su tienda (${DepositoLogin.nombre})`)
+			} else if(flag === 2) {
+				
+			}
+			setBarc('')
+			return
+		}
+		if(event.key !== 'Shift') setBarc(barc + event.key)
+	}, [Products, setDepositoErr, setMoreOrder, barc])
 
 	useEffect(() => {
 		// console.log('--------OrderList--------')
@@ -65,59 +122,13 @@ function OrderList({ details_data, setDetailsData, order, setOrder, particularOr
 		}
 		// setEmployee(Employee?.filter(function(x){return x.Employee_id === order?.Employee_id})[0])
 		setProduct(result)
-		
-		var barc = ''
-		const handleBarcode = (event) => {
-			if(event.code === 'Enter') {
-				var scan
-				var flag = 0
-				var prod = Products.filter(item => item.deposito.nombre === DepositoLogin.nombre)
-				console.log(prod)
-				for(var j=0; j < prod.length; j++) {
-					// if(prod[j].deposito.nombre === Employee[0].deposito.nombre) {
-						// console.log(prod[j].deposito.nombre, Employee[0].deposito.nombre)
-						// setDepositoErr(false)
-						for(var h=0; h<prod[j].codigo.length; h++) {
-							for(var r=0; r<prod[j].codigo[h].length; r++) {
-								if(prod[j].codigo[h][r] === barc) {
-									// console.log(prod[j].Stock[h][r] !== 0)
-									if(prod[j].Stock[h][r] !== 0) {
-										setDepositoErr('')
-										scan = prod[j]
-										addorder(scan, barc, h, r)
-										flag = 0
-									} else {
-										setDepositoErr(`No hay existencias en ${DepositoLogin.nombre}`)
-									}
-									return
-								} else {
-									flag = 1
-								}
-							}
-						}
-						// flag = 0
-						// return
-					// } else {
-					// 	flag = 1
-					// }
-				}
-				if(flag === 1) {
-					setDepositoErr(`El producto no está presente en su tienda (${DepositoLogin.nombre})`)
-				} else if(flag === 2) {
-					
-				}
-				barc = ''
-				return
-			}
-			if(event.key !== 'Shift') barc += event.key
-		}
 
 		window.addEventListener('keydown', handleBarcode);
 		
 		return() => {
 			window.removeEventListener('keydown', handleBarcode)
 		}
-	}, [Products, addorder, details_data, setDepositoErr, DepositoAdd, Status, setPaymentType, setEmployeeName, order, setDetailsData, Orders])
+	}, [Products, addorder, details_data, setDepositoErr, DepositoAdd, Status, setPaymentType, setEmployeeName, order, setDetailsData, Orders, handleBarcode])
 
 	const qtychange = (val, code, pro) => {
 		var pricing = 0
