@@ -64,6 +64,8 @@ function OrderList({ moreOrder, details_data, setDetailsData, order, setOrder, p
 				document.getElementById('modalproduct').removeAttribute('aria-hidden')
 				document.getElementById('modalproduct').classList.add('show')
 				document.getElementById('modalproduct').style.display = 'block'
+			} else if(pro_arr.length === 1) {
+				addorder(pro_arr[0].scan, pro_arr[0].barc, pro_arr[0].h, pro_arr[0].r)
 			} else {
 				flag = 1
 			}
@@ -77,7 +79,7 @@ function OrderList({ moreOrder, details_data, setDetailsData, order, setOrder, p
 			return
 		}
 		if(event.key !== 'Shift') setBarc(barc + event.key)
-	}, [Products, setDepositoErr, setMoreOrder, barc])
+	}, [Products, setDepositoErr, setMoreOrder, barc, addorder])
 
 	useEffect(() => {
 		// console.log('--------OrderList--------')
@@ -342,6 +344,13 @@ function OrderList({ moreOrder, details_data, setDetailsData, order, setOrder, p
 							details_data?.map((item, index) => 
 								<div className='productorder' key={index}>
 									{/* {console.log('OrderList Loop', product[index]?.Product_id, item.Product_id, index)} */}
+									{
+										product[index]?.Color[item.parentArray].split(' (').length > 1
+										? <div className="bg-danger exhibit_tag">
+											<FontAwesomeIcon icon="crown" style={{color: '#FFD700'}}/>
+										</div>
+										: null
+									}
 									<div className='row'>
 										<div className='col-md-2'>
 											<div className='image_display'>
@@ -395,7 +404,7 @@ function OrderList({ moreOrder, details_data, setDetailsData, order, setOrder, p
 														</div>
 														<div className='col-md third_col'>
 															<div>
-																<span style={{fontWeight: '600'}}>Color: {product[index]?.Color[item.parentArray]}</span>
+																<span style={{fontWeight: '600'}}>Color: {product[index]?.Color[item.parentArray].split(' (')[0]}</span>
 															</div>
 															<div>
 																<span style={{fontWeight: '600'}}>Talle: {product[index]?.Size[item.parentArray][item.childArray]}</span>
