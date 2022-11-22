@@ -44,14 +44,13 @@ function OrderList({ moreOrder, details_data, setDetailsData, order, setOrder, p
 									scan = prod[j]
 									// addorder(scan, barc, h, r)
 									pro_arr.push({scan: scan, barc: barc, h: h, r: r})
-									console.log(h, r)
+									// console.log(h, r)
 									flag = 0
 								} else {
 									setDepositoErr(`No hay existencias en ${DepositoLogin.nombre}`)
 								}
 								// return
-							} else {
-								flag = 1
+								// break
 							}
 						}
 					}
@@ -65,6 +64,8 @@ function OrderList({ moreOrder, details_data, setDetailsData, order, setOrder, p
 				document.getElementById('modalproduct').removeAttribute('aria-hidden')
 				document.getElementById('modalproduct').classList.add('show')
 				document.getElementById('modalproduct').style.display = 'block'
+			} else {
+				flag = 1
 			}
 			setMoreOrder(pro_arr)
 			if(flag === 1) {

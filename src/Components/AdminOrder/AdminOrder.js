@@ -58,108 +58,108 @@ function AdminOrder({ setOrderReturn, setReturnedData, setOrder_Data, returnProd
 	});
 
 	const addorder = (pro, code, inn, j) => {
-        // var today = new Date();
-        // var dd = JSON.stringify(today.getDate()).padStart(2, "0");
-        // var mm = JSON.stringify(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-        // var yyyy = today.getFullYear();
-        // var pricing = 0;
-        // if (paymentType === "Compras por Mayor") {
-        //     pricing = pro.costoCompra[inn][j];
-        // } else if (paymentType === "Compra por menor") {
-        //     pricing = pro.costoMenor[inn][j];
-        // }
+        var today = new Date();
+        var dd = JSON.stringify(today.getDate()).padStart(2, "0");
+        var mm = JSON.stringify(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+        var yyyy = today.getFullYear();
+        var pricing = 0;
+        if (paymentType === "Compras por Mayor") {
+            pricing = pro.costoCompra[inn][j];
+        } else if (paymentType === "Compra por menor") {
+            pricing = pro.costoMenor[inn][j];
+        }
 
-        // today = mm + "/" + dd + "/" + yyyy;
-        // var all_details = details_data;
-		// if(employee_name === '') {
-        //     setDepositoErr("Seleccione Nombre Vendedor")
-        // } else {
-		// 	if (all_details === null) {
-		// 		var order_data = {
-		// 			// Order_id: Order_master[Order_master.length - 1].Order_id + 1,
-		// 			Total_price: pricing,
-		// 			Fecha: new Date().toLocaleString(),
-		// 			Tipo_de_Cliente: paymentType,
-		// 			Order_status: "Unpaid",
-        //             Employee_name: employee_name,
-        //             Deposito_name: JSON.parse(localStorage.getItem('DepositoLogin')).nombre
-		// 		};
-		// 		var order_pro = {
-		// 			Qty: 1,
-		// 			Total_price: pricing,
-		// 			code: code,
-		// 			parentArray: inn,
-		// 			childArray: j,
-		// 			Product_id: pro.Product_id,
-		// 			Order_id: order_data.Order_id,
-		// 			// codigo: pro.codigo[inn][j],
-		// 			// Image: pro.Image[inn],
-		// 			// Color: pro.Color[inn][j],
-		// 			// Size: pro.Size[inn][j],
-		// 			// Stock: pro.Stock[inn][j],
-		// 			// precioVenta: pro.precioVenta[inn][j],
-		// 			// costoCompra: pro.costoCompra[inn][j],
-		// 			// costoMenor: pro.costoMenor[inn][j],
-		// 		};
-		// 		all_details = [order_pro];
-		// 		setDetailsData(all_details);
-		// 		setOrder(order_data);
-		// 	} else {
-		// 		var flag = 0;
-		// 		for (var i = 0; i < details_data.length; i++) {
-		// 			if (
-		// 				details_data[i].code === pro.codigo[inn][j] &&
-		// 				details_data[i].parentArray === inn &&
-		// 				details_data[i].childArray === j
-		// 			) {
-		// 				flag = 1;
-		// 				if(details_data[i].Qty < pro.Stock[inn][j]) {
-		// 					setDetailsData([
-		// 						...details_data.slice(0, i),
-		// 						{
-		// 							...details_data[i],
-		// 							Qty: details_data[i].Qty + 1,
-		// 							Total_price: pricing * (details_data[i].Qty + 1),
-		// 						},
-		// 						...details_data.slice(i + 1, details_data.length),
-		// 					]);
-		// 					setOrder({
-		// 						...order,
-		// 						order_product: [
-		// 							...details_data.slice(0, i),
-		// 							{
-		// 								...details_data[i],
-		// 								Qty: details_data[i].Qty + 1,
-		// 								Total_price: pricing * (details_data[i].Qty + 1),
-		// 							},
-		// 							...details_data.slice(i + 1, details_data.length),
-		// 						],
-		// 						Total_price: order.Total_price + pricing,
-		// 					});
-		// 				} else {
-		// 					setDepositoErr(`El stock es solo ${pro.Stock[inn][j]} en ${pro.deposito.nombre}`)
-		// 				}
-		// 			}
-		// 		}
-		// 		if (flag === 0) {
-		// 			var order_pro2 = {
-		// 				Qty: 1,
-		// 				Total_price: pricing,
-		// 				code: code,
-		// 				parentArray: inn,
-		// 				childArray: j,
-		// 				Product_id: pro.Product_id,
-		// 				Order_id: order.Order_id,
-		// 			};
-		// 			setDetailsData([...details_data, order_pro2]);
-		// 			setOrder({
-		// 				...order,
-		// 				order_product: [...details_data, order_pro2],
-		// 				Total_price: order.Total_price + pricing,
-		// 			});
-		// 		}
-		// 	}
-		// }
+        today = mm + "/" + dd + "/" + yyyy;
+        var all_details = details_data;
+		if(employee_name === '') {
+            setDepositoErr("Seleccione Nombre Vendedor")
+        } else {
+			if (all_details === null) {
+				var order_data = {
+					// Order_id: Order_master[Order_master.length - 1].Order_id + 1,
+					Total_price: pricing,
+					Fecha: new Date().toLocaleString(),
+					Tipo_de_Cliente: paymentType,
+					Order_status: "Unpaid",
+                    Employee_name: employee_name,
+                    Deposito_name: JSON.parse(localStorage.getItem('DepositoLogin')).nombre
+				};
+				var order_pro = {
+					Qty: 1,
+					Total_price: pricing,
+					code: code,
+					parentArray: inn,
+					childArray: j,
+					Product_id: pro.Product_id,
+					Order_id: order_data.Order_id,
+					// codigo: pro.codigo[inn][j],
+					// Image: pro.Image[inn],
+					// Color: pro.Color[inn][j],
+					// Size: pro.Size[inn][j],
+					// Stock: pro.Stock[inn][j],
+					// precioVenta: pro.precioVenta[inn][j],
+					// costoCompra: pro.costoCompra[inn][j],
+					// costoMenor: pro.costoMenor[inn][j],
+				};
+				all_details = [order_pro];
+				setDetailsData(all_details);
+				setOrder(order_data);
+			} else {
+				var flag = 0;
+				for (var i = 0; i < details_data.length; i++) {
+					if (
+						details_data[i].code === pro.codigo[inn][j] &&
+						details_data[i].parentArray === inn &&
+						details_data[i].childArray === j
+					) {
+						flag = 1;
+						if(details_data[i].Qty < pro.Stock[inn][j]) {
+							setDetailsData([
+								...details_data.slice(0, i),
+								{
+									...details_data[i],
+									Qty: details_data[i].Qty + 1,
+									Total_price: pricing * (details_data[i].Qty + 1),
+								},
+								...details_data.slice(i + 1, details_data.length),
+							]);
+							setOrder({
+								...order,
+								order_product: [
+									...details_data.slice(0, i),
+									{
+										...details_data[i],
+										Qty: details_data[i].Qty + 1,
+										Total_price: pricing * (details_data[i].Qty + 1),
+									},
+									...details_data.slice(i + 1, details_data.length),
+								],
+								Total_price: order.Total_price + pricing,
+							});
+						} else {
+							setDepositoErr(`El stock es solo ${pro.Stock[inn][j]} en ${pro.deposito.nombre}`)
+						}
+					}
+				}
+				if (flag === 0) {
+					var order_pro2 = {
+						Qty: 1,
+						Total_price: pricing,
+						code: code,
+						parentArray: inn,
+						childArray: j,
+						Product_id: pro.Product_id,
+						Order_id: order.Order_id,
+					};
+					setDetailsData([...details_data, order_pro2]);
+					setOrder({
+						...order,
+						order_product: [...details_data, order_pro2],
+						Total_price: order.Total_price + pricing,
+					});
+				}
+			}
+		}
     };
 
 	const loop = useRef(true)
