@@ -22,6 +22,7 @@ import {
     faFlask,
     faBars,
     faClose,
+    
     faSearch,
     faPlus,
     faMinus,
@@ -40,7 +41,6 @@ import {
     faArrowRightFromBracket,
     faStore,
     faUserTie,
-    faUser,
     faShoppingBag,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -71,7 +71,6 @@ library.add(
     faArrowRightFromBracket,
     faStore,
     faUserTie,
-    faUser,
     faShoppingBag
 );
 

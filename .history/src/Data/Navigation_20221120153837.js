@@ -28,7 +28,7 @@ export const navigation_data = [
     {
         title: "Clientes",
         path: "/clientes",
-        icon: <FontAwesomeIcon icon="user" size="xl"/>,
+        icon: <FontAwesomeIcon icon="user_tie" size="xl"/>,
         cName: "sidebar_link",
     },
     {

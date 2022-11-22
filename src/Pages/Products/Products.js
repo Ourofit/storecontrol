@@ -18,8 +18,8 @@ import FindProduct from "../../Components/FindProduct/FindProduct";
 import ShowOrders from "../../Components/ShowOrders/ShowOrders";
 import DetailsOrder from "../../Components/DetailsOrder/DetailsOrder";
 import EditOrder from "../../Components/EditOrder/EditOrder";
-import Exhibited from "../../Components/Exhibited/Exhibited";
-import AddExhibited from "../../Components/AddExhibited/AddExhibited";
+
+
 // import AdminOrder from "../../Components/AdminOrder/AdminOrder";
 // import {
 //     store_Category,
@@ -889,12 +889,7 @@ function Products(props) {
                                     {printBar.length === 0 ? "All" : "Selected"}{" "}
                                     Barcode
                                 </button> */}
-                                <button className="btn btn-primary mx-2" type="button"
-                           
-                                    data-toggle="modal"
-                                    data-target="#modal_exhibited" >
-                                    Exhibidos
-                                </button>
+                       
                             </div>
                             <select className="search_select" onChange={(e) => setSearch_filter(e.target.value)}>
                                 <option name="Product Nombre" value="Product Nombre">Product Nombre</option>
@@ -979,15 +974,7 @@ function Products(props) {
                     stocknum={stocknum}
                     setAllPro={setAllPro}
                 />
-                <Exhibited
-                    idModal='modal_exhibited'
-
-                />
-                <AddExhibited
-                 idModal='addexhibited'
-
-                
-                />
+           
                 <ShowOrders
                     idModal='showorders'
                     details_data={details_data}

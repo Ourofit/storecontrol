@@ -14,7 +14,7 @@ const Products = lazy(() => import("./Pages/Products/Products"));
 const Orders = lazy(() => import("./Pages/Orders/Orders"));
 const Expenses = lazy(() => import("./Pages/Expenses/Expenses"));
 const Tienda = lazy(() => import("./Pages/Tienda/Tienda"));
-const Users = lazy(() => import("./Pages/Users/Users"));
+const Users = lazy(() => import("./Pages/Tienda/Tienda"));
 
 // prettier-ignore
 function App() {

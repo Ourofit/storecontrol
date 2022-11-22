@@ -71,7 +71,6 @@ library.add(
     faArrowRightFromBracket,
     faStore,
     faUserTie,
-    faUser,
     faShoppingBag
 );
 
