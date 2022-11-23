@@ -181,10 +181,10 @@ function EmployeeOrder(props) {
                     result.push(pro)
                 }
 		}
-		// console.log('Order', details_data, result)
+		// console.log('Order', ordering, result)
 		setProduct(result)
 
-        // console.log(ordering, returned_data)
+        // console.log(ordering, returned_data, result)
         if(ordering !== null && returned_data !== null) {
 			// console.log(order_return?.Total_price - returned_data.Total_price)
             // var price = order_return?.Total_price - returned_data.Total_price
@@ -544,7 +544,7 @@ function EmployeeOrder(props) {
                 />
             ) : null}
             <EditOrder details_data={order_details} particular={particular} />
-            <PayOrder details_data={details_data} setDetailsData={setDetailsData} setOrder_Data={setOrder} setOrderReturn={setOrder} order={order} setOrder={setOrder} />
+            <PayOrder details_data={details_data} setDetailsData={setDetailsData} setOrder_Data={setOrder} setOrderReturn={setOrder} order={order} setOrder={setOrder} setReturnedData={setReturnedData} />
             {/* <AreYouSure returnProduct={returnProduct} return_val={return_val} setReturnedData={setReturnedData} /> */}
             <AreYouSure returnProduct={returnProduct} return_val={return_val} setReturnedData={setReturnedData} />
             <SendMessage />
