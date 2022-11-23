@@ -29,7 +29,7 @@ function OrderList({ moreOrder, details_data, setDetailsData, order, setOrder, p
 			var pro_arr = []
 			var scan
 			var flag = 0
-			var prod = Products.filter(item => item.deposito.nombre === DepositoLogin.nombre)
+			var prod = DepositoLogin.Type !== 'Master Manager' ? Products.filter(item => item.deposito.nombre === DepositoLogin.nombre) : Products
 			// console.log(prod)
 			for(var j=0; j < prod.length; j++) {
 				// if(prod[j].deposito.nombre === Employee[0].deposito.nombre) {
@@ -38,7 +38,7 @@ function OrderList({ moreOrder, details_data, setDetailsData, order, setOrder, p
 					for(var h=0; h<prod[j].codigo.length; h++) {
 						for(var r=0; r<prod[j].codigo[h].length; r++) {
 							// console.log(prod[j].codigo[h][r], barc)
-							if(prod[j].codigo[h][r] === barc) {
+							if(prod[j].codigo[h][r] === barc.split('Alt')[barc.split('Alt').length-1]) {
 								if(prod[j].Stock[h][r] !== 0) {
 									setDepositoErr('')
 									scan = prod[j]
