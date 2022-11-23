@@ -99,7 +99,7 @@ function App() {
 							} />
 								<Route path='/clientes' element={
 								<Suspense fallback={<div className="load"><div style={{width: '100px'}}><img src={loader} alt="loader" style={{width: '100%'}} /></div></div>}>
-									<Users boxes={true} />
+									<Users />
 								</Suspense>
 							} />
 							<Route path='/expenses' element={

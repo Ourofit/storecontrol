@@ -7,4 +7,4 @@ function NewClient() {
         </div>
     )
 }
-export default NClient;
+export default NewClient;

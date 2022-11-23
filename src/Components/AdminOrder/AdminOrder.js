@@ -14,6 +14,7 @@ import AreYouSure from "../../Components/AreYouSure/AreYouSure";
 import SendMessage from "../../Components/SendMessage/SendMessage";
 import FindProduct from "../FindProduct/FindProduct";
 import { connect } from "react-redux";
+import ModalProduct from "../ModalProduct/ModalProduct";
 // import axios from "axios";
 // import { Order_master } from "../../Data/Order_master";
 // prettier-ignore
@@ -34,6 +35,7 @@ function AdminOrder({ setOrderReturn, setReturnedData, setOrder_Data, returnProd
 	const [employee_name, setEmployeeName] = useState('')
 
 	const [refund, setRefund] = useState(false)
+	const [moreOrder, setMoreOrder] = useState()
 
 	const neworder = () => {
 		setDetailsData(null)
@@ -231,6 +233,7 @@ function AdminOrder({ setOrderReturn, setReturnedData, setOrder_Data, returnProd
 													setEmployeeName={setEmployeeName}
 													allpro={allpro} 
 													setAllPro={setAllPro}
+													setMoreOrder={setMoreOrder}
 												/>
 											</div>
 										</div>
@@ -326,6 +329,7 @@ function AdminOrder({ setOrderReturn, setReturnedData, setOrder_Data, returnProd
 							} */}
 							<EditOrder details_data={order_details} particular={particular} />
 							<PayOrder details_data={details_data} setDetailsData={setDetailsData} setOrder_Data={setOrder_Data} setOrderDetails={setOrderDetails} order={order} setOrder={setOrder} setOrderReturn={setOrderReturn} returned_data={returned_data} setReturnedData={setReturnedData} returnProduct={returnProduct} return_val={return_val} />
+							<ModalProduct addorder={addorder} moreOrder={moreOrder} />
 							<AreYouSure />
 							<SendMessage />
 						</div>

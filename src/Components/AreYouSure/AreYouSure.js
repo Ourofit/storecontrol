@@ -36,7 +36,7 @@ function AreYouSure({ returnProduct, return_val, setReturnedData }) {
                                 <div className='col-md d-flex flex-column justify-content-center align-items-center'>
                                     <label className="form-check-label d-flex flex-column justify-content-center align-items-center" htmlFor="return_pro">
                                         <div>
-                                            <FontAwesomeIcon icon="credit-card" fontSize={60} color='blue'/>
+                                            <FontAwesomeIcon icon="turn-down" fontSize={60} color='red'/>
                                         </div>
                                         <div>
                                             <span style={{fontSize: 20}}>Devolver el Producto</span>
@@ -47,7 +47,7 @@ function AreYouSure({ returnProduct, return_val, setReturnedData }) {
                                 <div className='col-md d-flex flex-column justify-content-center align-items-center'>
                                     <label className="form-check-label d-flex flex-column justify-content-center align-items-center" htmlFor="exchange">
                                         <div>
-                                            <FontAwesomeIcon icon="money-bill-1-wave" fontSize={60} color='green'/>
+                                            <FontAwesomeIcon icon="right-left" fontSize={60} color='green'/>
                                         </div>
                                         <div>
                                             <span style={{fontSize: 20}}>Cambiar el Producto</span>
