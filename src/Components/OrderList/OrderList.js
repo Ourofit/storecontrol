@@ -29,7 +29,7 @@ function OrderList({ moreOrder, details_data, setDetailsData, order, setOrder, p
 			var pro_arr = []
 			var scan
 			var flag = 0
-			var prod = Products.filter(item => item.deposito.nombre === DepositoLogin.nombre)
+			var prod = DepositoLogin.Type !== 'Master Manager' ? Products.filter(item => item.deposito.nombre === DepositoLogin.nombre) : Products
 			// console.log(prod)
 			for(var j=0; j < prod.length; j++) {
 				// if(prod[j].deposito.nombre === Employee[0].deposito.nombre) {
@@ -38,7 +38,7 @@ function OrderList({ moreOrder, details_data, setDetailsData, order, setOrder, p
 					for(var h=0; h<prod[j].codigo.length; h++) {
 						for(var r=0; r<prod[j].codigo[h].length; r++) {
 							// console.log(prod[j].codigo[h][r], barc)
-							if(prod[j].codigo[h][r] === barc) {
+							if(prod[j].codigo[h][r] === barc.split('Alt')[barc.split('Alt').length-1]) {
 								if(prod[j].Stock[h][r] !== 0) {
 									setDepositoErr('')
 									scan = prod[j]
@@ -84,14 +84,15 @@ function OrderList({ moreOrder, details_data, setDetailsData, order, setOrder, p
 	useEffect(() => {
 		// console.log('--------OrderList--------')
 		var result = []
+		// console.log(order)
 		if(order?.Employee_name !== undefined) {
 			setEmployeeName(order.Employee_name)
-			setPaymentType(order.Tipo_de_Cliente)
 			if(order?.order_product !== undefined) {
 				for(var k=0; k < order?.order_product.length; k++) {
 					var pro1
 					for(var l=0; l < Products.length; l++) {
 						if(Products[l].Product_id === order?.order_product[k]?.Product_id) {
+							// setPaymentType(order.Tipo_de_Cliente)
 							pro1 = Products[l]
 						}
 					}
@@ -175,6 +176,7 @@ function OrderList({ moreOrder, details_data, setDetailsData, order, setOrder, p
 		var orders = order
 		for(var i=0; i < details_data?.length; i++) {
 			for(var j=0; j < Products.length; j++) {
+				// console.log(details_data[i].Product_id, Products[j].Product_id)
 				if(details_data[i].Product_id === Products[j].Product_id) {
 					if(e.target.value === 'Compras por Mayor') {
 						pricing = Products[j].costoCompra[details_data[i].parentArray][details_data[i].childArray]
@@ -186,15 +188,15 @@ function OrderList({ moreOrder, details_data, setDetailsData, order, setOrder, p
 					item.Total_price = pricing * details[i].Qty;
 					details[i] = item;
 					orders.Total_price = orders.Total_price + (pricing * details[i].Qty) - pre_price
-					// setDetailsData([
-					// 	...details_data.slice(0,i), 
-					// 	{
-					// 		...details_data[i], 
-					// 		Total_price: pricing * details_data[i].Qty
-					// 	}, 
-					// 	...details_data.slice(i+1, details_data.length)
-					// ])
-					// setOrder({...order, Total_price: order.Total_price + (pricing * details_data[i].Qty) - details_data[i].Total_price})
+					setDetailsData([
+						...details_data.slice(0,i), 
+						{
+							...details_data[i], 
+							Total_price: pricing * details_data[i].Qty
+						}, 
+						...details_data.slice(i+1, details_data.length)
+					])
+					setOrder({...order, Total_price: order.Total_price + (pricing * details_data[i].Qty) - details_data[i].Total_price})
 				}
 			}
 		}
@@ -303,14 +305,14 @@ function OrderList({ moreOrder, details_data, setDetailsData, order, setOrder, p
 										? <span>{order.Tipo_de_Cliente}</span>
 										: <div>
 											<div className='py-2 d-flex align-items-center'>
-												<input className="form-check-input" type="radio" name="paymentType" value='Compras por Mayor' id="flexRadioDefault2" onChange={handleRadio} checked={paymentType === 'Compras por Mayor'} />
 												<label className="form-check-label px-2" htmlFor="flexRadioDefault2">
+													<input className="form-check-input" type="radio" name="paymentType" value='Compras por Mayor' id="flexRadioDefault2" onChange={handleRadio} checked={paymentType === 'Compras por Mayor'} />
 													Compras por Mayor
 												</label>
 											</div>
 											<div className='py-2 d-flex align-items-center'>
-												<input className="form-check-input" type="radio" name="paymentType" value='Compra por menor' id="flexRadioDefault3" onChange={handleRadio} />
 												<label className="form-check-label px-2" htmlFor="flexRadioDefault3">
+													<input className="form-check-input" type="radio" name="paymentType" value='Compra por menor' id="flexRadioDefault3" onChange={handleRadio} checked={paymentType === 'Compra por menor'}/>
 													Compra por menor
 												</label>
 											</div>
@@ -343,7 +345,7 @@ function OrderList({ moreOrder, details_data, setDetailsData, order, setOrder, p
 						{
 							details_data?.map((item, index) => 
 								<div className='productorder' key={index}>
-									{/* {console.log('OrderList Loop', product[index]?.Product_id, item.Product_id, index)} */}
+									{/* {console.log('OrderList Loop', product[index]?.Color[item.parentArray], item)} */}
 									{
 										product[index]?.Color[item.parentArray].split(' (').length > 1
 										? <div className="bg-danger exhibit_tag">

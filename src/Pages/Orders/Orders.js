@@ -17,7 +17,7 @@ import axios from "axios";
 // import FindProduct from '../../Components/FindProduct/FindProduct'
 
 // prettier-ignore
-function Orders({ setOrderDetails, setOrdering, boxes = false, employee = null, refund = false, seRefund, searchbox = true, ...props }) {
+function Orders({ setOrderDetails, setOrdering, boxes = false, employee = null, refund = false, seRefund, searchbox = true,  ...props }) {
 
 	const { Orders, Sales_Activity, allsalesactivity, Status, allproduct, Products, allorders} = props
 
