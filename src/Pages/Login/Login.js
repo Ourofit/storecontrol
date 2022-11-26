@@ -182,10 +182,10 @@ function Login({...props}) {
 					{/* <p>Iniciar sesión</p> */}
 					<ul className="nav nav-pills nav-fill mb-3" id="pills-tab" role="tablist">
 						<li className="nav-item" role="presentation">
-							<button className="nav-link active" onClick={() => setBtnName('Login')} id="pills-login-tab" data-bs-toggle="pill" data-bs-target="#pills-login" type="button" role="tab" aria-controls="pills-login" aria-selected="true">Iniciar sesión</button>
+							<button className="nav-link active" onClick={() => setBtnName('Login')} id="pills-login-tab" data-toggle="pill" data-target="#pills-login" type="button" role="tab" aria-controls="pills-login" aria-selected="true">Iniciar sesión</button>
 						</li>
 						<li className="nav-item" role="presentation">
-							<button className="nav-link" onClick={() => setBtnName('Signup')} id="pills-signup-tab" data-bs-toggle="pill" data-bs-target="#pills-signup" type="button" role="tab" aria-controls="pills-signup" aria-selected="false">Inscribirse</button>
+							<button className="nav-link" onClick={() => setBtnName('Signup')} id="pills-signup-tab" data-toggle="pill" data-target="#pills-signup" type="button" role="tab" aria-controls="pills-signup" aria-selected="false">Inscribirse</button>
 						</li>
 					</ul>
 					{/* <div style={{ borderBottom: "1px solid #fff", width: "100%" }}></div> */}

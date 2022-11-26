@@ -302,8 +302,9 @@ function Home(props) {
     // -----------------------------------
     let totalVentas = Order?.reduce((acc, value )=> acc + value.Total_price, 0);
     let totalexpenses = Expenses?.reduce((acc, value )=> acc + parseInt(value.Total), 0);
-let totalBalance = 0;
-totalBalance += totalVentas - totalexpenses
+    let totalBalance = 0;
+    totalBalance += totalVentas - totalexpenses
+    
     return (
         <div className="home">
             <div className="container-fluid">
@@ -376,7 +377,7 @@ totalBalance += totalVentas - totalexpenses
             </div>
             <DetailsProduct details_data={details_data} idModal={idMod} setDetailsData={setDetailsData} index={co} stocktransfer={stocktransfer} />
             <TransferStock details_data={details_data} stocknum={stocknum} />
-        </div>
+       </div>
     );
 }
 

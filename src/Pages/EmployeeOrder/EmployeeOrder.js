@@ -546,7 +546,7 @@ function EmployeeOrder(props) {
             <EditOrder details_data={order_details} particular={particular} />
             <PayOrder details_data={details_data} setDetailsData={setDetailsData} setOrder_Data={setOrder} setOrderReturn={setOrder} order={order} setOrder={setOrder} setReturnedData={setReturnedData} />
             {/* <AreYouSure returnProduct={returnProduct} return_val={return_val} setReturnedData={setReturnedData} /> */}
-            <AreYouSure returnProduct={returnProduct} return_val={return_val} setReturnedData={setReturnedData} />
+            <AreYouSure returnProduct={returnProduct} return_val={return_val} setReturnedData={setReturnedData} name='EmployeeOrder' />
             <SendMessage />
             <FindProduct addorder={addorder} allpro={allpro} setAllPro={setAllPro} />
         </div>
