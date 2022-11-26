@@ -31,7 +31,7 @@ function OneDetail({ name, data, stocktransfer, ordershow, transfer=false, showo
                                 : null
                             }
                             {
-                                showorder
+                                showorder && window.location.href !== 'http://localhost:3000/dashboard'
                                 ? <button className='btn btn-primary ml-2' data-toggle='modal' data-target='#showorders' onClick={() => ordershow(data)}>
                                     <FontAwesomeIcon icon="shopping-bag"/> Show Orders
                                 </button>

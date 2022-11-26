@@ -134,9 +134,13 @@ function ProductTable({ inspro, ...props }) {
                         Color: JSON.stringify(Products[u].Color),
                         Size: JSON.stringify(Products[u].Size),
                         Stock: JSON.stringify(Products[u].Stock),
-                        precioVenta: JSON.stringify(Products_data[u].precioVenta),
-                        costoCompra: JSON.stringify(Products_data[u].costoCompra),
-                        costoMenor: JSON.stringify(Products_data[u].costoMenor)
+                        precioVenta: JSON.stringify(
+                            Products_data[u].precioVenta
+                        ),
+                        costoCompra: JSON.stringify(
+                            Products_data[u].costoCompra
+                        ),
+                        costoMenor: JSON.stringify(Products_data[u].costoMenor),
                     };
                     await axios.put(
                         "https://dtodo-indumentaria-server.herokuapp.com/product/edit",
