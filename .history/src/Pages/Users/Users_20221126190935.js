@@ -7,7 +7,6 @@ import axios from 'axios'
 import NewClient from '../../Components/NewClient/NewClient';
 import { store_Desposito, store_Category, store_Products, store_Orders } from '../../Functions/AllFunctions';
 import ClientEdit from '../../Components/ClientEdit/ClientEdit'
-import PayOrder from './../../Components/PayOrder/PayOrder'
 function Users(props) {
 
     const { allClients, Clients, CategoryAdd, category, Products, Deposito, deposito, Status, allproduct, Sales_Activity, allsalesactivity, allorders, Orders, notify } = props
@@ -184,7 +183,7 @@ const editRow =(user)=>{
             </div>
             <NewClient allClients={Clients} Province={Province} depositVal={deposit} />
             <ClientEdit allClients={Clients} Province={Province} depositVal={deposit} currentUser={currentUser} />
-            <PayOrder allClients={Clients}  Province={Province} depositVal={deposit} />
+            <PayOrder  />
         </div>
     )
 }

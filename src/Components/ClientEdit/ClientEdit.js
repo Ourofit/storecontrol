@@ -10,7 +10,7 @@ import axios from "axios";
 
 
 // prettier-ignore
-function ClientEdit({ idModal = "client_edit", allClients, Province,depositVal, ...props }) {
+function ClientEdit({ idModal = "client_edit", allClients, Province,depositVal, currentUser, ...props }) {
     const { clients, Status } = props;
 
 
@@ -28,10 +28,10 @@ function ClientEdit({ idModal = "client_edit", allClients, Province,depositVal, 
     };
 
     const initialValues = {
-        Nombre: "",
-        Number: "",
-        Pais:"",
-        Provincia: "",
+        Nombre: currentUser.nombre,
+        Number: currentUser.number,
+        Pais:currentUser.Country,
+        Provincia: currentUser.Provincia,
     };
 
 
@@ -40,7 +40,8 @@ function ClientEdit({ idModal = "client_edit", allClients, Province,depositVal, 
         console.log(values)
         if (Status) {
 
-            await axios.post("http://localhost:5000/register/edit", {
+            await axios.put("http://localhost:5000/register/edit", {
+                id: currentUser.id,
                 nombre: values.Nombre,
                 number: values.Number,
                 Country: values.Pais,
@@ -59,35 +60,7 @@ function ClientEdit({ idModal = "client_edit", allClients, Province,depositVal, 
 
                     resetForm();
                 }).catch(err => console.log(err))
-        } else {
-            var new_client = {
-                nombre: values.Nombre,
-                number: values.Number,
-                Country: values.Pais,
-                Provincia: values.Provincia,
-                Deposito_id: depositVal
-
-            }
-            console.log(new_client)
-            clients(new_client)
-
-            var m = allClients;
-            m.push(new_client);
-
-            // setAllExpenses(m);
-            if (window.desktop) {
-                await window.api.addData(m, "Clients")
-            }
-            resetForm();
-
-
-
-        }
-
-
-      
-
-    };
+        }  };
 
 
     const formRef = useRef();
@@ -144,10 +117,10 @@ function ClientEdit({ idModal = "client_edit", allClients, Province,depositVal, 
                                                     <Inputbox type="text" name="Number" placeholder="Celular" />
                                                 </div>
                                                <div >
-                                                    <Dropdown name='Pais' onChange={settingval} dropvalues={['Argentina']} value_select={props.values.Pais} touched={props.touched.Pais} errors={props.errors.Pais} />
+                                                    <Dropdown name='PaisE' onChange={settingval} dropvalues={['Argentina']} value_select={props.values.Pais} touched={props.touched.Pais} errors={props.errors.Pais} />
                                                 </div >
                                                 <div >
-                                                    <Dropdown name='Provincia' onChange={settingval} dropvalues={Province?.provincias?.map((item) => item.nombre)} value_select={props.values.Provincia} touched={props.touched.Provincia} errors={props.errors.Provincia} />
+                                                    <Dropdown name='Province' onChange={settingval} dropvalues={Province?.provincias?.map((item) => item.nombre)} value_select={props.values.Provincia} touched={props.touched.Provincia} errors={props.errors.Provincia} />
                                                 </div> 
 
                                             </div>

@@ -10,9 +10,9 @@ import NewClient from '../../Components/NewClient/NewClient';
 // import NotifyAuto from "../SendMessage/NotifyAuto";
 
 // prettier-ignore
-function PayOrder({ Province, deposit, details_data, setDetailsData, order, setOrder, setOrderReturn, setOrder_Data, returnProduct, return_val, setReturnedData = null, setOrderDetails = null, returned_data = null, ...props }) {
+function PayOrder({ Clients, details_data, setDetailsData, order, setOrder, setOrderReturn, setOrder_Data, returnProduct, return_val, setReturnedData = null, setOrderDetails = null, returned_data = null, ...props }) {
 
-    const {Clients,  Products, allproduct, Orders, allorders, Sales_Activity, allsalesactivity, notify, Notific, Status } = props
+    const { Products, allproduct, Orders, allorders, Sales_Activity, allsalesactivity, notify, Notific, Status } = props
     // if(details_data !== null) {
     //     var code = Products?.filter((p) => p.Product_id === details_data[0]?.Product_id)[0]
     //     for(var c=0; c<code.codigo.length; c++) {

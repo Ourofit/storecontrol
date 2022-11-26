@@ -7,7 +7,7 @@ import axios from 'axios'
 import NewClient from '../../Components/NewClient/NewClient';
 import { store_Desposito, store_Category, store_Products, store_Orders } from '../../Functions/AllFunctions';
 import ClientEdit from '../../Components/ClientEdit/ClientEdit'
-import PayOrder from './../../Components/PayOrder/PayOrder'
+import PayOrder from './../../'
 function Users(props) {
 
     const { allClients, Clients, CategoryAdd, category, Products, Deposito, deposito, Status, allproduct, Sales_Activity, allsalesactivity, allorders, Orders, notify } = props
