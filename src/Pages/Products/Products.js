@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Overall from "../../Components/Overall/Overall";
-import { useReactToPrint } from "react-to-print";
+// import { useReactToPrint } from "react-to-print";
 import { connect } from "react-redux";
 import axios from "axios";
 import { IoCloseCircle } from "react-icons/io5";
@@ -18,7 +18,6 @@ import FindProduct from "../../Components/FindProduct/FindProduct";
 import ShowOrders from "../../Components/ShowOrders/ShowOrders";
 import DetailsOrder from "../../Components/DetailsOrder/DetailsOrder";
 import EditOrder from "../../Components/EditOrder/EditOrder";
-
 
 // import AdminOrder from "../../Components/AdminOrder/AdminOrder";
 // import {
@@ -130,9 +129,9 @@ function Products(props) {
 
     const printRef = useRef();
 
-    const handlePrint = useReactToPrint({
-        content: () => printRef.current,
-    });
+    // const handlePrint = useReactToPrint({
+    //     content: () => printRef.current,
+    // });
 
     const checking = (e, val) => {
         if (e.target.checked) {

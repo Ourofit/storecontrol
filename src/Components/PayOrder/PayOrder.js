@@ -4,8 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./PayOrder.scss";
 import axios from "axios";
 import { connect } from "react-redux";
-import Dropdown from "../Dropdown/Dropdown"
-import NewClient from '../../Components/NewClient/NewClient';
+import Dropdown from "../Dropdown/Dropdown";
+import NewClient from "../../Components/NewClient/NewClient";
 // import { store_SalesActivity } from "../../Functions/AllFunctions";
 // import NotifyAuto from "../SendMessage/NotifyAuto";
 
@@ -26,7 +26,7 @@ function PayOrder({ Province, deposit, details_data, setDetailsData, order, setO
 
     const [payment, setPayment] = useState(null)
     const [client_name, setClientName] = useState('')
-    const [errormsg, setErrorMsg] = useState(false)
+    const [, setErrorMsg] = useState(false)
     const [payerr, setPayErr] = useState(false)
 
     const loop = useRef(true)
@@ -641,15 +641,11 @@ function PayOrder({ Province, deposit, details_data, setDetailsData, order, setO
         }
     }
 
-
-
-
     const formRef = useRef();
     const settingval = (name, val) => {
         formRef.current.setFieldValue(name, val);
     };
 
-    console.log(Clients, 'cli')
     return (
         <div className='payorder'>
             <div className="modal fade" id="payorder" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

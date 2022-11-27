@@ -105,17 +105,18 @@ const rootReducer = (state = initialState, action) => {
                 ...state,
                 Expenses: [...state.Expenses, action.item],
             };
+
         case "CLIENTS":
             if (Array.isArray(action.item)) {
                 return {
                     ...state,
-                    Clients: action.item
-                }
+                    Clients: action.item,
+                };
             }
             return {
-                Clients: [...state.Clients, action.item]
+                ...state,
+                Clients: [...state.Clients, action.item],
             };
-
 
         case "NOTIFICATION":
             if (Array.isArray(action.item)) {

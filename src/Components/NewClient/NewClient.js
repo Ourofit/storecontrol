@@ -6,16 +6,11 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Form, Formik } from "formik";
 import { connect } from "react-redux";
 import axios from "axios";
-import './NewClient.scss'
-
+import "./NewClient.scss";
 
 // prettier-ignore
-function NewClient({ idModal = "new_client", allClients, Province,depositVal, ...props }) {
+function NewClient({ idModal = "new_client", allClients, Province, depositVal, ...props }) {
     const { clients, Status } = props;
-
-
-
-
 
     const validate = (values) => {
         const errors = {};
@@ -34,10 +29,7 @@ function NewClient({ idModal = "new_client", allClients, Province,depositVal, ..
         Provincia: "",
     };
 
-
-
     const onSubmit = async (values, { resetForm }) => {
-        console.log(values)
         if (Status) {
 
             await axios.post("http://localhost:5000/register/new", {
@@ -79,16 +71,10 @@ function NewClient({ idModal = "new_client", allClients, Province,depositVal, ..
                 await window.api.addData(m, "Clients")
             }
             resetForm();
-
-
-
         }
-
-
         console.log("subtmiting data client")
 
     };
-
 
     const formRef = useRef();
 
@@ -143,10 +129,10 @@ function NewClient({ idModal = "new_client", allClients, Province,depositVal, ..
                                                 <div className="col-8 d-flex align-items-center">
                                                     <Inputbox type="text" name="Number" placeholder="Celular" />
                                                 </div>
-                                               <div >
+                                               <div>
                                                     <Dropdown name='Pais' onChange={settingval} dropvalues={['Argentina']} value_select={props.values.Pais} touched={props.touched.Pais} errors={props.errors.Pais} />
-                                                </div >
-                                                <div >
+                                                </div>
+                                                <div>
                                                     <Dropdown name='Provincia' onChange={settingval} dropvalues={Province?.provincias?.map((item) => item.nombre)} value_select={props.values.Provincia} touched={props.touched.Provincia} errors={props.errors.Provincia} />
                                                 </div> 
 
@@ -186,4 +172,3 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(NewClient);
-

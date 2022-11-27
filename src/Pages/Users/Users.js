@@ -1,35 +1,37 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from "react";
 import { IoCloseCircle } from "react-icons/io5";
 import { AiFillEdit } from "react-icons/ai";
 import { connect } from "react-redux";
-import "./Users.scss"
-import axios from 'axios'
-import NewClient from '../../Components/NewClient/NewClient';
-import { store_Desposito, store_Category, store_Products, store_Orders } from '../../Functions/AllFunctions';
-import ClientEdit from '../../Components/ClientEdit/ClientEdit'
-import PayOrder from './../../Components/PayOrder/PayOrder'
+import "./Users.scss";
+import axios from "axios";
+import NewClient from "../../Components/NewClient/NewClient";
+import {
+    store_Desposito,
+    store_Category,
+    store_Products,
+    store_Orders,
+} from "../../Functions/AllFunctions";
+import ClientEdit from "../../Components/ClientEdit/ClientEdit";
+import PayOrder from "./../../Components/PayOrder/PayOrder";
+
+// prettier-ignore
 function Users(props) {
 
     const { allClients, Clients, CategoryAdd, category, Products, Deposito, deposito, Status, allproduct, Sales_Activity, allsalesactivity, allorders, Orders, notify } = props
+    
     const [Province, setProvince] = useState();
     const [, setAllPro] = useState(Products);
-    const[currentUser, setCurrentUser]=useState({
-        id:null , nombre:'', number:'', Provincia:'', Country:''
-    })
+    const[currentUser, setCurrentUser]=useState()
     const loop = useRef(true)
 
-const editRow =(user)=>{
-    setCurrentUser({
-        id:user.id, nombre:user.nombre, number:user.number, Provincia:user.Provincia, Country:user.Country
-    })
-}
+    const editRow =(user)=>{
+        setCurrentUser(user)
+    }
 
     if (localStorage.getItem('DepositoLogin') !== null) {
         var deposit = JSON.parse(localStorage.getItem('DepositoLogin')).Deposito_id;
 
     }
-
-
 
     useEffect(() => {
         async function dep_method() {
@@ -37,6 +39,13 @@ const editRow =(user)=>{
             await store_Category('Users', Status, CategoryAdd, category)
             await store_Products('Users', Status, Products, allproduct, setAllPro, Sales_Activity, allorders, allsalesactivity)
             await store_Orders('Users', Status, Orders, allorders, notify)
+            if (Status) {
+                axios.get(`https://apis.datos.gob.ar/georef/api/provincias?orden=nombre&aplanar=true&campos=basico&max=5000&exacto=true&formato=json`)
+                    .then((response) => {
+                        setProvince(response.data);
+                    })
+                    .catch((err) => console.log(err));
+            }
         }
 
         if (loop.current) {
@@ -51,17 +60,7 @@ const editRow =(user)=>{
                    } */
             ))
         }
-        if (Status) {
-            axios.get(
-                `https://apis.datos.gob.ar/georef/api/provincias?orden=nombre&aplanar=true&campos=basico&max=5000&exacto=true&formato=json`
-            )
-                .then((response) => {
-                    setProvince(response.data);
-                })
-                .catch((err) => console.log(err));
-        }
         if (Status && window.desktop) {
-
             window.api.getAllData("Clients_Returns").then(async (client_ret) => {
                 if (client_ret.Expenses_Returns) {
                     client_ret.Expenses_Returns.forEach(async (ret) => {
@@ -90,22 +89,17 @@ const editRow =(user)=>{
                   window.api.addData(response.data, "Clients")
                  }) 
              }) */
-
-
     }, [CategoryAdd, Deposito, Orders, Products, Sales_Activity, Status, allClients, allorders, allproduct, allsalesactivity, category, deposito, notify])
 
     const removeClient = async (id) => {
-        var e = Clients.filter(function (x) { return x.Clients !== id })
-
-        var result = [];
-        result = e
-
-        allClients(result)
         if (Status) {
             await axios.delete(`http://localhost:5000/register/delete/${id}`);
+            var e = Clients.filter(function (x) { return x.id !== id })
+            allClients(e)
         } else {
             if (window.desktop) {
-                await window.api.addData(result, "Clients")
+                var e2 = Clients.filter(function (x) { return x.id !== id })
+                await window.api.addData(e2, "Clients")
                 var cli_ret2 = []
                 await window.api.getAllData('Clients_Returns').then(async retur => {
                     // console.log(return_ord.Orders_Returns)
@@ -154,7 +148,6 @@ const editRow =(user)=>{
 
                                 <tr key={key} >
                                     <th scope="row" className='text-center align-middle'>{key + 1}</th>
-
                                     <td className='text-center align-middle'>{i.nombre}</td>
                                     <td className='text-center align-middle'>{i.number} </td>
                                     <td className='text-center align-middle'>{i.Provincia}</td>
@@ -170,25 +163,17 @@ const editRow =(user)=>{
                                             data-target="#client_edit"  onClick={() => editRow(i)}/>
                                     </td>
                                 </tr>
-
-
-
-
                             ))}
-
-
-
                         </tbody>
                     </table>
                 </div>
             </div>
             <NewClient allClients={Clients} Province={Province} depositVal={deposit} />
-            <ClientEdit allClients={Clients} Province={Province} depositVal={deposit} currentUser={currentUser} />
+            <ClientEdit Province={Province} setCurrentUser={setCurrentUser} currentUser={currentUser} />
             <PayOrder allClients={Clients}  Province={Province} depositVal={deposit} />
         </div>
     )
 }
-
 
 const mapStateToProps = (state) => {
     return {

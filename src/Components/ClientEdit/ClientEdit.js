@@ -7,66 +7,68 @@ import { Form, Formik } from "formik";
 import { connect } from "react-redux";
 import axios from "axios";
 
-
-
 // prettier-ignore
-function ClientEdit({ idModal = "client_edit", allClients, Province,depositVal, currentUser, ...props }) {
-    const { clients, Status } = props;
+function ClientEdit({ idModal = "client_edit", Province, setCurrentUser, currentUser, ...props }) {
 
-
-
-
+    const { Clients, allclients, Status } = props;
+    const editformRef = useRef();
 
     const validate = (values) => {
         const errors = {};
         if (!values.Nombre) errors.Nombre = "Required";
         if (!values.Number) errors.Number = "Required";
-        if (!values.Pais) errors.Pais = "Required";
-        if (!values.Provincia) errors.Provincia = "Required";
+        if (!values.PaisE) errors.PaisE = "Required";
+        if (!values.Province) errors.Province = "Required";
 
         return errors;
     };
 
     const initialValues = {
-        Nombre: currentUser.nombre,
-        Number: currentUser.number,
-        Pais:currentUser.Country,
-        Provincia: currentUser.Provincia,
+        Nombre: currentUser ? currentUser?.nombre : '',
+        Number: currentUser ? currentUser?.number : '',
+        PaisE: currentUser ? currentUser?.Country : '',
+        Province: currentUser ? currentUser?.Provincia : '',
     };
 
-
-
     const onSubmit = async (values, { resetForm }) => {
-        console.log(values)
         if (Status) {
-
             await axios.put("http://localhost:5000/register/edit", {
                 id: currentUser.id,
                 nombre: values.Nombre,
                 number: values.Number,
-                Country: values.Pais,
-                Provincia: values.Provincia,
-                Deposito_id: depositVal
-
+                Country: values.PaisE,
+                Provincia: values.Province,
             })
                 .then(async (item) => {
-                    clients(item.data)
-                    var m = allClients;
-                    m.push(item.data);
+                    var m = Clients;
+                    var index = Clients.findIndex(ele => ele.id === currentUser.id)
+                    m[index] = {
+                        ...currentUser,
+                        nombre: values.Nombre,
+                        number: values.Number,
+                        Country: values.PaisE,
+                        Provincia: values.Province,
+                    }
+                    setCurrentUser(m[index])
+                    allclients(m)
 
                     if (window.desktop) {
                         await window.api.addData(m, "Clients")
                     }
 
-                    resetForm();
+                    resetForm()
+                    // var client_edit = document.getElementById("client_edit");
+                    // client_edit.classList.remove("show");
+                    // client_edit.style.display = 'none'
+                    // client_edit.ariaHidden = 'true'
+                    // var client_editbackdrop = document.getElementsByClassName("modal-backdrop")[0];
+                    // client_editbackdrop.remove()
                 }).catch(err => console.log(err))
-        }  };
-
-
-    const formRef = useRef();
+        }  
+    };
 
     const settingval = (name, val) => {
-        formRef.current.setFieldValue(name, val);
+        editformRef.current.setFieldValue(name, val);
     };
 
     return (
@@ -83,7 +85,7 @@ function ClientEdit({ idModal = "client_edit", allClients, Province,depositVal, 
                                 data-dismiss="modal"
                                 aria-label="Close"
                                 onClick={() => {
-                                    formRef.current.resetForm()
+                                    editformRef.current.resetForm()
                                 }}
                             >
                                 <FontAwesomeIcon icon="close" />
@@ -94,7 +96,7 @@ function ClientEdit({ idModal = "client_edit", allClients, Province,depositVal, 
                             validate={validate}
                             onSubmit={onSubmit}
                             enableReinitialize={true}
-                            innerRef={formRef}
+                            innerRef={editformRef}
                         >
                             {(props) => (
                                 <Form>
@@ -116,21 +118,18 @@ function ClientEdit({ idModal = "client_edit", allClients, Province,depositVal, 
                                                 <div className="col-8 d-flex align-items-center">
                                                     <Inputbox type="text" name="Number" placeholder="Celular" />
                                                 </div>
-                                               <div >
-                                                    <Dropdown name='PaisE' onChange={settingval} dropvalues={['Argentina']} value_select={props.values.Pais} touched={props.touched.Pais} errors={props.errors.Pais} />
-                                                </div >
-                                                <div >
-                                                    <Dropdown name='Province' onChange={settingval} dropvalues={Province?.provincias?.map((item) => item.nombre)} value_select={props.values.Provincia} touched={props.touched.Provincia} errors={props.errors.Provincia} />
+                                                <div>
+                                                    <Dropdown name='PaisE' onChange={settingval} dropvalues={['Argentina']} value_select={props.values.PaisE} touched={props.touched.PaisE} errors={props.errors.PaisE} />
+                                                </div>
+                                                <div>
+                                                    <Dropdown name='Province' onChange={settingval} dropvalues={Province?.provincias?.map((item) => item.nombre)} value_select={props.values.Province} touched={props.touched.Province} errors={props.errors.Province} />
                                                 </div> 
 
                                             </div>
                                         </div>
-
-
-
                                     </div>
                                     <div className="modal-footer">
-                                        <button type='submit' className="btn btn-primary">
+                                        <button type='submit' className="btn btn-primary" data-toggle="modal" data-target="#client_edit">
                                             Guardar
                                         </button>
                                     </div>
@@ -146,11 +145,12 @@ function ClientEdit({ idModal = "client_edit", allClients, Province,depositVal, 
 const mapStateToProps = (state) => {
     return {
         Status: state.Status,
+        Clients: state.Clients,
     };
 };
 const mapDispatchToProps = (dispatch) => {
     return {
-        clients: (val) => {
+        allclients: (val) => {
             dispatch({
                 type: "CLIENTS",
                 item: val,
@@ -159,4 +159,3 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ClientEdit);
-
