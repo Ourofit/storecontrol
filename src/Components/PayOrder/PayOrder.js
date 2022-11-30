@@ -12,7 +12,7 @@ import NewClient from "../../Components/NewClient/NewClient";
 // prettier-ignore
 function PayOrder({ Province, deposit, details_data, setDetailsData, order, setOrder, setOrderReturn, setOrder_Data, returnProduct, return_val, setReturnedData = null, setOrderDetails = null, returned_data = null, ...props }) {
 
-    const {Clients,  Products, allproduct, Orders, allorders, Sales_Activity, allsalesactivity, notify, Notific, Status } = props
+    const {Clients,  Products, allproduct, Orders, allorders, Sales_Activity, allsalesactivity, notify, Notific, Status, allClients } = props
     // if(details_data !== null) {
     //     var code = Products?.filter((p) => p.Product_id === details_data[0]?.Product_id)[0]
     //     for(var c=0; c<code.codigo.length; c++) {
@@ -42,8 +42,11 @@ function PayOrder({ Province, deposit, details_data, setDetailsData, order, setO
             setClientName(order.Client_name)
         }
         async function fetchSale() {
-            if (Sales_Activity.length === 0) {
+            if (Clients.length === 0) {
                 if (Status) {
+                    await axios.get('http://localhost:5000/register').then(data_item => {
+                        allClients(data_item.data)
+                    })
                     // await store_SalesActivity('PayOrder', Status, Sales_Activity, allsalesactivity)
                     // await axios.get('http://localhost:5000/salesactivity')
                     //     .then(async item => {
@@ -57,9 +60,9 @@ function PayOrder({ Province, deposit, details_data, setDetailsData, order, setO
                     //         allsalesactivity(main_data)
                     //     })
                 } else {
-                    if (window.desktop) {
-                        await window.api.getAllData("Sales_Activity").then((item) => allsalesactivity(item.Sales_Activity));
-                    }
+                    // if (window.desktop) {
+                    //     await window.api.getAllData("Sales_Activity").then((item) => allsalesactivity(item.Sales_Activity));
+                    // }
                 }
             }
         }
@@ -67,7 +70,7 @@ function PayOrder({ Province, deposit, details_data, setDetailsData, order, setO
             fetchSale()
             loop.current = false
         }
-    }, [Sales_Activity, allsalesactivity, Status, order])
+    }, [Clients, allClients, Status, order])
 
     const createOrder = async (e, val) => {
         e.preventDefault()
@@ -641,9 +644,8 @@ function PayOrder({ Province, deposit, details_data, setDetailsData, order, setO
         }
     }
 
-    const formRef = useRef();
     const settingval = (name, val) => {
-        formRef.current.setFieldValue(name, val);
+        setClientName(val)
     };
 
     return (
@@ -663,9 +665,6 @@ function PayOrder({ Province, deposit, details_data, setDetailsData, order, setO
                                     <div className="col-12">
                                         <div className='order_client my-1' style={{ width: "50%" }}>
                                             <Dropdown name='Cliente' onChange={settingval} dropvalues={Clients?.map((item) => item.nombre)} />
-
-
-
                                         </div>
                                         <div className="col-12 btn_new_user">
                                             <button
@@ -770,6 +769,12 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
+        allClients: (val) => {
+            dispatch({
+                type: "CLIENTS",
+                item: val,
+            });
+        },
         allorders: (val) => {
             dispatch({
                 type: "ORDERS",

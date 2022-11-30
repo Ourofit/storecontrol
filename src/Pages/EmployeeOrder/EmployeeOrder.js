@@ -4,7 +4,7 @@ import { useReactToPrint } from "react-to-print";
 
 import "./EmployeeOrder.scss";
 import OrderList from "../../Components/OrderList/OrderList";
-import NewProduct from "../../Components/NewProduct/NewProduct";
+// import NewProduct from "../../Components/NewProduct/NewProduct";
 import DetailsOrder from "../../Components/DetailsOrder/DetailsOrder";
 import Orders from "../Orders/Orders";
 import EditOrder from "../../Components/EditOrder/EditOrder";
@@ -34,7 +34,7 @@ function EmployeeOrder(props) {
 	const [returned_data, setReturnedData] = useState(null)
 	const [return_val, setReturnVal] = useState()
 
-    const [productinsert, setProductInsert] = useState(null);
+    // const [productinsert, setProductInsert] = useState(null);
     const [paymentType, setPaymentType] = useState("Compras por Mayor");
 	const [deposito_err, setDepositoErr] = useState('')
 
@@ -439,9 +439,9 @@ function EmployeeOrder(props) {
                                     Nueva Orden
                                 </button>
                             </div>
-                            <div className="new_product_btn my-2">
+                            {/* <div className="new_product_btn my-2">
                                 <NewProduct details_data={productinsert} setDetailsData={setProductInsert} allpro={allpro} setAllPro={setAllPro} />
-                            </div>
+                            </div> */}
                             <div className="find_product_btn my-2">
                                 <button className="btn btn_all btn-primary w-100" data-toggle="modal" data-target="#findproduct">
                                     Buscar Producto

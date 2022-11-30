@@ -19,11 +19,12 @@ import axios from "axios";
 // prettier-ignore
 function Orders({ setOrderDetails, setOrdering, boxes = false, employee = null, refund = false, seRefund, searchbox = true,  ...props }) {
 
-	const { Orders, Sales_Activity, allsalesactivity, Status, allproduct, Products, allorders} = props
+	const { Orders, Sales_Activity, allsalesactivity, Status, allproduct, Products, allorders, Deposito} = props
 
 	const [arr, setArr] = useState('desc')
 	const [search, setSeatrch] = useState('')
 	const [allorder, setAllOrders] = useState()
+	const [filter_order, setFilterOrder] = useState()
 	const [details_data, setDetailsData] = useState(null)
 	const [order, setOrder] = useState(null)
 	const [particular, setparticular] = useState(null)
@@ -113,40 +114,49 @@ function Orders({ setOrderDetails, setOrdering, boxes = false, employee = null, 
 		}
 		
 		async function order_storing() {
-			if(employee !== null) {
+			var DepositoLogin = JSON.parse(localStorage.getItem("DepositoLogin"))
+			if(employee !== null || DepositoLogin.Type !== 'Master Manager') {
 				var result = []
-				for (var i = 0; i < Orders.length; i++) {
-					if (Orders[i].Deposito_name === employee) {
+				for (let i = 0; i < Orders.length; i++) {
+					var all_deposit = []
+					all_deposit.push(DepositoLogin.nombre)
+					var filter_deposit = Deposito.find(ele => ele.nombre === Orders[i].Deposito_name && ele.Deposito_id_fk === DepositoLogin.Deposito_id && ele.Type === 'Store')
+					var fk_deposit = Deposito.find(ele2 => ele2.Deposito_id === DepositoLogin.Deposito_id_fk)
+					if(filter_deposit) all_deposit.push(filter_deposit.nombre)
+					if(fk_deposit) all_deposit.push(fk_deposit.nombre)
+					if (all_deposit.includes(Orders[i].Deposito_name)) {
 						result.push(Orders[i])
 					}
 				}
 				setAllOrders(result)
+				setFilterOrder(result)
 			} else {
 				setAllOrders(Orders)
+				setFilterOrder(Orders)
 			}
 		}
 		order_storing()
-	}, [Orders, employee, Products, details_data])
+	}, [Orders, employee, Products, details_data, Deposito])
 
 	const onChange = (e) => {
 		setSeatrch(e.target.value)
 		var result = []
 		if(e.target.value !== '') {
-			for (var i = 0; i < Orders.length; i++) {
+			for (var i = 0; i < filter_order.length; i++) {
 				if(searching_val === 'Nombre Vendedor') {
-					var fullname = Orders[i].Employee_name
+					var fullname = filter_order[i].Employee_name
 					if (fullname.toUpperCase().indexOf(e.target.value.toUpperCase()) > -1) {
-						result.push(Orders[i])
+						result.push(filter_order[i])
 					}
 				} else {
-					var client = Orders[i].Client_name
+					var client = filter_order[i].Client_name
 					if(client.toUpperCase().indexOf(e.target.value.toUpperCase()) > -1) {
-						result.push(Orders[i])
+						result.push(filter_order[i])
 					}
 				}
 			}
 		} else {
-			result = Orders
+			result = filter_order
 		}
 		setAllOrders(result)
 	}
@@ -370,11 +380,11 @@ function Orders({ setOrderDetails, setOrdering, boxes = false, employee = null, 
 	const sorting_year = (e) => {
 		setYear(e.target.value)
 		if(e.target.value === 'All') {
-			setAllOrders(Orders)
+			setAllOrders(filter_order)
 			setMonth_dis(true)
 			setDay_dis(true)
 		} else {
-			setAllOrders(Orders.filter(ele => new Date(ele.Fecha).getFullYear() === parseInt(e.target.value)))
+			setAllOrders(filter_order.filter(ele => new Date(ele.Fecha).getFullYear() === parseInt(e.target.value)))
 			setMonth_dis(false)
 		}
 		setMonth('')
@@ -385,10 +395,10 @@ function Orders({ setOrderDetails, setOrdering, boxes = false, employee = null, 
 	const sorting_month = (e) => {
 		setMonth(e.target.value)
 		if(e.target.value === 'All') {
-			setAllOrders(Orders.filter(ele => new Date(ele.Fecha).getFullYear() === parseInt(year)))
+			setAllOrders(filter_order.filter(ele => new Date(ele.Fecha).getFullYear() === parseInt(year)))
 			setDay_dis(true)
 		} else {
-			setAllOrders(Orders.filter(ele => 
+			setAllOrders(filter_order.filter(ele => 
 				new Date(ele.Fecha).getFullYear() === parseInt(year) &&
 				new Date(ele.Fecha).getMonth() === month_sel.indexOf(e.target.value)
 			))
@@ -401,12 +411,12 @@ function Orders({ setOrderDetails, setOrdering, boxes = false, employee = null, 
 	const sorting_day = (e) => {
 		setDay(e.target.value)
 		if(e.target.value === 'All') {
-			setAllOrders(Orders.filter(ele => 
+			setAllOrders(filter_order.filter(ele => 
 				new Date(ele.Fecha).getFullYear() === parseInt(year) &&
 				new Date(ele.Fecha).getMonth() === month_sel.indexOf(month)
 			))
 		} else {
-			setAllOrders(Orders.filter(ele => 
+			setAllOrders(filter_order.filter(ele => 
 				new Date(ele.Fecha).getFullYear() === parseInt(year) &&
 				new Date(ele.Fecha).getMonth() === month_sel.indexOf(month) &&
 				new Date(ele.Fecha).getDate() === parseInt(e.target.value)
@@ -415,7 +425,7 @@ function Orders({ setOrderDetails, setOrdering, boxes = false, employee = null, 
 	}
 
 	// ----------------OVERALL DATA------------------------
-	let cantVentas = Orders.length;
+	let cantVentas = filter_order?.length;
 	const cobradoVentas =()=>{
 		let total;
 		let onlyPaid =  allorder?.filter(status => status.Order_status==="Paid")
@@ -617,6 +627,7 @@ const mapStateToProps = (state) => {
         Notific: state.NotifyMaster,
         Orders: state.Orders,
         Status: state.Status,
+        Deposito: state.Deposito,
     };
 };
 

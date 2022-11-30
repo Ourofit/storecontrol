@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Overall from "../../Components/Overall/Overall";
 // import { useReactToPrint } from "react-to-print";
@@ -13,7 +13,7 @@ import NewProduct from "../../Components/NewProduct/NewProduct";
 // import ProductTable from "../../Components/ProductTable/ProductTable";
 import DetailsProduct from "../../Components/DetailsProduct/DetailsProduct";
 import TransferStock from "../../Components/TransferStock/TransferStock";
-import PrintBarcode from "../../Components/PrintBarcode/PrintBarcode";
+// import PrintBarcode from "../../Components/PrintBarcode/PrintBarcode";
 import FindProduct from "../../Components/FindProduct/FindProduct";
 import ShowOrders from "../../Components/ShowOrders/ShowOrders";
 import DetailsOrder from "../../Components/DetailsOrder/DetailsOrder";
@@ -38,7 +38,7 @@ function Products(props) {
     const [details_data, setDetailsData] = useState(null);
     const [co, setCo] = useState(null)
     const [stocknum, setStockNum] = useState();
-    const [printBar, setPrintBar] = useState([]);
+    // const [printBar, setPrintBar] = useState([]);
     const [show_data, setShowData] = useState(null)
 
     const [details_order, setDetailsOrder] = useState(null)
@@ -127,23 +127,23 @@ function Products(props) {
         setShowData(ord)
     }
 
-    const printRef = useRef();
+    // const printRef = useRef();
 
     // const handlePrint = useReactToPrint({
     //     content: () => printRef.current,
     // });
 
-    const checking = (e, val) => {
-        if (e.target.checked) {
-            setPrintBar([...printBar, val]);
-        } else {
-            setPrintBar(
-                printBar.filter(function (x) {
-                    return x.Product_id !== val.Product_id;
-                })
-            );
-        }
-    };
+    // const checking = (e, val) => {
+    //     if (e.target.checked) {
+    //         setPrintBar([...printBar, val]);
+    //     } else {
+    //         setPrintBar(
+    //             printBar.filter(function (x) {
+    //                 return x.Product_id !== val.Product_id;
+    //             })
+    //         );
+    //     }
+    // };
 
     // const [addshow, setAddShow] = useState(true);
     // console.log(CategoryAdd);
@@ -787,9 +787,9 @@ function Products(props) {
                             className="close_icon_ind_pro" onClick={() => remove(p.Product_id)} />
                         <AiFillEdit style={{ display: "inline" }} className="edit_icon_ind_pro" onClick={() => edit(i)} />
                     </td>
-                    <td className='text-center align-middle' style={{ width: 25 }}>
+                    {/* <td className='text-center align-middle' style={{ width: 25 }}>
                         <input type='checkbox' onChange={(e) => checking(e, p)} style={{ zIndex: 10 }} />
-                    </td>
+                    </td> */}
                 </tr>
             );
         } else {
@@ -875,14 +875,14 @@ function Products(props) {
                     <div className="col-md text-right my-2">
                         <div className="d-flex justify-content-end">
                             <div className="barcode_all_print d-flex align-items-center">
-                                {printBar.length === 0 ? null : (
+                                {/* {printBar.length === 0 ? null : (
                                     <div
                                         className="bg-primary text-light p-1 rounded-circle text-center"
                                         style={{ width: 32 }}
                                     >
                                         {printBar.length}
                                     </div>
-                                )}
+                                )} */}
                                 {/*   <button className="btn btn-primary mx-2" onClick={handlePrint}>
                                     Print{" "}
                                     {printBar.length === 0 ? "All" : "Selected"}{" "}
@@ -926,7 +926,7 @@ function Products(props) {
                             <th scope="col" className='text-center'>Categoria</th>
                             <th scope="col" className='text-center'>Description</th>
                             <th scope="col" className='text-center'>Edit/Remove</th>
-                            <th scope="col" className='text-center'>Print Barcode</th>
+                            {/* <th scope="col" className='text-center'>Print Barcode</th> */}
                         </tr>
                     </thead>
                     <tbody>
@@ -989,7 +989,7 @@ function Products(props) {
                 {/* <AdminOrder /> */}
                 <FindProduct setAllPro={setAllPro} />
                 <div style={{ display: "none" }}>
-                    <PrintBarcode printRef={printRef} printBar={printBar} />
+                    {/* <PrintBarcode printRef={printRef} printBar={printBar} /> */}
                 </div>
             </div>
         </div>
