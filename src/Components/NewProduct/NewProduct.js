@@ -203,7 +203,7 @@ function NewProduct({ details_data, setDetailsData, setAllPro, allpro, ...props 
                                                 {
                                                     JSON.parse(localStorage.getItem('DepositoLogin')).Type !== 'Manager'
                                                     ? <div className="col-lg-6">
-                                                        <Dropdown name='Deposito' dropvalues={DepositoAdd.map((d) => d.nombre)} value_select={props.values.Deposito} onChange={settingval} touched={props.touched.Deposito} errors={props.errors.Deposito} />
+                                                        <Dropdown name='Deposito' dropvalues={DepositoAdd.map((d) => d.Type !== 'Store' ? d.nombre : null)} value_select={props.values.Deposito} onChange={settingval} touched={props.touched.Deposito} errors={props.errors.Deposito} />
                                                     </div>
                                                     : null
                                                     
