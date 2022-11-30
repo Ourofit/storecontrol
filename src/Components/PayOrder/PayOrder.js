@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import "./PayOrder.scss";
@@ -29,7 +29,7 @@ function PayOrder({ Province, deposit, details_data, setDetailsData, order, setO
     const [, setErrorMsg] = useState(false)
     const [payerr, setPayErr] = useState(false)
 
-    const loop = useRef(true)
+    // const loop = useRef(true)
 
     const onChange = (e) => {
         setPayErr(false)
@@ -41,35 +41,32 @@ function PayOrder({ Province, deposit, details_data, setDetailsData, order, setO
             setPayment(order.Metodo_de_Pago)
             setClientName(order.Client_name)
         }
-        async function fetchSale() {
-            if (Clients.length === 0) {
-                if (Status) {
-                    await axios.get('http://localhost:5000/register').then(data_item => {
-                        allClients(data_item.data)
-                    })
-                    // await store_SalesActivity('PayOrder', Status, Sales_Activity, allsalesactivity)
-                    // await axios.get('http://localhost:5000/salesactivity')
-                    //     .then(async item => {
-                    //         var main_data = item.data
-                    //         let months_data = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-                    //         for(var t=0; t < main_data.length; t++) {
-                    //             for(var m=0; m < months_data.length; m++) {
-                    //                 main_data[t][months_data[m]] = JSON.parse(main_data[t][months_data[m]])
-                    //             }
-                    //         }
-                    //         allsalesactivity(main_data)
-                    //     })
-                } else {
-                    // if (window.desktop) {
-                    //     await window.api.getAllData("Sales_Activity").then((item) => allsalesactivity(item.Sales_Activity));
-                    // }
-                }
-            }
-        }
-        if (loop.current) {
-            fetchSale()
-            loop.current = false
-        }
+        // async function fetchSale() {
+        //     if (Clients.length === 0) {
+        //         if (Status) {
+        //             // await store_SalesActivity('PayOrder', Status, Sales_Activity, allsalesactivity)
+        //             // await axios.get('http://localhost:5000/salesactivity')
+        //             //     .then(async item => {
+        //             //         var main_data = item.data
+        //             //         let months_data = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        //             //         for(var t=0; t < main_data.length; t++) {
+        //             //             for(var m=0; m < months_data.length; m++) {
+        //             //                 main_data[t][months_data[m]] = JSON.parse(main_data[t][months_data[m]])
+        //             //             }
+        //             //         }
+        //             //         allsalesactivity(main_data)
+        //             //     })
+        //         } else {
+        //             // if (window.desktop) {
+        //             //     await window.api.getAllData("Sales_Activity").then((item) => allsalesactivity(item.Sales_Activity));
+        //             // }
+        //         }
+        //     }
+        // }
+        // if (loop.current) {
+        //     fetchSale()
+        //     loop.current = false
+        // }
     }, [Clients, allClients, Status, order])
 
     const createOrder = async (e, val) => {

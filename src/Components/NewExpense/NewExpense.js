@@ -10,8 +10,8 @@ import axios from "axios";
 import "./NewExpense.scss";
 
 // prettier-ignore
-function NewExpense({ allExpenses, ...props }) {
-	const { Expensecat, expense, Status } = props;
+function NewExpense({ ...props }) {
+	const { Expensecat, expense, Status, Expenses } = props;
 	// console.log(Expensecat, 'xd')
 // console.log(expense, '<<<<<< what do this expense ?, I guide with the new product file . because it dispatch')
 	const validate = (values) => {
@@ -30,7 +30,6 @@ function NewExpense({ allExpenses, ...props }) {
 		Description: "",
 		PayMethod: "",
 		Expense_cat: "",
-
 	};
 
 	const onSubmit = async (values, { resetForm }) => {
@@ -38,11 +37,12 @@ function NewExpense({ allExpenses, ...props }) {
 			await axios.post("http://localhost:5000/expense/new", {
 				...values,
 				date: new Date(values.date).toLocaleString(),
+				Deposito_id: JSON.parse(localStorage.getItem('DepositoLogin')).Deposito_id,
 				CategoryExpense_id:Expensecat.filter(item=>item.nombre===values.Expense_cat)[0].CategoryExpense_id
 			})
 			.then(async (item) => {
 				expense(item.data);
-				var m = allExpenses;
+				var m = Expenses;
 				m.push(item.data);
 				m.sort(function (d1, d2) {
 					return new Date(d2.createdAt) - new Date(d1.createdAt);
@@ -62,7 +62,7 @@ function NewExpense({ allExpenses, ...props }) {
 			}
 			// console.log(new_expenses)
 			expense(new_expenses);
-			var m = allExpenses;
+			var m = Expenses;
 			m.push(new_expenses);
 			m.sort(function (d1, d2) {
 				return new Date(d2.createdAt) - new Date(d1.createdAt);
@@ -181,6 +181,7 @@ function NewExpense({ allExpenses, ...props }) {
 }
 const mapStateToProps = (state) => {
     return {
+        Expenses: state.Expenses,
         Expensecat: state.Expensecat,
         Status: state.Status,
     };

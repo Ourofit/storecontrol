@@ -10,6 +10,7 @@ import {
     store_Category,
     store_Products,
     store_Orders,
+    store_Clients,
 } from "../../Functions/AllFunctions";
 import ClientEdit from "../../Components/ClientEdit/ClientEdit";
 import PayOrder from "./../../Components/PayOrder/PayOrder";
@@ -39,8 +40,9 @@ function Users(props) {
             await store_Category('Users', Status, CategoryAdd, category)
             await store_Products('Users', Status, Products, allproduct, setAllPro, Sales_Activity, allorders, allsalesactivity)
             await store_Orders('Users', Status, Orders, allorders, notify)
+            await store_Clients('Users', Status, Clients, allClients)
             if (Status) {
-                axios.get(`https://apis.datos.gob.ar/georef/api/provincias?orden=nombre&aplanar=true&campos=basico&max=5000&exacto=true&formato=json`)
+                await axios.get('https://apis.datos.gob.ar/georef/api/provincias?orden=nombre&aplanar=true&campos=basico&max=5000&exacto=true&formato=json')
                     .then((response) => {
                         setProvince(response.data);
                     })
@@ -52,32 +54,23 @@ function Users(props) {
             dep_method()
             loop.current = false
         }
-        if (Status) {
-            axios.get("http://localhost:5000/register").then((response) => (
-                allClients(response.data)
-                /*    if(window.desktop) {
-                       window.api.getAllData("Users").then(items => items.)
-                   } */
-            ))
-        }
-        if (Status && window.desktop) {
-            window.api.getAllData("Clients_Returns").then(async (client_ret) => {
-                if (client_ret.Expenses_Returns) {
-                    client_ret.Expenses_Returns.forEach(async (ret) => {
-                        await axios.delete(`http://localhost:5000/register/delete/${ret.id}`).then(async dele => {
-                            await axios.get("http://localhost:5000/register").then(async (item7) => {
+        // if (Status && window.desktop) {
+        //     window.api.getAllData("Clients_Returns").then(async (client_ret) => {
+        //         if (client_ret.Expenses_Returns) {
+        //             client_ret.Expenses_Returns.forEach(async (ret) => {
+        //                 await axios.delete(`http://localhost:5000/register/delete/${ret.id}`).then(async dele => {
+        //                     await axios.get("http://localhost:5000/register").then(async (item7) => {
 
-                                allClients(item7.data)
-                                // setAllExpenses(item7.data)
-                                await window.api.addData(item7.data, "Clients")
-                            })
-                        })
-                    })
-                }
-            })
-            window.api.deleteData("Clients_Returns")
-
-        }
+        //                         allClients(item7.data)
+        //                         // setAllExpenses(item7.data)
+        //                         await window.api.addData(item7.data, "Clients")
+        //                     })
+        //                 })
+        //             })
+        //         }
+        //     })
+        //     window.api.deleteData("Clients_Returns")
+        // }
 
         // window.api.addData(item.data,"Users")
 
@@ -89,7 +82,7 @@ function Users(props) {
                   window.api.addData(response.data, "Clients")
                  }) 
              }) */
-    }, [CategoryAdd, Deposito, Orders, Products, Sales_Activity, Status, allClients, allorders, allproduct, allsalesactivity, category, deposito, notify])
+    }, [CategoryAdd, Deposito, Orders, Products, Sales_Activity, Status, allClients, allorders, allproduct, allsalesactivity, category, deposito, notify, Clients])
 
     const removeClient = async (id) => {
         if (Status) {
@@ -136,6 +129,7 @@ function Users(props) {
                             <tr>
                                 <th scope="col" className='text-center'>ID</th>
                                 <th scope="col" className='text-center'>Nombre</th>
+                                <th scope="col" className='text-center'>Deposito</th>
                                 <th scope="col" className='text-center'>Celular</th>
                                 <th scope="col" className='text-center'>Provincia</th>
                                 <th scope="col" className='text-center'>Pais</th>
@@ -144,26 +138,25 @@ function Users(props) {
                             </tr>
                         </thead>
                         <tbody>
-                            {Clients.map((i, key) => (
-
-                                <tr key={key} >
-                                    <th scope="row" className='text-center align-middle'>{key + 1}</th>
-                                    <td className='text-center align-middle'>{i.nombre}</td>
-                                    <td className='text-center align-middle'>{i.number} </td>
-                                    <td className='text-center align-middle'>{i.Provincia}</td>
-                                    <td className='text-center align-middle'>{i.Country}</td>
-                                    <td className='edit text-center align-middle'>
-                                        <IoCloseCircle style={{ display: "inline" }} className="close_icon_ind" onClick={() => removeClient(i.id)} />
-
-                                    </td>
-
-                                    <td className='edit text-center align-middle'>
-
-                                        <AiFillEdit style={{ display: "inline" }} className="edit_icon_ind" data-toggle="modal"
-                                            data-target="#client_edit"  onClick={() => editRow(i)}/>
-                                    </td>
-                                </tr>
-                            ))}
+                            {
+                                Clients?.map((i, key) => (
+                                    <tr key={key} >
+                                        <th scope="row" className='text-center align-middle'>{key + 1}</th>
+                                        <td className='text-center align-middle'>{i.nombre}</td>
+                                        <td className='text-center align-middle'>{Deposito.length !== 0 ? Deposito?.find(ele => ele.Deposito_id === i.Deposito_id).nombre : null}</td>
+                                        <td className='text-center align-middle'>{i.number} </td>
+                                        <td className='text-center align-middle'>{i.Provincia}</td>
+                                        <td className='text-center align-middle'>{i.Country}</td>
+                                        <td className='edit text-center align-middle'>
+                                            <IoCloseCircle style={{ display: "inline" }} className="close_icon_ind" onClick={() => removeClient(i.id)} />
+                                        </td>
+                                        <td className='edit text-center align-middle'>
+                                            <AiFillEdit style={{ display: "inline" }} className="edit_icon_ind" data-toggle="modal"
+                                                data-target="#client_edit"  onClick={() => editRow(i)}/>
+                                        </td>
+                                    </tr>
+                                ))
+                            }
                         </tbody>
                     </table>
                 </div>
