@@ -14,6 +14,7 @@ const Products = lazy(() => import("./Pages/Products/Products"));
 const Orders = lazy(() => import("./Pages/Orders/Orders"));
 const Expenses = lazy(() => import("./Pages/Expenses/Expenses"));
 const Tienda = lazy(() => import("./Pages/Tienda/Tienda"));
+const Users = lazy(() => import("./Pages/Users/Users"));
 
 // prettier-ignore
 function App() {
@@ -94,6 +95,11 @@ function App() {
 							<Route path='/ordenes' element={
 								<Suspense fallback={<div className="load"><div style={{width: '100px'}}><img src={loader} alt="loader" style={{width: '100%'}} /></div></div>}>
 									<Orders boxes={true} />
+								</Suspense>
+							} />
+								<Route path='/clientes' element={
+								<Suspense fallback={<div className="load"><div style={{width: '100px'}}><img src={loader} alt="loader" style={{width: '100%'}} /></div></div>}>
+									<Users />
 								</Suspense>
 							} />
 							<Route path='/expenses' element={

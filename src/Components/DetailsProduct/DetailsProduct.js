@@ -52,7 +52,7 @@ function DetailsProduct({ idModal="detailsproduct", details_data, setDetailsData
 									</div>
 								</div>
 							</div>
-							<OneDetail key={index} name={'Stock'} data={details_data} transfer={true} stocktransfer={stocktransfer} ordershow={ordershow} />
+							<OneDetail key={index} name={'Stock'} data={details_data} transfer={true} stocktransfer={stocktransfer} ordershow={ordershow} showorder={window.location.href !== 'http://localhost:3000/ordenes'} />
 							{
 								Products[index] !== undefined
 								? <Colorpicker colap={index} addorder={addorder} />

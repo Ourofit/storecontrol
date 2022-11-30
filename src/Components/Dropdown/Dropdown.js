@@ -18,7 +18,7 @@ function Dropdown({ name, dropvalues, onChange, touched, errors, value_select, i
     useEffect(() => {
         function selecting() {
             setSelected(value_select === '' ? name === 'manager' ? 'Manager' : 'Select' : value_select)
-            setFilterVal(CategoryAdd.filter(cat => Products.filter(pro => pro.Category_id === cat.Category_id)[0]?.Category_id).map((final) => final.nombre))
+            setFilterVal(CategoryAdd?.filter(cat => Products.filter(pro => pro.Category_id === cat.Category_id)[0]?.Category_id).map((final) => final.nombre))
         }
         selecting()
     }, [value_select, CategoryAdd, Products, name])

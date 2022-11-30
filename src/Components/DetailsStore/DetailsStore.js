@@ -402,7 +402,7 @@ function DetailsStore({ idModal="detailsStore", details_data, setDetailsData, in
 															: <ul>
 															{
 																JSON.parse(details_data?.Employee_list)?.map(emp => 
-																	<li>{emp}</li>
+																	<li key={emp}>{emp}</li>
 																)
 															}
 															</ul>

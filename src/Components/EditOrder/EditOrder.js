@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import { useFormik } from 'formik'
+import React, { useEffect, useState } from "react";
+import { useFormik } from "formik";
 
-import './EditOrder.scss'
-import OneDetail from '../DetailsProduct/OneDetail'
+import "./EditOrder.scss";
+import OneDetail from "../DetailsProduct/OneDetail";
 
+// prettier-ignore
 function EditOrder({ details_data, particular }) {
 
     const [price, setPrice] = useState('')
@@ -45,7 +46,7 @@ function EditOrder({ details_data, particular }) {
                     <div className="modal-content">
                         <div className="modal-header d-flex justify-content-center">
                             <h3 className="modal-title" id="exampleModalLabel">Transferir Stock</h3>
-                            {/* <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                            {/* <button type="button" className="close" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true"><FontAwesomeIcon icon="close"/></span>
                             </button> */}
                         </div>
@@ -68,7 +69,7 @@ function EditOrder({ details_data, particular }) {
                                 </div>
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                 <button type="submit" className="btn btn-primary">Submit</button>
                             </div>
                         </form>
@@ -79,4 +80,4 @@ function EditOrder({ details_data, particular }) {
     )
 }
 
-export default EditOrder
+export default EditOrder;

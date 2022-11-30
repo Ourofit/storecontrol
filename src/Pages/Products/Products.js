@@ -1,7 +1,7 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Overall from "../../Components/Overall/Overall";
-import { useReactToPrint } from "react-to-print";
+// import { useReactToPrint } from "react-to-print";
 import { connect } from "react-redux";
 import axios from "axios";
 import { IoCloseCircle } from "react-icons/io5";
@@ -18,6 +18,7 @@ import FindProduct from "../../Components/FindProduct/FindProduct";
 import ShowOrders from "../../Components/ShowOrders/ShowOrders";
 import DetailsOrder from "../../Components/DetailsOrder/DetailsOrder";
 import EditOrder from "../../Components/EditOrder/EditOrder";
+
 // import AdminOrder from "../../Components/AdminOrder/AdminOrder";
 // import {
 //     store_Category,
@@ -43,15 +44,37 @@ function Products(props) {
     const [details_order, setDetailsOrder] = useState(null)
     const [order, setOrder] = useState(null)
 	const [particular, setparticular] = useState(null)
+    const [product, setProduct] = useState(null)
 
     const [search_filter, setSearch_filter] = useState("Product Nombre")
+
+    useEffect(() => {
+        var result = []
+		// console.log('---------Order----------')
+		if (details_data !== null && show_data !== null) {
+            for(var l=0; l < show_data.length; l++) {
+                for (var i = 0; i < show_data[l].order_product.length; i++) {
+                    var pro
+                    for (var j = 0; j < Products.length; j++) {
+                        // console.log(Products[j].Product_id, details_data[0].order_product[i].Product_id)
+                        if (Products[j].Product_id === show_data[l].order_product[i].Product_id) {
+                            pro = Products[j]
+                        }
+                    }
+                    result.push(pro)
+                }
+            }
+		}
+		// console.log('Order', details_data, result)
+		setProduct(result)
+    }, [Products, details_data, show_data])
 
     const onChange = (e) => {
         setSeatrch(e.target.value);
         var result = [];
         // setAllPro(Products)
         if (e.target.value !== "") {
-            if(search_filter === "Product Nombre") {
+            if (search_filter === "Product Nombre") {
                 for (let i = 0; i < Products.length; i++) {
                     if (
                         Products[i].nombre.toUpperCase().indexOf(
@@ -61,7 +84,7 @@ function Products(props) {
                         result.push(Products[i]);
                     }
                 }
-            } else if(search_filter === "Deposito") {
+            } else if (search_filter === "Deposito") {
                 for (let i = 0; i < Products.length; i++) {
                     if (
                         Products[i].deposito.nombre.toUpperCase().indexOf(
@@ -71,7 +94,7 @@ function Products(props) {
                         result.push(Products[i]);
                     }
                 }
-            } else if(search_filter === "Categoria") {
+            } else if (search_filter === "Categoria") {
                 for (let i = 0; i < Products.length; i++) {
                     var cat = CategoryAdd.find(ele => ele.Category_id === Products[i].Category_id).nombre
                     if (cat.toUpperCase().indexOf(e.target.value.toUpperCase()) > -1) {
@@ -86,8 +109,8 @@ function Products(props) {
     };
 
     const particularOrder = (index) => {
-		setparticular(index)
-	}
+        setparticular(index)
+    }
 
     const details = (pro) => {
         var index = Products.findIndex((item) => item.Product_id === pro.Product_id)
@@ -106,9 +129,9 @@ function Products(props) {
 
     const printRef = useRef();
 
-    const handlePrint = useReactToPrint({
-        content: () => printRef.current,
-    });
+    // const handlePrint = useReactToPrint({
+    //     content: () => printRef.current,
+    // });
 
     const checking = (e, val) => {
         if (e.target.checked) {
@@ -135,7 +158,7 @@ function Products(props) {
     // }, [allproduct]);
 
     const remove = async (i) => {
-        var p = Products.filter(function(x) {return x.Product_id !== i})
+        var p = Products.filter(function (x) { return x.Product_id !== i })
         var result = [];
         if (search !== "") {
             for (var j = 0; j < p.length; j++) {
@@ -153,7 +176,7 @@ function Products(props) {
         // console.log(result)
         allproduct(result)
         setAllPro(p)
-        if(Status) {
+        if (Status) {
             await axios.delete(
                 `http://localhost:5000/product/delete/${i}`
             );
@@ -163,7 +186,7 @@ function Products(props) {
                 var pro_ret2 = []
                 await window.api.getAllData('Products_Returns').then(async return_pro => {
                     // console.log(return_ord.Orders_Returns)
-                    if(return_pro.Orders_Returns) {
+                    if (return_pro.Orders_Returns) {
                         pro_ret2 = return_pro.Products_Returns
                     }
                     var extra = {
@@ -264,10 +287,10 @@ function Products(props) {
                     );
                     setAllPro(p)
                     allproduct(p)
-                    if(window.desktop) {
+                    if (window.desktop) {
                         await window.api.addData(p, "Products");
                     }
-                    if(Status) {
+                    if (Status) {
                         await axios.put("http://localhost:5000/product/edit", db_val);
                     }
 
@@ -292,16 +315,16 @@ function Products(props) {
                     for (var c = 0; c < lengt1; c++) {
                         document.getElementsByClassName("edit_icon_ind_pro")[c].style.display = "inline";
                         var flag1 = 0
-                        for(var z=0; z<Orders.length; z++) {
-                            for(var y=0; y<Orders[z].order_product.length; y++) {
-                                if(Orders[z].order_product[y].Product_id === Products[c].Product_id) {
+                        for (var z = 0; z < Orders.length; z++) {
+                            for (var y = 0; y < Orders[z].order_product.length; y++) {
+                                if (Orders[z].order_product[y].Product_id === Products[c].Product_id) {
                                     // console.log(Orders[z].order_product[y].Product_id, Products[c].Product_id)
                                     flag1 = 1
                                     break
                                 }
                             }
                         }
-                        if(flag1 === 0) {
+                        if (flag1 === 0) {
                             document.getElementsByClassName("close_icon_ind_pro")[c].style.display = "inline";
                         }
                     }
@@ -380,14 +403,14 @@ function Products(props) {
     // useEffect(() => {
     //     async function pro_method() {
     //         // store_Category('Products', Status, CategoryAdd, category)
-	// 		// store_Products('Products', Status, Products, allproduct, setAllPro, Sales_Activity, allorders, allsalesactivity)
-	// 		// store_Desposito('Products', Status, DepositoAdd, deposito)
+    // 		// store_Products('Products', Status, Products, allproduct, setAllPro, Sales_Activity, allorders, allsalesactivity)
+    // 		// store_Desposito('Products', Status, DepositoAdd, deposito)
     //         // if(CategoryAdd.length === 0) {
-	// 		// 	if(Status) {
-	// 		// 		await axios.get("http://localhost:5000/category").then(async (item) => {
-	// 		// 			console.log('Products -> Category')
-	// 		// 			category(item.data);
-	// 		// 			if(window.desktop) {
+    // 		// 	if(Status) {
+    // 		// 		await axios.get("http://localhost:5000/category").then(async (item) => {
+    // 		// 			console.log('Products -> Category')
+    // 		// 			category(item.data);
+    // 		// 			if(window.desktop) {
     //         //                 await window.api.getAllData("CategoryAdd").then(async (item2) => {
     //         //                     item2.CategoryAdd.forEach(async function (cate) {
     //         //                         if (!Object.keys(cate).includes('createdAt')) {
@@ -700,8 +723,8 @@ function Products(props) {
     //         //         if (window.desktop) {
     //         //             await window.api.getAllData("Deposito").then((item) => deposito(item.Deposito));
     //         //         }
-	// 		// 	}
-	// 		// }
+    // 		// 	}
+    // 		// }
     //         setLoading(false)
     //     }
     //     if (loop.current) {
@@ -757,8 +780,8 @@ function Products(props) {
                     </td>
                     <td className={`align-middle update${i}`} data-toggle="modal" data-target="#detailsproduct" onClick={() => details(p)}>{p.description}</td>
                     <td className="edit text-center align-middle" style={{ width: 25 }}>
-                        <IoCloseCircle 
-                            style={{ 
+                        <IoCloseCircle
+                            style={{
                                 display: Orders.filter(ord => ord.order_product.find(ordpro => ordpro.Product_id === p.Product_id)).length === 0 ? "inline" : "none"
                             }}
                             className="close_icon_ind_pro" onClick={() => remove(p.Product_id)} />
@@ -860,18 +883,19 @@ function Products(props) {
                                         {printBar.length}
                                     </div>
                                 )}
-                                <button className="btn btn-primary mx-2" onClick={handlePrint}>
+                                {/*   <button className="btn btn-primary mx-2" onClick={handlePrint}>
                                     Print{" "}
                                     {printBar.length === 0 ? "All" : "Selected"}{" "}
                                     Barcode
-                                </button>
+                                </button> */}
+                       
                             </div>
                             <select className="search_select" onChange={(e) => setSearch_filter(e.target.value)}>
                                 <option name="Product Nombre" value="Product Nombre">Product Nombre</option>
                                 {
                                     JSON.parse(localStorage.getItem("DepositoLogin")).Type !== "Manager"
-                                    ? <option name="Deposito" value="Deposito">Deposito</option>
-                                    : null
+                                        ? <option name="Deposito" value="Deposito">Deposito</option>
+                                        : null
                                 }
                                 <option name="Categoria" value="Categoria">Categoria</option>
                             </select>
@@ -936,6 +960,7 @@ function Products(props) {
 						} */}
                     </tbody>
                 </table>
+
                 <DetailsProduct
                     details_data={details_data}
                     setDetailsData={setDetailsData}
@@ -948,7 +973,8 @@ function Products(props) {
                     stocknum={stocknum}
                     setAllPro={setAllPro}
                 />
-                <ShowOrders 
+           
+                <ShowOrders
                     idModal='showorders'
                     details_data={details_data}
                     show_data={show_data}
@@ -956,10 +982,12 @@ function Products(props) {
                     setOrder={setOrder}
                     setDetailsData={setDetailsOrder}
                 />
-                <DetailsOrder details_data={details_order} setDetailsData={setDetailsOrder} order={order} setOrder={setOrder} particularOrder={particularOrder} />
+                {/* <DetailsOrder details_data={details_data} setDetailsData={setDetailsData} order={order} setOrder={setOrder} particularOrder={particularOrder} setReturnVal={setReturnVal} product={product} /> */}
+                <DetailsOrder details_data={details_order} setDetailsData={setDetailsOrder} order={order} setOrder={setOrder} particularOrder={particularOrder} product={product} />
                 <EditOrder details_data={details_order} particular={particular} />
+                {/* <AreYouSure /> */}
                 {/* <AdminOrder /> */}
-                <FindProduct setAllPro={setAllPro}/>
+                <FindProduct setAllPro={setAllPro} />
                 <div style={{ display: "none" }}>
                     <PrintBarcode printRef={printRef} printBar={printBar} />
                 </div>

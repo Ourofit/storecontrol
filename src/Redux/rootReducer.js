@@ -9,6 +9,7 @@ const initialState = {
     NotifyMaster: [],
     DepositoLogin: true,
     Sales_Activity: [],
+    Clients: [],
     // Status: false,
     Status: navigator.onLine,
 };
@@ -105,6 +106,18 @@ const rootReducer = (state = initialState, action) => {
                 Expenses: [...state.Expenses, action.item],
             };
 
+        case "CLIENTS":
+            if (Array.isArray(action.item)) {
+                return {
+                    ...state,
+                    Clients: action.item,
+                };
+            }
+            return {
+                ...state,
+                Clients: [...state.Clients, action.item],
+            };
+
         case "NOTIFICATION":
             if (Array.isArray(action.item)) {
                 return {
@@ -116,7 +129,6 @@ const rootReducer = (state = initialState, action) => {
                 ...state,
                 NotifyMaster: [...state.NotifyMaster, action.item],
             };
-
         case "SALESACTIVITY":
             if (Array.isArray(action.item)) {
                 return {

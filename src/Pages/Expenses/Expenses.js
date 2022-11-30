@@ -104,7 +104,9 @@ function Expenses(props) {
 
 		async function store_expense() {
 			if(Status && window.desktop) {
+				
 				await window.api.getAllData("Expenses").then(async (item2) => {
+					
 					await axios.get("http://localhost:5000/expense").then(async (item) => {
 						// console.log(item.data, item2.Expenses)
 						if(item.data.length > item2.Expenses.length) {
@@ -224,7 +226,7 @@ function Expenses(props) {
 								<th scope="col" className='text-center'>Categoría</th>
 								<th scope="col" className='text-center'>Descripción</th>
 								<th scope="col" className='text-center'>Tipo de Pago</th>
-								<th scope="col" className='text-center'>Delete</th>
+								<th scope="col" className='text-center'>Eliminar</th>
 							</tr>
 						</thead>
 						<tbody>

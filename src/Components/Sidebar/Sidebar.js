@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { navigation_data } from "../../Data/Navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -7,6 +7,8 @@ import "./Sidebar.scss";
 
 // prettier-ignore
 function Sidebar(props) {
+
+	const [nav, setNav] = useState(JSON.parse(localStorage.getItem('DepositoLogin'))?.Type === 'Master Manager' ? navigation_data : navigation_data.filter(ele => ele.title !== 'Tienda'))
 	const stylechange = (val) => {
 		var allelements = document.getElementsByClassName("sidebar_link");
 		for (var i = 0; i < allelements.length; i++) {
@@ -19,6 +21,8 @@ function Sidebar(props) {
 	};
 
 	useEffect(() => {
+		var navigation = JSON.parse(localStorage.getItem('DepositoLogin'))?.Type === 'Master Manager' ? navigation_data : navigation_data.filter(ele => ele.title !== 'Tienda')
+		setNav(navigation)
 		var url = window.location.href.split("/").at(-1);
 		var name = url.charAt(0).toUpperCase() + url.slice(1);
 		var allelements = document.getElementsByClassName("sidebar_link");
@@ -48,7 +52,7 @@ function Sidebar(props) {
 				<div className="profile_name">Ourofit</div>
 			</div>
 			<ul className="sidebar_list">
-				{navigation_data.map((item, index) => (
+				{nav?.map((item, index) => (
 					item.title === 'Tienda'
 					? localStorage.getItem('DepositoLogin') !== null && JSON.parse(localStorage.getItem('DepositoLogin')).Type === 'Master Manager'
 						? <li className="nested_list" key={index}>

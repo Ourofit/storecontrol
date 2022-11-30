@@ -26,6 +26,12 @@ export const navigation_data = [
         cName: "sidebar_link",
     },
     {
+        title: "Clientes",
+        path: "/clientes",
+        icon: <FontAwesomeIcon icon="user" size="xl"/>,
+        cName: "sidebar_link",
+    },
+    {
         title: "Expenses",
         path: "/expenses",
         icon: <FontAwesomeIcon icon="flask" size="lg" />,

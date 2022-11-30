@@ -17,7 +17,7 @@ export const store_SalesActivity = async (naming, Status, Sales_Activity, allsal
                     } else {
                         con = item.data.find(element => element.year === new Date().getFullYear() && log.Deposito_id === element.Deposito_id)
                     }
-                    if(con === undefined && log.Type === 'Manager') {
+                    if(con === undefined && (log.Type === 'Manager' || log.Type === 'Master Manager')) {
                         var single_month = {}
                         for(var i = 1; i <= months_data.length; i++) {
                             var single_date = []
@@ -37,7 +37,7 @@ export const store_SalesActivity = async (naming, Status, Sales_Activity, allsal
                             Deposito_id: log.Deposito_id,
                             ...single_month 
                         }
-                        main_data.push(main_data)
+                        main_data = data
                         await axios.post('http://localhost:5000/salesactivity/new', data)
                         for(var t=0; t < main_data.length; t++) {
                             for(var m=0; m < months_data.length; m++) {
@@ -62,8 +62,21 @@ export const store_SalesActivity = async (naming, Status, Sales_Activity, allsal
                             })
                         }
                     } else {
-                        for(var r=0; r < months_data.length; r++) {
-                            con[months_data[r]] = JSON.parse(con[months_data[r]])
+                        if(log.Type === 'Master Manager') {
+                            for(var q=0; q<item.data.length; q++) {
+                                for(var w=0; w < months_data.length; w++) {
+                                    if(typeof item.data[q][months_data[w]] === 'string') item.data[q][months_data[w]] = JSON.parse(item.data[q][months_data[w]])
+                                    if(typeof con[months_data[w]] === 'string') con[months_data[w]] = JSON.parse(con[months_data[w]])
+                                    for(var tq=0; tq < item.data[q][months_data[w]].length; tq++) {
+                                        var final_sale = item.data[q][months_data[w]][tq].sales + con[months_data[w]][tq].sales
+                                        con[months_data[w]][tq].sales = final_sale
+                                    }
+                                }
+                            }
+                        } else {
+                            for(var r=0; r < months_data.length; r++) {
+                                con[months_data[r]] = JSON.parse(con[months_data[r]])
+                            }
                         }
                         allsalesactivity(con)
                         if(window.desktop) {
@@ -571,7 +584,9 @@ export const store_Expenses = async (naming, Status, Expenses, allexp) => {
                 });
                 allexp(item.data)
                 if(window.desktop) {
+                    
                     await window.api.getAllData("Expenses").then(async (item2) => {
+                   
                         item2.Expenses.forEach(async function (exp, index) {
                             if(!Object.keys(exp).includes('ExpenseId')) {
                                 await axios.post("http://localhost:5000/expense/new", exp)
@@ -748,3 +763,6 @@ export const store_NotifyMaster = async (naming, Status, Notific, notify) => {
         }
     }
 }
+
+
+
