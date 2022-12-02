@@ -20,7 +20,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // prettier-ignore
 function Tienda(props) {
 
-    const { CategoryAdd, category, Products, Deposito, deposito, Status, allproduct, Sales_Activity, allsalesactivity, allorders, Orders, notify } = props
+    const { CategoryAdd, category, Products, Deposito, deposito, Status, allproduct, Sales_Activity, allsalesactivity, allorders, Orders, notify, filtered_cat } = props
 
 	const [arr, setArr] = useState('desc')
     const [alldepo, setAllDepo] = useState(Deposito);
@@ -37,7 +37,7 @@ function Tienda(props) {
 		async function dep_method() {
 			await store_Desposito('Tienda', Status, Deposito, deposito)
 			await store_Category('Tineda', Status, CategoryAdd, category)
-			await store_Products('Tienda', Status, Products, allproduct, setAllPro, Sales_Activity, allorders, allsalesactivity)
+			await store_Products('Tienda', Status, Products, allproduct, setAllPro, Sales_Activity, allorders, allsalesactivity, CategoryAdd, filtered_cat)
 			await store_Orders('Tienda', Status, Orders, allorders, notify)
 		}
 		
@@ -45,7 +45,7 @@ function Tienda(props) {
 			dep_method()
 			loop.current = false
 		}
-	}, [Deposito, Status, deposito, Products, Sales_Activity, allorders, allproduct, allsalesactivity, CategoryAdd, category, Orders, notify])
+	}, [Deposito, Status, deposito, Products, Sales_Activity, allorders, allproduct, allsalesactivity, CategoryAdd, category, Orders, notify, filtered_cat])
 
 	const removetienda = async (id) => {
 		var e = Deposito.filter(function (x) { return x.Deposito_id !== id })
@@ -237,6 +237,12 @@ const mapDispatchToProps = (dispatch) => {
         notify: (val) => {
             dispatch({
                 type: "NOTIFICATION",
+                item: val,
+            });
+        },
+        filtered_cat: (val) => {
+            dispatch({
+                type: "FILTERED_CAT",
                 item: val,
             });
         },

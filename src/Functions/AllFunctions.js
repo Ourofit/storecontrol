@@ -124,7 +124,7 @@ export const store_SalesActivity = async (naming, Status, Sales_Activity, allsal
 };
 
 // prettier-ignore
-export const store_Products = async (naming, Status, Products, allproduct, setAllPro, Sales_Activity, allorders, allsalesactivity) => {
+export const store_Products = async (naming, Status, Products, allproduct, setAllPro, Sales_Activity, allorders, allsalesactivity, CategoryAdd=null, filtered_cat=null) => {
     if(Products.length === 0) {
         if(Status) {
             await axios.get("http://localhost:5000/product").then(async (item) => {
@@ -148,6 +148,15 @@ export const store_Products = async (naming, Status, Products, allproduct, setAl
                 alldata.sort(function (d1, d2) {
                     return new Date(d1.createdAt) - new Date(d2.createdAt);
                 });
+                if(filtered_cat !== null) {
+                    if(CategoryAdd.length === 0) {
+                        await axios.get("http://localhost:5000/category").then(async (category_data) => {
+                            filtered_cat(category_data.data?.filter(cat => alldata.filter(pro => pro.Category_id === cat.Category_id)[0]?.Category_id).map((final) => final.nombre))
+                        })
+                    } else {
+                        filtered_cat(CategoryAdd?.filter(cat => alldata.filter(pro => pro.Category_id === cat.Category_id)[0]?.Category_id).map((final) => final.nombre))
+                    }
+                }
                 if(dep.Type === "Manager") {
                     alldata = alldata.filter(ele => ele.Deposito_id === dep.Deposito_id)
                 }

@@ -18,7 +18,7 @@ import PayOrder from "./../../Components/PayOrder/PayOrder";
 // prettier-ignore
 function Users(props) {
 
-    const { allClients, Clients, CategoryAdd, category, Products, Deposito, deposito, Status, allproduct, Sales_Activity, allsalesactivity, allorders, Orders, notify } = props
+    const { allClients, Clients, CategoryAdd, category, Products, Deposito, deposito, Status, allproduct, Sales_Activity, allsalesactivity, allorders, Orders, notify, filtered_cat } = props
     
     const [Province, setProvince] = useState();
     const [, setAllPro] = useState(Products);
@@ -38,7 +38,7 @@ function Users(props) {
         async function dep_method() {
             await store_Desposito('Users', Status, Deposito, deposito)
             await store_Category('Users', Status, CategoryAdd, category)
-            await store_Products('Users', Status, Products, allproduct, setAllPro, Sales_Activity, allorders, allsalesactivity)
+            await store_Products('Users', Status, Products, allproduct, setAllPro, Sales_Activity, allorders, allsalesactivity, CategoryAdd, filtered_cat)
             await store_Orders('Users', Status, Orders, allorders, notify)
             await store_Clients('Users', Status, Clients, allClients)
             if (Status) {
@@ -82,7 +82,7 @@ function Users(props) {
                   window.api.addData(response.data, "Clients")
                  }) 
              }) */
-    }, [CategoryAdd, Deposito, Orders, Products, Sales_Activity, Status, allClients, allorders, allproduct, allsalesactivity, category, deposito, notify, Clients])
+    }, [CategoryAdd, Deposito, Orders, Products, Sales_Activity, Status, allClients, allorders, allproduct, allsalesactivity, category, deposito, notify, Clients, filtered_cat])
 
     const removeClient = async (id) => {
         if (Status) {
@@ -220,6 +220,12 @@ const mapDispatchToProps = (dispatch) => {
         notify: (val) => {
             dispatch({
                 type: "NOTIFICATION",
+                item: val,
+            });
+        },
+        filtered_cat: (val) => {
+            dispatch({
+                type: "FILTERED_CAT",
                 item: val,
             });
         },

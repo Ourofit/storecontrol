@@ -13,31 +13,34 @@ let api = "http://localhost:5000/notification/new";
 
 // prettier-ignore
 function SendMessage({ sendActive, allNotify, setAllNotify, ...props }) {
-	const { notify, Status, Notific } = props
+	const { notify, Status, Notific, Deposito } = props
 
 	let employeers = JSON.parse(JSON.parse(localStorage.getItem('DepositoLogin')).Employee_list)
 
 	const validate = values => {
 		const errors = {}
 
-		if (!values.nombre) errors.nombre = 'Required'
+		if (!values.not_nombre) errors.nombre = 'Required'
 		if (!values.description) errors.description = 'Required'
 
 		return errors
 	}
 
 	const initialValues = {
-		nombre: '',
+		not_nombre: '',
 		description: ''
 	}
 	const onSubmit = async (values, { resetForm }) => {
 		// console.log(values, 'values')
 		// alert(JSON.stringify(values, null, 2))
+		var final_dep = Deposito?.find(dep => dep.nombre === values.not_nombre)
 		if(Status) {
 			await axios.post(api, {
-				Title: values.nombre,
+				Title: values.not_nombre,
 				Message: values.description,
-				Date: new Date().toLocaleString()
+				Sender_id: JSON.parse(localStorage.getItem('DepositoLogin')).Deposito_id,
+				Date: new Date().toLocaleString(),
+				Deposito_id: final_dep ? final_dep.Deposito_id : null
 			}).then(async (item) => {
 				var m = Notific;
 				m.push(item.data)
@@ -54,7 +57,7 @@ function SendMessage({ sendActive, allNotify, setAllNotify, ...props }) {
 		} else {
 			var note = await window.api.getAllData("Notification").then((item) => item.Notification)
 			var msg = {
-				Title: values.nombre,
+				Title: values.not_nombre,
 				Message:  values.description,
 				Date: new Date().toLocaleString(),
 				createdAt: new Date().toISOString()
@@ -111,8 +114,20 @@ function SendMessage({ sendActive, allNotify, setAllNotify, ...props }) {
 									<Form>
 										<div className="modal-body">
 											{/* <Inputbox type='text' name='nombre' placeholder='Nombre' /> */}
-
-											<Dropdown name='nombre' dropvalues={employeers.map(item => item)} value_select={props.values.nombre} onChange={settingval} touched={props.touched.nombre} errors={props.errors.nombre} />
+											<Dropdown 
+												name='not_nombre' 
+												dropvalues={[
+													...employeers, 
+													...Deposito?.filter(ele => 
+														window.location.pathname === '/employeeorder' 
+														? ele.Deposito_id === JSON.parse(localStorage.getItem('DepositoLogin')).Deposito_id_fk
+														: ele.Type !== 'Store' && ele.Deposito_id !== JSON.parse(localStorage.getItem('DepositoLogin')).Deposito_id
+													)
+												]}
+												value_select={props.values.not_nombre} 
+												onChange={settingval} 
+												touched={props.touched.nombre} 
+												errors={props.errors.nombre} />
 											<Inputbox textarea_dis={true} name='description' placeholder='Description' />
 										</div>
 										<div className="modal-footer">
@@ -140,6 +155,7 @@ function SendMessage({ sendActive, allNotify, setAllNotify, ...props }) {
 const mapStateToProps = (state) => {
     return {
         Notific: state.NotifyMaster,
+        Deposito: state.Deposito,
         products: state.Products,
         Status: state.Status,
     };
