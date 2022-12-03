@@ -201,7 +201,7 @@ function EmployeeOrder(props) {
 		}
     }, [Products, ordering, order, returned_data])
 
-    const returnProduct = async (val) => {
+    const returnProduct = async (val, pay=true) => {
         // console.log(ordering, details_data)
 		if(ordering.order_product.length === 1) {
 			setDetailsData(null)
@@ -314,13 +314,15 @@ function EmployeeOrder(props) {
 			var prod = product.filter(ele => ele.Product_id !== val.Product_id)
 			setDetailsData(details_data)
 			setProduct(prod)
-			setOrdering({...ordering, Total_price: ordering.Total_price - val.Total_price})
+			// setOrdering({...ordering, Total_price: ordering.Total_price - val.Total_price})
 			if(Status) {
 				await axios.put('http://localhost:5000/product/quantity', req_data_el)
-				await axios.put(`http://localhost:5000/ordermaster/price`, {
-					Order_id: ordering.Order_id,
-					Total_price: ordering.Total_price - val.Total_price
-				})
+                if(pay) {
+                    await axios.put(`http://localhost:5000/ordermaster/price`, {
+                        Order_id: ordering.Order_id,
+                        Total_price: ordering.Total_price - val.Total_price
+                    })
+                }
 				await axios.delete(`http://localhost:5000/orderproduct/delete/${val.Order_pro_id}`)
 					.then(async item => {
 						await axios.get('http://localhost:5000/ordermaster')
