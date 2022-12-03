@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useReactToPrint } from "react-to-print";
+// import { useReactToPrint } from "react-to-print";
 // import axios from "axios";
 
 import "./FindProduct.scss";
 // import { Products_data } from "../../Data/Products_data";
-import PrintBarcode from "../../Components/PrintBarcode/PrintBarcode";
+// import PrintBarcode from "../../Components/PrintBarcode/PrintBarcode";
 import TransferStock from "../TransferStock/TransferStock";
 import DetailsProduct from "../DetailsProduct/DetailsProduct";
 import { useLocation } from "react-router-dom";
@@ -30,7 +30,7 @@ function FindProduct({ addorder, allpro, setAllPro, ...props }) {
 	// const [allpro, setAllPro] = useState(Products)
 	const [details_data, setDetailsData] = useState(null)
 	const [stocknum, setStockNum] = useState()
-	const [printBar, setPrintBar] = useState([])
+	// const [printBar, setPrintBar] = useState([])
 	const [co, setCo] = useState()
 	const loop = useRef(true)
 	// const order_loop = useRef(true)
@@ -60,25 +60,25 @@ function FindProduct({ addorder, allpro, setAllPro, ...props }) {
 		setStockNum(val)
 	}
 
-	const printRef = useRef()
+	// const printRef = useRef()
 
-	const handlePrint = useReactToPrint({
-		content: () => printRef.current,
-	});
+	// const handlePrint = useReactToPrint({
+	// 	content: () => printRef.current,
+	// });
 
-	const checking = (e, val) => {
-		if(e.target.checked) {
-			setPrintBar([...printBar, val])
-		} else {
-			setPrintBar(printBar.filter(function(x) {return x.Product_id !== val.Product_id}))
-		}
-	}
+	// const checking = (e, val) => {
+	// 	if(e.target.checked) {
+	// 		setPrintBar([...printBar, val])
+	// 	} else {
+	// 		setPrintBar(printBar.filter(function(x) {return x.Product_id !== val.Product_id}))
+	// 	}
+	// }
 
 	useEffect(() => {
 		async function pro_method() {
 			await store_SalesActivity('FindProduct', Status, Sales_Activity, allsalesactivity)
 			await store_Category('FindProduct', Status, CategoryAdd, category)
-			await store_Products('FindProduct', Status, Products, allproduct, setAllPro, Sales_Activity, allorders, allsalesactivity)
+			await store_Products('FindProduct', Status, Products, allproduct, setAllPro, Sales_Activity, allorders, allsalesactivity, CategoryAdd, filtered_cat)
 			await store_Desposito('FindProduct', Status, DepositoAdd, deposito)
 			await store_Orders('FindProduct', Status, Orders, allorders, notify)
 			await store_NotifyMaster('FindProduct', Status, Notific, notify)
@@ -120,12 +120,12 @@ function FindProduct({ addorder, allpro, setAllPro, ...props }) {
 									<div className='col-md text-right my-2'>
 										<div className='d-flex justify-content-end'>
 											<div className='barcode_all_print d-flex align-items-center'>
-												{
+												{/* {
 													printBar.length === 0 
 													? null 
 													: <div className='bg-primary text-light p-1 rounded-circle text-center' style={{width:32}}>{printBar.length}</div>
 												}
-												<button className='btn btn-primary mx-2' onClick={handlePrint}>Print {printBar.length === 0 ? 'All' : 'Selected'} Barcode</button>
+												<button className='btn btn-primary mx-2' onClick={handlePrint}>Print {printBar.length === 0 ? 'All' : 'Selected'} Barcode</button> */}
 											</div>
 											<div className='search'>
 												<input type='text' className='txt_input' placeholder='Search by Nombre' defaultValue={search} onChange={onChange} />
@@ -153,7 +153,7 @@ function FindProduct({ addorder, allpro, setAllPro, ...props }) {
 											{/* <th scope="col" className='text-center'>Fecha</th> */}
 											{/* <th scope="col" className='text-center'>Categoria</th> */}
 											{/* <th scope="col" className='text-center'>Talles</th> */}
-											<th scope="col" className='text-center'>Print Barcode</th>
+											{/* <th scope="col" className='text-center'>Print Barcode</th> */}
 											{/* <th scope="col" className='text-center'>Add</th> */}
 										</tr>
 									</thead>
@@ -169,9 +169,9 @@ function FindProduct({ addorder, allpro, setAllPro, ...props }) {
 													<td className={`text-center align-middle update${index}`} data-toggle="modal" data-target="#detailsproduct" onClick={() => details(pro, index)}>
 														{CategoryAdd?.filter(function (x) {return x.Category_id === pro.Category_id;})[0]?.nombre}
 													</td>
-													<td className='text-center align-middle' style={{width:25}}>
+													{/* <td className='text-center align-middle' style={{width:25}}>
 														<input type='checkbox' onChange={(e) => checking(e, pro)} style={{zIndex: 10}} />
-													</td>
+													</td> */}
 													{/* <td onClick={() => details(pro)} data-toggle="modal" data-target="#detailsproduct" className={`${pro.stock.filter((item) => item.stocking === 0).length > 0 ? 'bg-danger' : pro.stock.reduce((partialSum, a) => partialSum.stocking + a.stocking, 0) === 0 ? 'bg-danger' : 'bg-success'} text-center text-light align-middle`}>
 														{
 															pro.stock.reduce((partialSum, a) => partialSum + a.stocking, 0)
@@ -192,9 +192,9 @@ function FindProduct({ addorder, allpro, setAllPro, ...props }) {
 														<td className={`text-center align-middle update${index}`} data-toggle="modal" data-target="#detailsproduct" onClick={() => details(pro, index)}>
 															{CategoryAdd?.filter(function (x) {return x.Category_id === pro.Category_id;})[0]?.nombre}
 														</td>
-														<td className='text-center align-middle' style={{width:25}}>
+														{/* <td className='text-center align-middle' style={{width:25}}>
 															<input type='checkbox' onChange={(e) => checking(e, pro)} style={{zIndex: 10}} />
-														</td>
+														</td> */}
 														{/* <td onClick={() => details(pro)} data-toggle="modal" data-target="#detailsproduct" className={`${pro.stock.filter((item) => item.stocking === 0).length > 0 ? 'bg-danger' : pro.stock.reduce((partialSum, a) => partialSum.stocking + a.stocking, 0) === 0 ? 'bg-danger' : 'bg-success'} text-center text-light align-middle`}>
 															{
 																pro.stock.reduce((partialSum, a) => partialSum + a.stocking, 0)
@@ -244,9 +244,9 @@ function FindProduct({ addorder, allpro, setAllPro, ...props }) {
 				</>
 				: null
 			}
-			<div style={{display: 'none'}}>
+			{/* <div style={{display: 'none'}}>
 				<PrintBarcode printRef={printRef} printBar={printBar} />
-			</div>
+			</div> */}
 		</div>
 	)
 }

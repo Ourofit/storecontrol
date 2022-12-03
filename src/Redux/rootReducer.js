@@ -10,6 +10,7 @@ const initialState = {
     DepositoLogin: true,
     Sales_Activity: [],
     Clients: [],
+    Filtered_cat: [],
     // Status: false,
     Status: navigator.onLine,
 };
@@ -139,6 +140,18 @@ const rootReducer = (state = initialState, action) => {
             return {
                 ...state,
                 Sales_Activity: [...state.Sales_Activity, action.item],
+            };
+
+        case "FILTERED_CAT":
+            if (Array.isArray(action.item)) {
+                return {
+                    ...state,
+                    Filtered_cat: action.item,
+                };
+            }
+            return {
+                ...state,
+                Filtered_cat: [...state.Filtered_cat, action.item],
             };
 
         default:

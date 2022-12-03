@@ -124,7 +124,7 @@ export const store_SalesActivity = async (naming, Status, Sales_Activity, allsal
 };
 
 // prettier-ignore
-export const store_Products = async (naming, Status, Products, allproduct, setAllPro, Sales_Activity, allorders, allsalesactivity) => {
+export const store_Products = async (naming, Status, Products, allproduct, setAllPro, Sales_Activity, allorders, allsalesactivity, CategoryAdd=null, filtered_cat=null) => {
     if(Products.length === 0) {
         if(Status) {
             await axios.get("http://localhost:5000/product").then(async (item) => {
@@ -148,6 +148,15 @@ export const store_Products = async (naming, Status, Products, allproduct, setAl
                 alldata.sort(function (d1, d2) {
                     return new Date(d1.createdAt) - new Date(d2.createdAt);
                 });
+                if(filtered_cat !== null) {
+                    if(CategoryAdd.length === 0) {
+                        await axios.get("http://localhost:5000/category").then(async (category_data) => {
+                            filtered_cat(category_data.data?.filter(cat => alldata.filter(pro => pro.Category_id === cat.Category_id)[0]?.Category_id).map((final) => final.nombre))
+                        })
+                    } else {
+                        filtered_cat(CategoryAdd?.filter(cat => alldata.filter(pro => pro.Category_id === cat.Category_id)[0]?.Category_id).map((final) => final.nombre))
+                    }
+                }
                 if(dep.Type === "Manager") {
                     alldata = alldata.filter(ele => ele.Deposito_id === dep.Deposito_id)
                 }
@@ -579,19 +588,19 @@ export const store_Expenses = async (naming, Status, Expenses, allexp) => {
             await axios.get("http://localhost:5000/expense").then(async (item) => {
                 console.log(`${naming} -> all expenses`)
                 // setallDataExp(item.data)
-                item.data.sort(function (d1, d2) {
+                var DepositoLogin = JSON.parse(localStorage.getItem('DepositoLogin'))
+                var deposit_client = item.data.filter(ele => ele.Deposito_id === DepositoLogin.Deposito_id)
+                deposit_client.sort(function (d1, d2) {
                     return new Date(d2.createdAt) - new Date(d1.createdAt);
                 });
-                allexp(item.data)
+                allexp(deposit_client)
                 if(window.desktop) {
-                    
                     await window.api.getAllData("Expenses").then(async (item2) => {
-                   
                         item2.Expenses.forEach(async function (exp, index) {
                             if(!Object.keys(exp).includes('ExpenseId')) {
                                 await axios.post("http://localhost:5000/expense/new", exp)
                                 .then(async (item3) => {
-                                    var m = item.data;
+                                    var m = deposit_client;
                                     m.push(item3.data);
                                     m.sort(function (d1, d2) {
                                         return new Date(d2.createdAt) - new Date(d1.createdAt);
@@ -601,9 +610,9 @@ export const store_Expenses = async (naming, Status, Expenses, allexp) => {
                                     // console.log(allExpenses, 'details')
                                 }).catch(err => console.log(err))
                             }
-                            if(item.data.length === item2.Expenses.length) {
+                            if(deposit_client.length === item2.Expenses.length) {
                                 item2.Expenses.forEach(async (new_exp) => {
-                                    var find_exp = item.data.find(al => al.ExpenseId === new_exp.ExpenseId)
+                                    var find_exp = deposit_client.find(al => al.ExpenseId === new_exp.ExpenseId)
                                     var flag1 = 0
                                     if(find_exp) {
                                         if(find_exp.date !== new_exp.date ||
@@ -619,12 +628,13 @@ export const store_Expenses = async (naming, Status, Expenses, allexp) => {
                                         await axios.put("http://localhost:5000/expense/edit", new_exp).catch(err => console.log(err))
                                         await axios.get("http://localhost:5000/expense").then(async (item3) => {
                                             // var exp_new = Expenses.map(exp => exp.ExpenseId === new_exp.ExpenseId ? new_exp : exp)
-                                            item3.data.sort(function (d1, d2) {
+                                            var deposit_client2 = item3.data.filter(ele => ele.Deposito_id === DepositoLogin.Deposito_id)
+                                            deposit_client2.sort(function (d1, d2) {
                                                 return new Date(d2.createdAt) - new Date(d1.createdAt);
                                             });
-                                            allexp(item3.data)
+                                            allexp(deposit_client2)
                                             // setAllExpenses(item3.data)
-                                            await window.api.addData(item3.data, "Expenses")
+                                            await window.api.addData(deposit_client2, "Expenses")
                                             // console.log('succes update front ')
                                         })
                                     }
@@ -663,19 +673,20 @@ export const store_Expenses = async (naming, Status, Expenses, allexp) => {
                             expense_ret.Expenses_Returns.forEach(async (ret) => {
                                 await axios.delete(`http://localhost:5000/expense/delete/${ret.Expense_id}`).then(async dele => {
                                     await axios.get("http://localhost:5000/expense").then(async (item7) => {
-                                        item7.data.sort(function (d1, d2) {
+                                        var deposit_client3 = item7.data.filter(ele => ele.Deposito_id === DepositoLogin.Deposito_id)
+                                        deposit_client3.sort(function (d1, d2) {
                                             return new Date(d2.createdAt) - new Date(d1.createdAt);
                                         });
-                                        allexp(item7.data)
+                                        allexp(deposit_client3)
                                         // setAllExpenses(item7.data)
-                                        await window.api.addData(item7.data, "Expenses")
+                                        await window.api.addData(deposit_client3, "Expenses")
                                     })
                                 })
                             })
                         }
                     })
                     await window.api.deleteData("Expenses_Returns")
-                    await window.api.addData(item.data, "Expenses")
+                    await window.api.addData(deposit_client, "Expenses")
                 }
             })
         } else {

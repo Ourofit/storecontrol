@@ -8,20 +8,19 @@ import { connect } from "react-redux";
 // prettier-ignore
 function Dropdown({ name, dropvalues, onChange, touched, errors, value_select, inputbox=false, ...props }) {
 
-    const { CategoryAdd, category, deposito, DepositoLog, Expensecat, allexpensecat, Status, DepositoAdd, Products } = props
+    const { CategoryAdd, category, deposito, DepositoLog, Expensecat, allexpensecat, Status, DepositoAdd, Filtered_cat } = props
     
     const [selected, setSelected] = useState(value_select === '' ? name === 'manager' ? 'Manager' : 'Select' : value_select)
-    const [filter_val, setFilterVal] = useState()
     const [inputText, setInputText] = useState('')
     const [open, setOpen] = useState(false)
+    const [error, setError] = useState('')
 
     useEffect(() => {
-        function selecting() {
+        async function selecting() {
             setSelected(value_select === '' ? name === 'manager' ? 'Manager' : 'Select' : value_select)
-            setFilterVal(CategoryAdd?.filter(cat => Products.filter(pro => pro.Category_id === cat.Category_id)[0]?.Category_id).map((final) => final.nombre))
         }
         selecting()
-    }, [value_select, CategoryAdd, Products, name])
+    }, [value_select, CategoryAdd, name])
 
     const dropingdown = () => {
         document.getElementById(name).classList.toggle('drop_show')
@@ -60,31 +59,41 @@ function Dropdown({ name, dropvalues, onChange, touched, errors, value_select, i
             }
         } else if(name === 'Nombre Vendedor :') {
             var DepositoLogin = JSON.parse(localStorage.getItem('DepositoLogin'))
-            var deposit = DepositoAdd.find(item => item.Deposito_id === DepositoLogin.Deposito_id)
-            var de = JSON.parse(deposit.Employee_list)
-            de.push(inputText)
-            await axios.put('http://localhost:5000/deposito/employee', { Deposito_id: deposit.Deposito_id,  Employee_list: JSON.stringify(de)})
-                .then(async (item) => {
-                    // console.log(de)
-                    var dep = {
-                        Deposito_id: deposit.Deposito_id,
-                        nombre: deposit.nombre,
-                        Email: deposit.Email,
-                        Employee_list: JSON.stringify(de),
-                        Type: deposit.Type,
-                        Deposito_id_fk: deposit.Deposito_id_fk,
-                        Password: deposit.Password,
-                        createdAt: deposit.createdAt,
-                        updatedAt: deposit.updatedAt
-                    }
-                    localStorage.setItem('DepositoLogin', JSON.stringify(dep))
-                    DepositoLog(dep)
-                    await axios.get('http://localhost:5000/deposito')
-                        .then(item => {
-                            deposito(item.data)
-                            setInputText('')
+            var deposit = DepositoAdd.filter(item => item.nombre === inputText || item.Deposito_id === DepositoLogin.Deposito_id)
+            if(deposit.length >= 2 ) {
+                setError(`${inputText} is a Deposit name`)
+            } else {
+                deposit = deposit[0]
+                var de = JSON.parse(deposit.Employee_list)
+                if(de.includes(inputText)) {
+                    setError(`${inputText} is a Employee name`)
+                } else {
+                    de.push(inputText)
+                    await axios.put('http://localhost:5000/deposito/employee', { Deposito_id: deposit.Deposito_id,  Employee_list: JSON.stringify(de)})
+                        .then(async (item) => {
+                            // console.log(de)
+                            var dep = {
+                                Deposito_id: deposit.Deposito_id,
+                                nombre: deposit.nombre,
+                                Email: deposit.Email,
+                                Employee_list: JSON.stringify(de),
+                                Type: deposit.Type,
+                                Deposito_id_fk: deposit.Deposito_id_fk,
+                                Password: deposit.Password,
+                                createdAt: deposit.createdAt,
+                                updatedAt: deposit.updatedAt
+                            }
+                            localStorage.setItem('DepositoLogin', JSON.stringify(dep))
+                            DepositoLog(dep)
+                            await axios.get('http://localhost:5000/deposito')
+                                .then(item => {
+                                    deposito(item.data)
+                                    setInputText('')
+                                })
                         })
-                })
+                    setError('')
+                }
+            }
         }
         else if(name==="Expense_cat" || name==="Expense_cate"){
             if(Status) {
@@ -154,7 +163,13 @@ function Dropdown({ name, dropvalues, onChange, touched, errors, value_select, i
                         name === 'manager'
                         ? null
                         : <div className={`${name === 'Nombre Vendedor :' ? 'col-6' : 'col-4'} d-flex align-items-center`}>
-                            <span style={{fontWeight: name === 'Nombre Vendedor :' ? '500' : '700'}}>{name.charAt(0).toUpperCase() + name.slice(1)}</span>
+                            <span style={{fontWeight: name === 'Nombre Vendedor :' ? '500' : '700'}}>
+                                {
+                                    name === 'not_nombre'
+                                    ? 'Nombre'
+                                    : name.charAt(0).toUpperCase() + name.slice(1)
+                                }
+                            </span>
                         </div>
                     }
                     <div className={`${name === 'Nombre Vendedor :' ? 'col-6' : name === 'manager' ? 'col-12' : 'col-8'}`}>
@@ -179,13 +194,28 @@ function Dropdown({ name, dropvalues, onChange, touched, errors, value_select, i
                             <div className='drop_down' id={name}>
                                 {
                                     inputbox
-                                    ? <div className='input_main_box d-flex align-items-center w-100'>
-                                        <div className='w-100 flex-1'>
-                                            <input type='text' className='w-100 p-1 input_cat' value={inputText} onChange={(e) => setInputText(e.target.value)} />
+                                    ? <div className="d-flex flex-column">
+                                        <div className='input_main_box d-flex align-items-center w-100'>
+                                            <div className='w-100 flex-1'>
+                                                <input 
+                                                    type='text' 
+                                                    className='w-100 p-1 input_cat' 
+                                                    value={inputText} 
+                                                    onChange={(e) => {
+                                                        setInputText(e.target.value)
+                                                        setError('')
+                                                    }} 
+                                                />
+                                            </div>
+                                            <div>
+                                                <button type="button" className='btn' onClick={(e) => input_submit(e, name)}><FontAwesomeIcon icon="plus" /></button>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <button type="button" className='btn' onClick={(e) => input_submit(e, name)}><FontAwesomeIcon icon="plus" /></button>
-                                        </div>
+                                        {
+                                            error !== ''
+                                            ? <span style={{color: 'red', fontSize: 15}}>{error}</span>
+                                            : null
+                                        }
                                     </div>
                                     // ? <div className='container-fluid'>
                                     //     <div className='row d-flex align-items-center'>
@@ -215,7 +245,7 @@ function Dropdown({ name, dropvalues, onChange, touched, errors, value_select, i
                                                 {item}
                                             </div>
                                             {
-                                                !filter_val?.includes(item)
+                                                !Filtered_cat?.includes(item)
                                                 ? <button type="button" className="minus_btn" onClick={() => category_remove(item, index)}>
                                                     <FontAwesomeIcon icon="minus" style={{padding: 5, paddingRight: 10, zIndex: 5}}/>
                                                 </button>
@@ -224,19 +254,33 @@ function Dropdown({ name, dropvalues, onChange, touched, errors, value_select, i
                                         </div>
                                         : null
                                     )
-                                    : dropvalues?.map((item, index) => 
-                                        item !== ""
-                                        ? <div name={item} 
-                                            key={index} 
-                                            className={item === null ? "" : "option"} 
-                                            onClick={() => {
-                                                setSelected(item)
-                                                onChange(name, item)
-                                                dropingdown()
-                                            }}
-                                        >{item}</div>
-                                        : null
-                                    )
+                                    : name === 'not_nombre'
+                                        ? dropvalues?.map((item, index) => 
+                                            item !== ""
+                                            ? <div name={typeof item === 'string' ? item : item.nombre} 
+                                                key={index} 
+                                                className={item === null ? "" : "option"} 
+                                                onClick={() => {
+                                                    setSelected(typeof item === 'string' ? item : item.Deposito_id)
+                                                    onChange(name, typeof item === 'string' ? item : item.nombre)
+                                                    dropingdown()
+                                                }}
+                                            >{typeof item === 'string' ? item : item.nombre}</div>
+                                            : null
+                                        )
+                                        : dropvalues?.map((item, index) => 
+                                            item !== ""
+                                            ? <div name={item} 
+                                                key={index} 
+                                                className={item === null ? "" : "option"} 
+                                                onClick={() => {
+                                                    setSelected(item)
+                                                    onChange(name, item)
+                                                    dropingdown()
+                                                }}
+                                            >{item}</div>
+                                            : null
+                                        )
                                 }
                             </div>
                             {/* <select value={value_select === '' ? 'Select' : value_select} name={name} onChange={onChange}>
@@ -266,6 +310,7 @@ const mapStateToProps = (state) => {
         CategoryAdd: state.CategoryAdd,
         Expensecat: state.Expensecat,
         DepositoAdd: state.Deposito,
+        Filtered_cat: state.Filtered_cat,
         Status: state.Status,
     };
 };

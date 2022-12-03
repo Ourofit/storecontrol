@@ -18,7 +18,7 @@ import PayOrder from "./../../Components/PayOrder/PayOrder";
 // prettier-ignore
 function Users(props) {
 
-    const { allClients, Clients, CategoryAdd, category, Products, Deposito, deposito, Status, allproduct, Sales_Activity, allsalesactivity, allorders, Orders, notify } = props
+    const { allClients, Clients, CategoryAdd, category, Products, Deposito, deposito, Status, allproduct, Sales_Activity, allsalesactivity, allorders, Orders, notify, filtered_cat } = props
     
     const [Province, setProvince] = useState();
     const [, setAllPro] = useState(Products);
@@ -38,11 +38,11 @@ function Users(props) {
         async function dep_method() {
             await store_Desposito('Users', Status, Deposito, deposito)
             await store_Category('Users', Status, CategoryAdd, category)
-            await store_Products('Users', Status, Products, allproduct, setAllPro, Sales_Activity, allorders, allsalesactivity)
+            await store_Products('Users', Status, Products, allproduct, setAllPro, Sales_Activity, allorders, allsalesactivity, CategoryAdd, filtered_cat)
             await store_Orders('Users', Status, Orders, allorders, notify)
             await store_Clients('Users', Status, Clients, allClients)
             if (Status) {
-                axios.get(`https://apis.datos.gob.ar/georef/api/provincias?orden=nombre&aplanar=true&campos=basico&max=5000&exacto=true&formato=json`)
+                await axios.get('https://apis.datos.gob.ar/georef/api/provincias?orden=nombre&aplanar=true&campos=basico&max=5000&exacto=true&formato=json')
                     .then((response) => {
                         setProvince(response.data);
                     })
@@ -70,7 +70,6 @@ function Users(props) {
                 }
             })
             window.api.deleteData("Clients_Returns")
-
         }
 
         // window.api.addData(item.data,"Users")
@@ -83,7 +82,7 @@ function Users(props) {
                   window.api.addData(response.data, "Clients")
                  }) 
              }) */
-    }, [CategoryAdd, Deposito, Orders, Products, Sales_Activity, Status, allClients, allorders, allproduct, allsalesactivity, category, deposito, notify])
+    }, [CategoryAdd, Deposito, Orders, Products, Sales_Activity, Status, allClients, allorders, allproduct, allsalesactivity, category, deposito, notify, Clients, filtered_cat])
 
     const removeClient = async (id) => {
         if (Status) {
@@ -130,6 +129,7 @@ function Users(props) {
                             <tr>
                                 <th scope="col" className='text-center'>ID</th>
                                 <th scope="col" className='text-center'>Nombre</th>
+                                <th scope="col" className='text-center'>Deposito</th>
                                 <th scope="col" className='text-center'>Celular</th>
                                 <th scope="col" className='text-center'>Provincia</th>
                                 <th scope="col" className='text-center'>Pais</th>
@@ -138,26 +138,25 @@ function Users(props) {
                             </tr>
                         </thead>
                         <tbody>
-                            {Clients.map((i, key) => (
-
-                                <tr key={key} >
-                                    <th scope="row" className='text-center align-middle'>{key + 1}</th>
-                                    <td className='text-center align-middle'>{i.nombre}</td>
-                                    <td className='text-center align-middle'>{i.number} </td>
-                                    <td className='text-center align-middle'>{i.Provincia}</td>
-                                    <td className='text-center align-middle'>{i.Country}</td>
-                                    <td className='edit text-center align-middle'>
-                                        <IoCloseCircle style={{ display: "inline" }} className="close_icon_ind" onClick={() => removeClient(i.id)} />
-
-                                    </td>
-
-                                    <td className='edit text-center align-middle'>
-
-                                        <AiFillEdit style={{ display: "inline" }} className="edit_icon_ind" data-toggle="modal"
-                                            data-target="#client_edit"  onClick={() => editRow(i)}/>
-                                    </td>
-                                </tr>
-                            ))}
+                            {
+                                Clients?.map((i, key) => (
+                                    <tr key={key} >
+                                        <th scope="row" className='text-center align-middle'>{key + 1}</th>
+                                        <td className='text-center align-middle'>{i.nombre}</td>
+                                        <td className='text-center align-middle'>{Deposito.length !== 0 ? Deposito?.find(ele => ele.Deposito_id === i.Deposito_id).nombre : null}</td>
+                                        <td className='text-center align-middle'>{i.number} </td>
+                                        <td className='text-center align-middle'>{i.Provincia}</td>
+                                        <td className='text-center align-middle'>{i.Country}</td>
+                                        <td className='edit text-center align-middle'>
+                                            <IoCloseCircle style={{ display: "inline" }} className="close_icon_ind" onClick={() => removeClient(i.id)} />
+                                        </td>
+                                        <td className='edit text-center align-middle'>
+                                            <AiFillEdit style={{ display: "inline" }} className="edit_icon_ind" data-toggle="modal"
+                                                data-target="#client_edit"  onClick={() => editRow(i)}/>
+                                        </td>
+                                    </tr>
+                                ))
+                            }
                         </tbody>
                     </table>
                 </div>
@@ -221,6 +220,12 @@ const mapDispatchToProps = (dispatch) => {
         notify: (val) => {
             dispatch({
                 type: "NOTIFICATION",
+                item: val,
+            });
+        },
+        filtered_cat: (val) => {
+            dispatch({
+                type: "FILTERED_CAT",
                 item: val,
             });
         },

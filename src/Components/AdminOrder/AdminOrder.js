@@ -341,8 +341,8 @@ function AdminOrder({ setOrderReturn, setReturnedData, setOrder_Data, returnProd
 								onClick={() => {
 									setDetailsData(null)
 									setOrder(null)
-                                    // setOrderReturn(null)
-                                    // setReturnedData(null)
+                                    setOrderReturn(null)
+                                    setReturnedData(null)
 									// formRef.current.resetForm()
 								}}
 								>Close</button>

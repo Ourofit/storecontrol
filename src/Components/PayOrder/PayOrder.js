@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import "./PayOrder.scss";
@@ -12,7 +12,7 @@ import NewClient from "../../Components/NewClient/NewClient";
 // prettier-ignore
 function PayOrder({ Province, deposit, details_data, setDetailsData, order, setOrder, setOrderReturn, setOrder_Data, returnProduct, return_val, setReturnedData = null, setOrderDetails = null, returned_data = null, ...props }) {
 
-    const {Clients,  Products, allproduct, Orders, allorders, Sales_Activity, allsalesactivity, notify, Notific, Status } = props
+    const {Clients,  Products, allproduct, Orders, allorders, Sales_Activity, allsalesactivity, notify, Notific, Status, allClients } = props
     // if(details_data !== null) {
     //     var code = Products?.filter((p) => p.Product_id === details_data[0]?.Product_id)[0]
     //     for(var c=0; c<code.codigo.length; c++) {
@@ -29,7 +29,7 @@ function PayOrder({ Province, deposit, details_data, setDetailsData, order, setO
     const [, setErrorMsg] = useState(false)
     const [payerr, setPayErr] = useState(false)
 
-    const loop = useRef(true)
+    // const loop = useRef(true)
 
     const onChange = (e) => {
         setPayErr(false)
@@ -41,33 +41,33 @@ function PayOrder({ Province, deposit, details_data, setDetailsData, order, setO
             setPayment(order.Metodo_de_Pago)
             setClientName(order.Client_name)
         }
-        async function fetchSale() {
-            if (Sales_Activity.length === 0) {
-                if (Status) {
-                    // await store_SalesActivity('PayOrder', Status, Sales_Activity, allsalesactivity)
-                    // await axios.get('http://localhost:5000/salesactivity')
-                    //     .then(async item => {
-                    //         var main_data = item.data
-                    //         let months_data = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-                    //         for(var t=0; t < main_data.length; t++) {
-                    //             for(var m=0; m < months_data.length; m++) {
-                    //                 main_data[t][months_data[m]] = JSON.parse(main_data[t][months_data[m]])
-                    //             }
-                    //         }
-                    //         allsalesactivity(main_data)
-                    //     })
-                } else {
-                    if (window.desktop) {
-                        await window.api.getAllData("Sales_Activity").then((item) => allsalesactivity(item.Sales_Activity));
-                    }
-                }
-            }
-        }
-        if (loop.current) {
-            fetchSale()
-            loop.current = false
-        }
-    }, [Sales_Activity, allsalesactivity, Status, order])
+        // async function fetchSale() {
+        //     if (Clients.length === 0) {
+        //         if (Status) {
+        //             // await store_SalesActivity('PayOrder', Status, Sales_Activity, allsalesactivity)
+        //             // await axios.get('http://localhost:5000/salesactivity')
+        //             //     .then(async item => {
+        //             //         var main_data = item.data
+        //             //         let months_data = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        //             //         for(var t=0; t < main_data.length; t++) {
+        //             //             for(var m=0; m < months_data.length; m++) {
+        //             //                 main_data[t][months_data[m]] = JSON.parse(main_data[t][months_data[m]])
+        //             //             }
+        //             //         }
+        //             //         allsalesactivity(main_data)
+        //             //     })
+        //         } else {
+        //             // if (window.desktop) {
+        //             //     await window.api.getAllData("Sales_Activity").then((item) => allsalesactivity(item.Sales_Activity));
+        //             // }
+        //         }
+        //     }
+        // }
+        // if (loop.current) {
+        //     fetchSale()
+        //     loop.current = false
+        // }
+    }, [Clients, allClients, Status, order])
 
     const createOrder = async (e, val) => {
         e.preventDefault()
@@ -641,9 +641,8 @@ function PayOrder({ Province, deposit, details_data, setDetailsData, order, setO
         }
     }
 
-    const formRef = useRef();
     const settingval = (name, val) => {
-        formRef.current.setFieldValue(name, val);
+        setClientName(val)
     };
 
     return (
@@ -663,9 +662,6 @@ function PayOrder({ Province, deposit, details_data, setDetailsData, order, setO
                                     <div className="col-12">
                                         <div className='order_client my-1' style={{ width: "50%" }}>
                                             <Dropdown name='Cliente' onChange={settingval} dropvalues={Clients?.map((item) => item.nombre)} />
-
-
-
                                         </div>
                                         <div className="col-12 btn_new_user">
                                             <button
@@ -770,6 +766,12 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
+        allClients: (val) => {
+            dispatch({
+                type: "CLIENTS",
+                item: val,
+            });
+        },
         allorders: (val) => {
             dispatch({
                 type: "ORDERS",

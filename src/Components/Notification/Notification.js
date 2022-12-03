@@ -9,7 +9,7 @@ import { connect } from "react-redux";
 import { store_NotifyMaster } from "../../Functions/AllFunctions";
 // prettier-ignore
 function Notification({ employee, ...props }) {
-    const {Notific,notify,Status}= props
+    const { Notific, notify, Deposito, Status}= props
 
     const [allNotify, setAllNotify] = useState(Notific);
 
@@ -106,11 +106,19 @@ function Notification({ employee, ...props }) {
             <div className='not_scroll' >
                 {   
                     Notific?.map((note, index) => 
-                        <div className={`notify_main p-2 m-2 my-3 rounded bg-${note.Title === 'Stock warning' ? 'warning': note.Title === 'Stock danger' ? 'danger text-light' : note.Title === 'Last Month Earnings' ? 'success text-light' : 'info'}`}  key={note.Notify_id === undefined ? note.Date : note.Notify_id}>
+                        note.Sender_id !== null && (note.Sender_id === JSON.parse(localStorage.getItem('DepositoLogin')).Deposito_id || note.Deposito_id === JSON.parse(localStorage.getItem('DepositoLogin')).Deposito_id)
+                        ? <div className={`notify_main p-2 m-2 my-3 rounded bg-${note.Title === 'Stock warning' ? 'warning': note.Title === 'Stock danger' ? 'danger text-light' : note.Title === 'Last Month Earnings' ? 'success text-light' : 'info'}`}  key={note.Notify_id === undefined ? note.Date : note.Notify_id}>
                             <div className='d-flex justify-content-between'>
                                 <div className='d-flex justify-content-benotetween align-items-end'>
-                                    <span className='notify_title'>{note.Title}</span>
-                                
+                                    <span className='notify_title'>
+                                        {
+                                            note.Deposito_id && note.Deposito_id === JSON.parse(localStorage.getItem('DepositoLogin')).Deposito_id
+                                            ? Deposito?.find(ele => 
+                                                ele.Deposito_id === note.Sender_id
+                                            )?.nombre 
+                                            : note.Title
+                                        }
+                                    </span>
                                     <span className='notify_date'>{note.Date.split(',')[0]}</span>
                                 </div>
                                 <button className="btn" style={{padding: 0}} onClick={() => delete_notify(note.Notify_id)}>
@@ -121,6 +129,7 @@ function Notification({ employee, ...props }) {
                                 <span className='notify_msg'>{note.Message}</span>
                             </div>
                         </div>
+                        : null
                     )
                 }
   {/*                         {  Notification_master?.map((item) => 
@@ -180,6 +189,7 @@ function Notification({ employee, ...props }) {
 const mapStateToProps = (state) => {
     return {
         Notific: state.NotifyMaster,
+        Deposito: state.Deposito,
         Status: state.Status,
     };
 };

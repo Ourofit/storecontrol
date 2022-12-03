@@ -17,7 +17,7 @@ import { store_Expensecat, store_Expenses } from "../../Functions/AllFunctions";
 // prettier-ignore
 function Home(props) {
 
-    const { Products, Sales_Activity, allsalesactivity, Order, allorders, Status, Notific, notify, expense_category, Expenses, allexp, Expensecat } = props
+    const { Products, Sales_Activity, allsalesactivity, Order, allorders, Status, Notific, notify, expense_category, Expenses, allexp, Expensecat, Deposito } = props
 
     const chartRef = useRef();
 
@@ -44,6 +44,7 @@ function Home(props) {
     const [details_data, setDetailsData] = useState(null)
 	const [stocknum, setStockNum] = useState()
     const [co, setCo] = useState(null)
+    const [allorder, setAllOrders] = useState()
     const[idMod] = useState("idModalDash");
 
     const details = (pro, index) => {
@@ -80,6 +81,7 @@ function Home(props) {
         }
         if(notify_loop.current) {
             if(Status) {
+                var DepositoLogin = JSON.parse(localStorage.getItem("DepositoLogin"))
                 if(Notific.length !== 0 && Sales_Activity.length !== 0) {
                     var flag = 0
                     var date = new Date()
@@ -95,7 +97,7 @@ function Home(props) {
                             // console.log(last_month, m)
                             // console.log(last_year, y)
                             // console.log(last_month === m && last_year === y)
-                            if(last_month === m && last_year === y) {
+                            if(last_month === m && last_year === y && Notific[i].Sender_id === DepositoLogin?.Deposito_id) {
                                 flag = 1
                                 break
                             }
@@ -129,8 +131,9 @@ function Home(props) {
                         // console.log(`${total_curr < total_prev ? '-' : ''}${percentage}`)
                         axios.post("http://localhost:5000/notification/new",{
                             Title: 'Last Month Earnings',
-                            Message : `¿Sus ingresos del último mes fueron ${total_curr < total_prev ? 'no': ''} mejor que el mes anterior. ¿Has ganado ${total_curr < total_prev ? ' -' : ''}${percentage}% ${total_curr < total_prev ? ' Menos ': ' más '}.`,
+                            Message : `${DepositoLogin?.Type === 'Master Manager' ? 'Overall Store' : DepositoLogin?.nombre} ingresos del último mes fueron ${total_curr < total_prev ? 'no': ''} mejor que el mes anterior. ¿Has ganado ${total_curr < total_prev ? ' -' : ''}${percentage}% ${total_curr < total_prev ? ' Menos ': ' más '}.`,
                             // Message:  `Your Last month earnings was ${total_curr < total_prev ? ' not ' : ''} better then the month before that. You have earned ${total_curr < total_prev ? ' -' : ''}${percentage}% ${total_curr < total_prev ? ' less ' : ' more '}.`,
+                            Sender_id: DepositoLogin?.Deposito_id,
                             Date: new Date().toLocaleString()
                         }).then(async (item) => {
                             var note = Notific
@@ -153,6 +156,27 @@ function Home(props) {
                 }
             }
         }
+
+        async function order_storing() {
+			if(DepositoLogin?.Type !== 'Master Manager') {
+				var result = []
+                for (let i = 0; i < Order.length; i++) {
+                    var all_deposit = []
+                    all_deposit.push(DepositoLogin?.nombre)
+                    var filter_deposit = Deposito.find(ele => ele.nombre === Order[i].Deposito_name && ele.Deposito_id_fk === DepositoLogin?.Deposito_id && ele.Type === 'Store')
+                    var fk_deposit = Deposito.find(ele2 => ele2.Deposito_id === DepositoLogin?.Deposito_id_fk)
+                    if(filter_deposit) all_deposit.push(filter_deposit.nombre)
+                    if(fk_deposit) all_deposit.push(fk_deposit.nombre)
+                    if (all_deposit.includes(Order[i].Deposito_name)) {
+                        result.push(Order[i])
+                    }
+                }
+				setAllOrders(result)
+			} else {
+				setAllOrders(Order)
+			}
+		}
+		order_storing()
 
         const chart = chartRef.current;
         const labels_data = () => {
@@ -295,12 +319,13 @@ function Home(props) {
 
         setSaleData(sales);
         setOptions(option);
-    }, [Sales_Activity, allsalesactivity, select_month, select_year, Status, Notific, notify, Expensecat, Expenses, allexp, expense_category, Products, allorders, Order.length]);
+    }, [Sales_Activity, allsalesactivity, select_month, select_year, Status, Notific, notify, Expensecat, Expenses, allexp, expense_category, Products, allorders, Order, Deposito]);
 
     // -----------------------------------
     // ----------DATA OVERALL TOP---------
     // -----------------------------------
-    let totalVentas = Order?.reduce((acc, value )=> acc + value.Total_price, 0);
+    // console.log(allorder?.reduce((acc, value )=> acc + value.Total_price, 0))
+    let totalVentas = allorder?.reduce((acc, value )=> acc + value.Total_price, 0);
     let totalexpenses = Expenses?.reduce((acc, value )=> acc + parseInt(value.Total), 0);
     let totalBalance = 0;
     totalBalance += totalVentas - totalexpenses
@@ -386,6 +411,7 @@ const mapStateToProps = (state) => {
     return {
         Products: state.Products,
         Order: state.Orders,
+        Deposito: state.Deposito,
         Sales_Activity: state.Sales_Activity,
         Status: state.Status,
         Notific: state.NotifyMaster,
