@@ -60,7 +60,7 @@ function NewClient({ idModal = "new_client", allClients, Province, depositVal, .
                 Deposito_id: depositVal
 
             }
-            // console.log(new_client)
+            console.log(new_client)
             clients(new_client)
 
             var m = allClients;
@@ -72,7 +72,7 @@ function NewClient({ idModal = "new_client", allClients, Province, depositVal, .
             }
             resetForm();
         }
-        // console.log("subtmiting data client")
+        console.log("subtmiting data client")
 
     };
 
