@@ -764,5 +764,14 @@ export const store_NotifyMaster = async (naming, Status, Notific, notify) => {
     }
 }
 
-
-
+// prettier-ignore
+export const store_Clients = async (naming, Status, Clients, allClients) => {
+    if(Clients.length === 0) {
+        if(Status) {
+            await axios.get("http://localhost:5000/register").then((response) => {
+                console.log(`${naming} -> Clients`)
+				allClients(response.data)
+            })
+        }
+    }
+}

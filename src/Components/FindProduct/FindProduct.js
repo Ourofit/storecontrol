@@ -12,6 +12,7 @@ import { useLocation } from "react-router-dom";
 import { connect } from "react-redux";
 import {
     store_Category,
+    store_Clients,
     store_Desposito,
     store_NotifyMaster,
     store_Orders,
@@ -23,7 +24,7 @@ import {
 // prettier-ignore
 function FindProduct({ addorder, allpro, setAllPro, ...props }) {
 
-	const { Products, CategoryAdd, allproduct, category, deposito, DepositoAdd, Status, Sales_Activity, allsalesactivity, Orders, allorders, Notific, notify } = props
+	const { Products, CategoryAdd, allproduct, category, deposito, DepositoAdd, Status, Sales_Activity, allsalesactivity, Orders, allorders, Notific, notify, Clients, allClients } = props
 
 	const [search, setSeatrch] = useState('')
 	// const [allpro, setAllPro] = useState(Products)
@@ -81,6 +82,7 @@ function FindProduct({ addorder, allpro, setAllPro, ...props }) {
 			await store_Desposito('FindProduct', Status, DepositoAdd, deposito)
 			await store_Orders('FindProduct', Status, Orders, allorders, notify)
 			await store_NotifyMaster('FindProduct', Status, Notific, notify)
+			await store_Clients('FindProduct', Status, Clients, allClients)
         }
 		if(loop.current) {
 			pro_method()
@@ -90,7 +92,7 @@ function FindProduct({ addorder, allpro, setAllPro, ...props }) {
 		// 	// store_order()
 		// 	order_loop.current = false
 		// }
-    }, [Products.length, allproduct, category, deposito, CategoryAdd, DepositoAdd, Status, Products, Sales_Activity, allorders, allsalesactivity, setAllPro, Notific, Orders, notify]);
+    }, [Products.length, allproduct, category, deposito, CategoryAdd, DepositoAdd, Status, Products, Sales_Activity, allorders, allsalesactivity, setAllPro, Notific, Orders, notify, Clients, allClients]);
 
 	return(
 		<div className='findproduct'>
@@ -255,6 +257,7 @@ const mapStateToProps = (state) => {
         CategoryAdd: state.CategoryAdd,
         DepositoAdd: state.Deposito,
         Notific: state.NotifyMaster,
+        Clients: state.Clients,
         Orders: state.Orders,
         Status: state.Status,
         Sales_Activity: state.Sales_Activity,
@@ -296,6 +299,12 @@ const mapDispatchToProps = (dispatch) => {
         allorders: (val) => {
             dispatch({
                 type: "ORDERS",
+                item: val,
+            });
+        },
+        allClients: (val) => {
+            dispatch({
+                type: "CLIENTS",
                 item: val,
             });
         },
