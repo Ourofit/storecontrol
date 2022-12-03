@@ -188,7 +188,7 @@ function Orders({ setOrderDetails, setOrdering, boxes = false, employee = null, 
 		}
 	}
 
-	const returnProduct = async (val) => {
+	const returnProduct = async (val, pay=true) => {
 		if(details_data[0].order_product.length === 1) {
 			setDetailsData(null)
 			setOrder(null)
@@ -298,13 +298,16 @@ function Orders({ setOrderDetails, setOrdering, boxes = false, employee = null, 
 			var prod = product.filter(ele => ele.Product_id !== val.Product_id)
 			setDetailsData(details_data)
 			setProduct(prod)
-			setOrder({...order, Total_price: order.Total_price - val.Total_price})
+			// console.log({...order, Total_price: order.Total_price - val.Total_price}, order, details_data)
+			// setOrder({...order, Total_price: order.Total_price - val.Total_price})
 			if(Status) {
 				await axios.put('http://localhost:5000/product/quantity', req_data_el)
-				await axios.put(`http://localhost:5000/ordermaster/price`, {
-					Order_id: order.Order_id,
-					Total_price: order.Total_price - val.Total_price
-				})
+				if(pay) {
+					await axios.put(`http://localhost:5000/ordermaster/price`, {
+						Order_id: order.Order_id,
+						Total_price: order.Total_price - val.Total_price
+					})
+				}
 				await axios.delete(`http://localhost:5000/orderproduct/delete/${val.Order_pro_id}`)
 					.then(async item => {
 						await axios.get('http://localhost:5000/ordermaster')

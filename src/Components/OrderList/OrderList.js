@@ -91,6 +91,7 @@ function OrderList({ moreOrder, details_data, setDetailsData, order, setOrder, p
 				for(var k=0; k < order?.order_product.length; k++) {
 					var pro1
 					for(var l=0; l < Products.length; l++) {
+						// console.log(Products[l].Product_id, order?.order_product[k]?.Product_id)
 						if(Products[l].Product_id === order?.order_product[k]?.Product_id) {
 							// setPaymentType(order.Tipo_de_Cliente)
 							pro1 = Products[l]
@@ -98,17 +99,17 @@ function OrderList({ moreOrder, details_data, setDetailsData, order, setOrder, p
 					}
 					result.push(pro1)
 				}
-			} else {
-				var pro
-				for(var i=0; i < details_data?.length; i++) {
-					for(var p=0; p < Products.length; p++) {
-						if(Products[p].Product_id === details_data[i]?.Product_id) {
-							pro = Products[p]
-						}
+			}
+		}  else {
+			var pro
+			for(var i=0; i < details_data?.length; i++) {
+				for(var p=0; p < Products.length; p++) {
+					if(Products[p].Product_id === details_data[i]?.Product_id) {
+						pro = Products[p]
 					}
 				}
-				result.push(pro)
 			}
+			result.push(pro)
 		}
 		async function pro_method() {
 			
@@ -286,7 +287,7 @@ function OrderList({ moreOrder, details_data, setDetailsData, order, setOrder, p
 								</div>
 								<div className='order_price'>
 									<span>Precio Total: </span>
-									<span>${order?.Total_price}</span>
+									<span>${details_data?.reduce((acc, value )=> acc + value.Total_price, 0)}</span>
 								</div>
 							</div>
 							<div className='col-md'>
@@ -345,7 +346,7 @@ function OrderList({ moreOrder, details_data, setDetailsData, order, setOrder, p
 						{
 							details_data?.map((item, index) => 
 								<div className='productorder' key={index}>
-									{/* {console.log('OrderList Loop', product[index]?.Color[item.parentArray], item)} */}
+									{/* {console.log('OrderList Loop', product[index]?.Color, item)} */}
 									{
 										product[index]?.Color[item.parentArray].split(' (').length > 1
 										? <div className="bg-danger exhibit_tag">

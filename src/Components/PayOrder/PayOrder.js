@@ -23,6 +23,7 @@ function PayOrder({ Province, deposit, details_data, setDetailsData, order, setO
     //         }
     //     }
     // }
+    // console.log(Sales_Activity)
 
     const [payment, setPayment] = useState(null)
     const [client_name, setClientName] = useState('')
@@ -86,6 +87,7 @@ function PayOrder({ Province, deposit, details_data, setDetailsData, order, setO
                 o['Client_name'] = client_name
                 if (Status) {
                     if (Orders.find(ele => ele.Order_id === o.Order_id) !== undefined) {
+                        returnProduct(return_val, false)
                         await axios.put('http://localhost:5000/ordermaster/update', o)
                             .then(async (item) => {
                                 var data_ord = []
@@ -128,10 +130,11 @@ function PayOrder({ Province, deposit, details_data, setDetailsData, order, setO
                                                     setOrder_Data([prod.data.find(ele => ele.Order_id === order.Order_id)])
                                                     // console.log('PayOrder', prod.data.find(ele => ele.Order_id === order.Order_id).order_product)
                                                     // setDetailsData(prod.data.find(ele => ele.Order_id === order.Order_id).order_product)
+                                                    // console.log(items_order?.reduce((acc, value )=> acc + value.Total_price, 0), items_order)
                                                     setOrderReturn({
                                                         ...order,
                                                         order_product: items_order,
-                                                        Total_price: prod.data.find(ele => ele.Order_id === order.Order_id).Total_price
+                                                        Total_price: items_order?.reduce((acc, value )=> acc + value.Total_price, 0)
                                                     })
                                                     if (window.desktop) {
                                                         await window.api.addData(prod.data, "Orders")
@@ -418,7 +421,7 @@ function PayOrder({ Province, deposit, details_data, setDetailsData, order, setO
                                                     setOrderReturn({
                                                         ...order,
                                                         order_product: items_order,
-                                                        Total_price: prod.data.find(ele => ele.Order_id === order.Order_id).Total_price
+                                                        Total_price: items_order?.reduce((acc, value )=> acc + value.Total_price, 0)
                                                     })
                                                     if (window.desktop) {
                                                         await window.api.addData(prod.data, "Orders")
@@ -660,20 +663,29 @@ function PayOrder({ Province, deposit, details_data, setDetailsData, order, setO
                             <div className='container-fluid'>
                                 <div className="row">
                                     <div className="col-12">
-                                        <div className='order_client my-1' style={{ width: "50%" }}>
-                                            <Dropdown name='Cliente' onChange={settingval} dropvalues={Clients?.map((item) => item.nombre)} />
-                                        </div>
-                                        <div className="col-12 btn_new_user">
-                                            <button
-                                                type="button"
-                                                className="btn_color"
-                                                data-toggle="modal"
-                                                data-target="#new_client"
-                                            // onClick={() => setModalShow(true)}
-                                            >
-                                                Registrar cliente
-                                            </button>
-                                        </div>
+                                        {
+                                            order?.Client_name
+                                            ? <>
+                                                <span style={{ fontSize: 20, fontWeight: 600 }}>Cliente</span>:
+                                                <span style={{ fontSize: 20, fontWeight: 600 }}>{order.Client_name}</span>
+                                            </>
+                                            : <>
+                                                <div className='order_client my-1' style={{ width: "50%" }}>
+                                                    <Dropdown name='Cliente' onChange={settingval} dropvalues={Clients?.map((item) => item.nombre)} />
+                                                </div>
+                                                <div className="col-12 btn_new_user">
+                                                    <button
+                                                        type="button"
+                                                        className="btn_color"
+                                                        data-toggle="modal"
+                                                        data-target="#new_client"
+                                                    // onClick={() => setModalShow(true)}
+                                                    >
+                                                        Registrar cliente
+                                                    </button>
+                                                </div>
+                                            </>
+                                        }
 
                                         {/*   <div className='order_client my-1'>
                                             <span>Nombre Cliente: </span>

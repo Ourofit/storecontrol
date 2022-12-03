@@ -27,7 +27,7 @@ function AreYouSure({ returnProduct, return_val, setReturnedData, name=null }) {
     // }, [])
 
     const Submit = () => {
-        returnProduct(return_val)
+        // returnProduct(return_val)
         setReturnedData(return_val)
         // var myModalEl = document.getElementById('detailsorder')
         // myModalEl.modal('hide')

@@ -155,7 +155,7 @@ function AdminOrder({ setOrderReturn, setReturnedData, setOrder_Data, returnProd
 					setOrder({
 						...order,
 						order_product: [...details_data, order_pro2],
-						Total_price: order.Total_price + pricing,
+						Total_price: details_data?.reduce((acc, value )=> acc + value.Total_price, 0) + pricing,
 					});
 				}
 			}
