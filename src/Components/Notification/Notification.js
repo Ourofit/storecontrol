@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SendMessage from "../SendMessage/SendMessage";
 import axios from "axios";
 import { connect } from "react-redux";
-import { store_NotifyMaster } from "../../Functions/AllFunctions";
+// import { store_NotifyMaster } from "../../Functions/AllFunctions";
 // prettier-ignore
 function Notification({ employee, ...props }) {
     const { Notific, notify, Deposito, Status}= props
@@ -22,7 +22,7 @@ function Notification({ employee, ...props }) {
 
     useEffect(()=>{
         async function notificate() {
-            await store_NotifyMaster('Notification', Status, Notific, notify)
+            // await store_NotifyMaster('Notification', Status, Notific, notify)
             // if(Notific.length === 0){
             //     if(Status) {
             //         await axios.get("http://localhost:5000/notification").then(async item => {

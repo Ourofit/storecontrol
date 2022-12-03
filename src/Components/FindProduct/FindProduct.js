@@ -24,7 +24,7 @@ import {
 // prettier-ignore
 function FindProduct({ addorder, allpro, setAllPro, ...props }) {
 
-	const { Products, CategoryAdd, allproduct, category, deposito, DepositoAdd, Status, Sales_Activity, allsalesactivity, Orders, allorders, Notific, notify, Clients, allClients, Filtered_cat } = props
+	const { Products, CategoryAdd, allproduct, category, deposito, DepositoAdd, Status, Sales_Activity, allsalesactivity, Orders, allorders, Notific, notify, Clients, allClients, filtered_cat } = props
 
 	const [search, setSeatrch] = useState('')
 	// const [allpro, setAllPro] = useState(Products)
@@ -78,7 +78,7 @@ function FindProduct({ addorder, allpro, setAllPro, ...props }) {
 		async function pro_method() {
 			await store_SalesActivity('FindProduct', Status, Sales_Activity, allsalesactivity)
 			await store_Category('FindProduct', Status, CategoryAdd, category)
-			await store_Products('FindProduct', Status, Products, allproduct, setAllPro, Sales_Activity, allorders, allsalesactivity, CategoryAdd, Filtered_cat)
+			await store_Products('FindProduct', Status, Products, allproduct, setAllPro, Sales_Activity, allorders, allsalesactivity, CategoryAdd, filtered_cat)
 			await store_Desposito('FindProduct', Status, DepositoAdd, deposito)
 			await store_Orders('FindProduct', Status, Orders, allorders, notify)
 			await store_NotifyMaster('FindProduct', Status, Notific, notify)
@@ -92,7 +92,7 @@ function FindProduct({ addorder, allpro, setAllPro, ...props }) {
 		// 	// store_order()
 		// 	order_loop.current = false
 		// }
-    }, [Products.length, allproduct, category, deposito, CategoryAdd, DepositoAdd, Status, Products, Sales_Activity, allorders, allsalesactivity, setAllPro, Notific, Orders, notify, Clients, allClients, Filtered_cat]);
+    }, [Products.length, allproduct, category, deposito, CategoryAdd, DepositoAdd, Status, Products, Sales_Activity, allorders, allsalesactivity, setAllPro, Notific, Orders, notify, Clients, allClients, filtered_cat]);
 
 	return(
 		<div className='findproduct'>
@@ -306,6 +306,12 @@ const mapDispatchToProps = (dispatch) => {
         allClients: (val) => {
             dispatch({
                 type: "CLIENTS",
+                item: val,
+            });
+        },
+        filtered_cat: (val) => {
+            dispatch({
+                type: "FILTERED_CAT",
                 item: val,
             });
         },

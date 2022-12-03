@@ -739,6 +739,7 @@ export const store_NotifyMaster = async (naming, Status, Notific, notify) => {
                 item.data.sort(function (d1, d2) {
                     return new Date(d2.createdAt) - new Date(d1.createdAt);
                 });
+                console.log(item.data)
                 notify(item.data)
                 if(window.desktop) {
                     await window.api.getAllData("Notification").then(async (item2) => {
