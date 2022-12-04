@@ -103,7 +103,7 @@ function AdminOrder({ setOrderReturn, setReturnedData, setOrder_Data, returnProd
 				};
 				all_details = [order_pro];
 				setDetailsData(all_details);
-				setOrder(order_data);
+				setOrder({...order_data, order_product: all_details});
 			} else {
 				var flag = 0;
 				for (var i = 0; i < details_data.length; i++) {

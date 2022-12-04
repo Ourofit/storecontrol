@@ -208,7 +208,9 @@ function Orders({ setOrderDetails, setOrdering, boxes = false, employee = null, 
 			}
 			if(Status) {
 				await axios.put('http://localhost:5000/product/quantity', req_data)
-				await axios.delete(`http://localhost:5000/ordermaster/delete/${order.Order_id}`)
+				if(pay) {
+					await axios.delete(`http://localhost:5000/ordermaster/delete/${order.Order_id}`)
+				}
 				await axios.delete(`http://localhost:5000/orderproduct/delete/${val.Order_pro_id}`)
 				.then(async item => {
 					await axios.get('http://localhost:5000/ordermaster')
