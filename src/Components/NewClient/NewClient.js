@@ -32,7 +32,7 @@ function NewClient({ idModal = "new_client", allClients, Province, depositVal, .
     const onSubmit = async (values, { resetForm }) => {
         if (Status) {
 
-            await axios.post("http://localhost:5000/register/new", {
+            await axios.post("https://storecontrolserver-production-3675.up.railway.app/register/new", {
                 nombre: values.Nombre,
                 number: values.Number,
                 Country: values.Pais,

@@ -55,7 +55,7 @@ function Tienda(props) {
 
 		deposito(result)
 		if(Status) {
-			await axios.delete(`http://localhost:5000/deposito/delete/${id}`);
+			await axios.delete(`https://storecontrolserver-production-3675.up.railway.app/deposito/delete/${id}`);
 		} else {
 			if(window.desktop) {
 				await window.api.addData(result, "Deposito")
