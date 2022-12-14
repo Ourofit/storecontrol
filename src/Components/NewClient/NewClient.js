@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Inputbox from "../Inputbox/Inputbox";
 import Dropdown from "../Dropdown/Dropdown";
@@ -7,10 +7,31 @@ import { Form, Formik } from "formik";
 import { connect } from "react-redux";
 import axios from "axios";
 import "./NewClient.scss";
+import { store_Clients } from "../../Functions/AllFunctions";
 
 // prettier-ignore
-function NewClient({ idModal = "new_client", allClients, Province, depositVal, ...props }) {
+function NewClient({ idModal = "new_client", allClients, setProvince=null, Province, depositVal, ...props }) {
     const { clients, Status } = props;
+
+    const loop = useRef(true)
+
+    useEffect(() => {
+        async function dep_method() {
+            if (Status && Province === undefined && setProvince !== null) {
+                await axios.get('https://apis.datos.gob.ar/georef/api/provincias?orden=nombre&aplanar=true&campos=basico&max=5000&exacto=true&formato=json')
+                    .then((response) => {
+                        console.log(response.data)
+                        setProvince(response.data);
+                    })
+                    .catch((err) => console.log(err));
+            }
+        }
+
+        if (loop.current) {
+            dep_method()
+            loop.current = false
+        }
+    }, [Province, Status, setProvince])
 
     const validate = (values) => {
         const errors = {};

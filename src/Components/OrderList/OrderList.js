@@ -84,7 +84,7 @@ function OrderList({ moreOrder, details_data, setDetailsData, order, setOrder, p
 	useEffect(() => {
 		// console.log('--------OrderList--------')
 		var result = []
-		// console.log(order)
+		// console.log('Employee Name', order?.Employee_name)
 		if(order?.Employee_name !== undefined) {
 			setEmployeeName(order.Employee_name)
 			if(order?.order_product !== undefined) {
@@ -99,6 +99,16 @@ function OrderList({ moreOrder, details_data, setDetailsData, order, setOrder, p
 					}
 					result.push(pro1)
 				}
+			} else {
+				var pro2
+				for(var w=0; w < details_data?.length; w++) {
+					for(var a=0; a < Products.length; a++) {
+						if(Products[a].Product_id === details_data[w]?.Product_id) {
+							pro2 = Products[a]
+						}
+					}
+				}
+				result.push(pro2)
 			}
 		}  else {
 			var pro
@@ -358,7 +368,8 @@ function OrderList({ moreOrder, details_data, setDetailsData, order, setOrder, p
 										<div className='col-md-2'>
 											<div className='image_display'>
 												<div className='image_outside'>
-													{/* {Products.filter(pro => pro.Product_id === item.Product_id)} */}
+													{/* {console.log(product[index])} */}
+													{/* {console.log(Products.filter(pro => pro.Product_id === item.Product_id))} */}
 													{
 														Products.filter(pro => pro.Product_id === item.Product_id)[0].Image.length === 0 ||
 														Products.filter(pro => pro.Product_id === item.Product_id)[0].Image[0].length === 0

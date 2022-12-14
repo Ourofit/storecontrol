@@ -10,6 +10,7 @@ import {
     store_Category,
     store_Products,
     store_Orders,
+    store_Clients,
 } from "../../Functions/AllFunctions";
 import ClientEdit from "../../Components/ClientEdit/ClientEdit";
 import PayOrder from "./../../Components/PayOrder/PayOrder";
@@ -39,9 +40,11 @@ function Users(props) {
             await store_Category('Users', Status, CategoryAdd, category)
             await store_Products('Users', Status, Products, allproduct, setAllPro, Sales_Activity, allorders, allsalesactivity, CategoryAdd, filtered_cat)
             await store_Orders('Users', Status, Orders, allorders, notify)
+			await store_Clients('Users', Status, Clients, allClients)
             if (Status) {
                 await axios.get('https://apis.datos.gob.ar/georef/api/provincias?orden=nombre&aplanar=true&campos=basico&max=5000&exacto=true&formato=json')
                     .then((response) => {
+                        console.log(response.data)
                         setProvince(response.data);
                     })
                     .catch((err) => console.log(err));
@@ -51,14 +54,6 @@ function Users(props) {
         if (loop.current) {
             dep_method()
             loop.current = false
-        }
-        if (Status) {
-            axios.get("https://storecontrolserver-production-3675.up.railway.app/register").then((response) => (
-                allClients(response.data)
-                /*    if(window.desktop) {
-                       window.api.getAllData("Users").then(items => items.)
-                   } */
-            ))
         }
         if (Status && window.desktop) {
             window.api.getAllData("Clients_Returns").then(async (client_ret) => {
@@ -167,9 +162,9 @@ function Users(props) {
                     </table>
                 </div>
             </div>
-            <NewClient allClients={Clients} Province={Province} depositVal={deposit} />
+            <NewClient allClients={Clients} setProvince={setProvince} Province={Province} depositVal={deposit} />
             <ClientEdit Province={Province} setCurrentUser={setCurrentUser} currentUser={currentUser} />
-            <PayOrder allClients={Clients}  Province={Province} depositVal={deposit} />
+            <PayOrder allClients={Clients}  Province={Province} setProvince={setProvince} depositVal={deposit} />
         </div>
     )
 }

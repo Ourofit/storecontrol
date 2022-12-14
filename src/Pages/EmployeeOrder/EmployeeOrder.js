@@ -33,6 +33,7 @@ function EmployeeOrder(props) {
     const [product, setProduct] = useState(null)
 	const [returned_data, setReturnedData] = useState(null)
 	const [return_val, setReturnVal] = useState()
+    const [Province, setProvince] = useState();
 
     // const [productinsert, setProductInsert] = useState(null);
     const [paymentType, setPaymentType] = useState("Compras por Mayor");
@@ -546,7 +547,7 @@ function EmployeeOrder(props) {
                 />
             ) : null}
             <EditOrder details_data={order_details} particular={particular} />
-            <PayOrder details_data={details_data} setDetailsData={setDetailsData} setOrder_Data={setOrder} setOrderReturn={setOrder} order={order} setOrder={setOrder} setReturnedData={setReturnedData} />
+            <PayOrder details_data={details_data} setDetailsData={setDetailsData} setOrder_Data={setOrder} setOrderReturn={setOrder} order={order} setOrder={setOrder} setReturnedData={setReturnedData} Province={Province} setProvince={setProvince} />
             {/* <AreYouSure returnProduct={returnProduct} return_val={return_val} setReturnedData={setReturnedData} /> */}
             <AreYouSure returnProduct={returnProduct} return_val={return_val} setReturnedData={setReturnedData} name='EmployeeOrder' />
             <SendMessage />

@@ -10,7 +10,7 @@ import NewClient from "../../Components/NewClient/NewClient";
 // import NotifyAuto from "../SendMessage/NotifyAuto";
 
 // prettier-ignore
-function PayOrder({ Province, deposit, details_data, setDetailsData, order, setOrder, setOrderReturn, setOrder_Data, returnProduct, return_val, setReturnedData = null, setOrderDetails = null, returned_data = null, ...props }) {
+function PayOrder({ Province, deposit, details_data, setDetailsData, order, setOrder, setOrderReturn, setOrder_Data, returnProduct, return_val, setProvince=null, setReturnedData = null, setOrderDetails = null, returned_data = null, ...props }) {
 
     const {Clients,  Products, allproduct, Orders, allorders, Sales_Activity, allsalesactivity, notify, Notific, Status, allClients } = props
     // if(details_data !== null) {
@@ -68,7 +68,7 @@ function PayOrder({ Province, deposit, details_data, setDetailsData, order, setO
         //     fetchSale()
         //     loop.current = false
         // }
-    }, [Clients, allClients, Status, order])
+    }, [Clients, allClients, Status, order, Province])
 
     const createOrder = async (e, val) => {
         e.preventDefault()
@@ -760,7 +760,7 @@ function PayOrder({ Province, deposit, details_data, setDetailsData, order, setO
                     </div>
                 </div>
             </div>
-            <NewClient  Province={Province} depositVal={deposit} />
+            <NewClient allClients={Clients} setProvince={setProvince} Province={Province} depositVal={deposit} />
         </div>
     )
 }
