@@ -7,7 +7,6 @@ import { Form, Formik } from "formik";
 import { connect } from "react-redux";
 import axios from "axios";
 import "./NewClient.scss";
-import { store_Clients } from "../../Functions/AllFunctions";
 
 // prettier-ignore
 function NewClient({ idModal = "new_client", allClients, setProvince=null, Province, depositVal, ...props }) {
@@ -20,7 +19,6 @@ function NewClient({ idModal = "new_client", allClients, setProvince=null, Provi
             if (Status && Province === undefined && setProvince !== null) {
                 await axios.get('https://apis.datos.gob.ar/georef/api/provincias?orden=nombre&aplanar=true&campos=basico&max=5000&exacto=true&formato=json')
                     .then((response) => {
-                        console.log(response.data)
                         setProvince(response.data);
                     })
                     .catch((err) => console.log(err));

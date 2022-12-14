@@ -669,11 +669,11 @@ function PayOrder({ Province, deposit, details_data, setDetailsData, order, setO
                                                 <span style={{ fontSize: 20, fontWeight: 600 }}>Cliente</span>:
                                                 <span style={{ fontSize: 20, fontWeight: 600 }}>{order.Client_name}</span>
                                             </>
-                                            : <>
-                                                <div className='order_client my-1' style={{ width: "50%" }}>
+                                            : <div className="row">
+                                                <div className='col-md-6 order_client my-1'>
                                                     <Dropdown name='Cliente' onChange={settingval} dropvalues={Clients?.map((item) => item.nombre)} />
                                                 </div>
-                                                <div className="col-12 btn_new_user">
+                                                <div className="col-md-6 btn_new_user">
                                                     <button
                                                         type="button"
                                                         className="btn_color"
@@ -684,7 +684,7 @@ function PayOrder({ Province, deposit, details_data, setDetailsData, order, setO
                                                         Registrar cliente
                                                     </button>
                                                 </div>
-                                            </>
+                                            </div>
                                         }
 
                                         {/*   <div className='order_client my-1'>
