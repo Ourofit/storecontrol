@@ -137,7 +137,7 @@ function Tienda(props) {
 									<th scope="row" className='text-center align-middle' data-toggle='modal' data-target="#detailsStore" onClick={() => detail_store(i)}>{key+1}</th>
 									<td className='text-center align-middle' data-toggle='modal' data-target="#detailsStore" onClick={() => detail_store(i)}>{i.createdAt.split('T')[0]}</td>
 									<td className='text-center align-middle' data-toggle='modal' data-target="#detailsStore" onClick={() => detail_store(i)}>{i.nombre}</td>
-									<td className='text-center align-middle' data-toggle='modal' data-target="#detailsStore" onClick={() => detail_store(i)}>{Products.filter(ele => ele.Deposito_id === i.Deposito_id).length}</td>
+									<td className='text-center align-middle' data-toggle='modal' data-target="#detailsStore" onClick={() => detail_store(i)}>{i.Type === 'Store' ? '-' : Products.filter(ele => ele.Deposito_id === i.Deposito_id).length}</td>
 									<td className='text-center align-middle' data-toggle='modal' data-target="#detailsStore" onClick={() => detail_store(i)} >{i.Type}</td>
 									<td className='text-center align-middle' data-toggle='modal' data-target="#detailsStore" onClick={() => detail_store(i)}>No Direccion</td>
 									<td className='edit text-center align-middle'> 
