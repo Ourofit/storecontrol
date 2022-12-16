@@ -9,7 +9,7 @@ function NotifyAuto(nombre, Stock, ...props) {
     axios.post("https://storecontrolserver-production-3675.up.railway.app/notification/new",{
     	Title: Stock <= 3 ? 'Stock warning' : Stock === 0 ? 'Stock danger': null,
     	Message:  Stock <= 3 ? `El producto de ${nombre} se esta apunto de acabar. cargue mas stock !`: Stock === 0 ?  `El producto de ${nombre} se agoto. cargue mas stock !`:  null,
-    	Date: new Date().toLocaleString()
+    	Date: new Date().toLocaleString("en-US")
     }).then((item) => {
     	console.log(item)
     	console.log('okey works fine')

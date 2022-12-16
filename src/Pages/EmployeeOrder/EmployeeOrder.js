@@ -82,7 +82,7 @@ function EmployeeOrder(props) {
                 var order_data = {
                     // Order_id: Order_master[Order_master.length - 1].Order_id + 1,
                     Total_price: pricing,
-                    Fecha: new Date().toLocaleString(),
+                    Fecha: new Date().toLocaleString("en-US"),
                     Tipo_de_Cliente: paymentType,
                     Order_status: "Unpaid",
                     Employee_name: employee_name,

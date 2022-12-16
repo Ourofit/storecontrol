@@ -273,7 +273,7 @@ function PayOrder({ Province, deposit, details_data, setDetailsData, order, setO
                                                 axios.post("https://storecontrolserver-production-3675.up.railway.app/notification/new", {
                                                     Title: Stock === 0 ? 'Stock danger' : Stock <= 3 ? 'Stock warning' : null,
                                                     Message: Stock === 0 ? `El producto de ${nombre} (${Color}, ${Size}) se agoto. cargue mas stock !` : Stock <= 3 ? `El producto de ${nombre} (${Color}, ${Size}) se esta apunto de acabar. cargue mas stock !` : null,
-                                                    Date: new Date().toLocaleString()
+                                                    Date: new Date().toLocaleString("en-US")
                                                 }).then((item) => {
                                                     var note = Notific
                                                     note.push(item.data)
@@ -340,7 +340,7 @@ function PayOrder({ Province, deposit, details_data, setDetailsData, order, setO
                                     var msg = {
                                         Title: Stock === 0 ? 'Stock danger' : Stock <= 3 ? 'Stock warning' : null,
                                         Message: Stock === 0 ? `El producto de ${nombre} (${Color}, ${Size}) se agoto. cargue mas stock !` : Stock <= 3 ? `El producto de ${nombre} (${Color}, ${Size}) se esta apunto de acabar. cargue mas stock !` : null,
-                                        Date: new Date().toLocaleString(),
+                                        Date: new Date().toLocaleString("en-US"),
                                         createdAt: new Date().toISOString()
                                     }
                                     note.push(msg)
@@ -552,7 +552,7 @@ function PayOrder({ Province, deposit, details_data, setDetailsData, order, setO
                                                 axios.post("https://storecontrolserver-production-3675.up.railway.app/notification/new", {
                                                     Title: Stock === 0 ? 'Stock danger' : Stock <= 3 ? 'Stock warning' : null,
                                                     Message: Stock === 0 ? `El producto de ${nombre} (${Color}, ${Size}) se agoto. cargue mas stock !` : Stock <= 3 ? `El producto de ${nombre} (${Color}, ${Size}) se esta apunto de acabar. cargue mas stock !` : null,
-                                                    Date: new Date().toLocaleString()
+                                                    Date: new Date().toLocaleString("en-US")
                                                 }).then((item) => {
                                                     var note = Notific
                                                     note.push(item.data)
@@ -618,7 +618,7 @@ function PayOrder({ Province, deposit, details_data, setDetailsData, order, setO
                                     var msg2 = {
                                         Title: Stock2 === 0 ? 'Stock danger' : Stock2 <= 3 ? 'Stock warning' : null,
                                         Message: Stock2 === 0 ? `El producto de ${nombre2} (${Color2}, ${Size2}) se agoto. cargue mas stock !` : Stock2 <= 3 ? `El producto de ${nombre2} (${Color2}, ${Size2}) se esta apunto de acabar. cargue mas stock !` : null,
-                                        Date: new Date().toLocaleString()
+                                        Date: new Date().toLocaleString("en-US")
                                     }
                                     note2.push(msg2)
                                     note2.sort(function (d1, d2) {
@@ -655,7 +655,7 @@ function PayOrder({ Province, deposit, details_data, setDetailsData, order, setO
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title" id="exampleModalLabel">Metodo de Pago</h5>
-                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                            <button type="button" className="close" data-toggle="modal" data-target="#payorder" aria-label="Close">
                                 <span aria-hidden="true"><FontAwesomeIcon icon="close" /></span>
                             </button>
                         </div>
@@ -760,7 +760,7 @@ function PayOrder({ Province, deposit, details_data, setDetailsData, order, setO
                     </div>
                 </div>
             </div>
-            <NewClient allClients={Clients} setProvince={setProvince} Province={Province} depositVal={deposit} />
+            <NewClient allClients={Clients} setProvince={setProvince} Province={Province} depositVal={JSON.parse(localStorage.getItem('DepositoLogin')).Deposito_id} />
         </div>
     )
 }

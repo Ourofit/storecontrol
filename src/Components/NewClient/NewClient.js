@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Inputbox from "../Inputbox/Inputbox";
 import Dropdown from "../Dropdown/Dropdown";
@@ -7,29 +7,11 @@ import { Form, Formik } from "formik";
 import { connect } from "react-redux";
 import axios from "axios";
 import "./NewClient.scss";
+import { countries_data } from "../../Data/Countries_data";
 
 // prettier-ignore
-function NewClient({ idModal = "new_client", allClients, setProvince=null, Province, depositVal, ...props }) {
+function NewClient({ idModal = "new_client", allClients, depositVal, ...props }) {
     const { clients, Status } = props;
-
-    const loop = useRef(true)
-
-    useEffect(() => {
-        async function dep_method() {
-            if (Status && Province === undefined && setProvince !== null) {
-                await axios.get('https://apis.datos.gob.ar/georef/api/provincias?orden=nombre&aplanar=true&campos=basico&max=5000&exacto=true&formato=json')
-                    .then((response) => {
-                        setProvince(response.data);
-                    })
-                    .catch((err) => console.log(err));
-            }
-        }
-
-        if (loop.current) {
-            dep_method()
-            loop.current = false
-        }
-    }, [Province, Status, setProvince])
 
     const validate = (values) => {
         const errors = {};
@@ -112,7 +94,8 @@ function NewClient({ idModal = "new_client", allClients, setProvince=null, Provi
                                 type="button"
                                 style={{ backgroundColor: "transparent", border: 0 }}
                                 className="close"
-                                data-dismiss="modal"
+                                data-toggle="modal"
+                                data-target={`#${idModal}`}
                                 aria-label="Close"
                                 onClick={() => {
                                     formRef.current.resetForm()
@@ -148,11 +131,13 @@ function NewClient({ idModal = "new_client", allClients, setProvince=null, Provi
                                                 <div className="col-8 d-flex align-items-center">
                                                     <Inputbox type="text" name="Number" placeholder="Celular" />
                                                 </div>
-                                               <div>
-                                                    <Dropdown name='Pais' onChange={settingval} dropvalues={['Argentina']} value_select={props.values.Pais} touched={props.touched.Pais} errors={props.errors.Pais} />
+                                                <div>
+                                                    <Dropdown name='Pais' onChange={settingval} dropvalues={countries_data?.map(ele => ele.country)} value_select={props.values.Pais} touched={props.touched.Pais} errors={props.errors.Pais} />
+                                                    {/* <Dropdown name='Pais' onChange={settingval} dropvalues={['Argentina']} value_select={props.values.Pais} touched={props.touched.Pais} errors={props.errors.Pais} /> */}
                                                 </div>
                                                 <div>
-                                                    <Dropdown name='Provincia' onChange={settingval} dropvalues={Province?.provincias?.map((item) => item.nombre)} value_select={props.values.Provincia} touched={props.touched.Provincia} errors={props.errors.Provincia} />
+                                                    <Dropdown name='Provincia' onChange={settingval} dropvalues={countries_data?.find((item) => item.country === props.values.Pais)?.states} value_select={props.values.Provincia} touched={props.touched.Provincia} errors={props.errors.Provincia} />
+                                                    {/* <Dropdown name='Provincia' onChange={settingval} dropvalues={Province?.map((item) => item.nombre)} value_select={props.values.Provincia} touched={props.touched.Provincia} errors={props.errors.Provincia} /> */}
                                                 </div> 
 
                                             </div>

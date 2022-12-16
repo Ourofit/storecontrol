@@ -41,14 +41,6 @@ function Users(props) {
             await store_Products('Users', Status, Products, allproduct, setAllPro, Sales_Activity, allorders, allsalesactivity, CategoryAdd, filtered_cat)
             await store_Orders('Users', Status, Orders, allorders, notify)
 			await store_Clients('Users', Status, Clients, allClients)
-            if (Status) {
-                await axios.get('https://apis.datos.gob.ar/georef/api/provincias?orden=nombre&aplanar=true&campos=basico&max=5000&exacto=true&formato=json')
-                    .then((response) => {
-                        console.log(response.data)
-                        setProvince(response.data);
-                    })
-                    .catch((err) => console.log(err));
-            }
         }
 
         if (loop.current) {
@@ -144,7 +136,7 @@ function Users(props) {
                                     <tr key={key} >
                                         <th scope="row" className='text-center align-middle'>{key + 1}</th>
                                         <td className='text-center align-middle'>{i.nombre}</td>
-                                        <td className='text-center align-middle'>{Deposito.length !== 0 ? Deposito?.find(ele => ele.Deposito_id === i.Deposito_id).nombre : null}</td>
+                                        <td className='text-center align-middle'>{Deposito.length !== 0 && i.Deposito_id !== null ? Deposito?.find(ele => ele.Deposito_id === i.Deposito_id).nombre : null}</td>
                                         <td className='text-center align-middle'>{i.number} </td>
                                         <td className='text-center align-middle'>{i.Provincia}</td>
                                         <td className='text-center align-middle'>{i.Country}</td>
@@ -162,7 +154,7 @@ function Users(props) {
                     </table>
                 </div>
             </div>
-            <NewClient allClients={Clients} setProvince={setProvince} Province={Province} depositVal={deposit} />
+            <NewClient allClients={Clients} depositVal={deposit} />
             <ClientEdit Province={Province} setCurrentUser={setCurrentUser} currentUser={currentUser} />
             <PayOrder allClients={Clients}  Province={Province} setProvince={setProvince} depositVal={deposit} />
         </div>

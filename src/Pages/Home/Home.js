@@ -134,7 +134,7 @@ function Home(props) {
                             Message : `${DepositoLogin?.Type === 'Master Manager' ? 'Overall Store' : DepositoLogin?.nombre} ingresos del último mes fueron ${total_curr < total_prev ? 'no': ''} mejor que el mes anterior. ¿Has ganado ${total_curr < total_prev ? ' -' : ''}${percentage}% ${total_curr < total_prev ? ' Menos ': ' más '}.`,
                             // Message:  `Your Last month earnings was ${total_curr < total_prev ? ' not ' : ''} better then the month before that. You have earned ${total_curr < total_prev ? ' -' : ''}${percentage}% ${total_curr < total_prev ? ' less ' : ' more '}.`,
                             Sender_id: DepositoLogin?.Deposito_id,
-                            Date: new Date().toLocaleString()
+                            Date: new Date().toLocaleString("en-US")
                         }).then(async (item) => {
                             var note = Notific
                             note.push(item.data)
@@ -158,7 +158,7 @@ function Home(props) {
         }
 
         async function order_storing() {
-			if(DepositoLogin?.Type !== 'Master Manager') {
+			if(JSON.parse(localStorage.getItem('DepositoLogin'))?.Type !== 'Master Manager') {
 				var result = []
                 for (let i = 0; i < Order.length; i++) {
                     var all_deposit = []

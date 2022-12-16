@@ -776,7 +776,7 @@ export const store_NotifyMaster = async (naming, Status, Notific, notify) => {
 }
 
 // prettier-ignore
-export const store_Clients = async (naming, Status, Clients, allClients) => {
+export const store_Clients = async (naming, Status, Clients, allClients, allprovince) => {
     if(Clients.length === 0) {
         if(Status) {
             await axios.get("https://storecontrolserver-production-3675.up.railway.app/register").then((response) => {

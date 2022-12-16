@@ -40,7 +40,7 @@ function SendMessage({ sendActive, allNotify, setAllNotify, ...props }) {
 				Title: values.not_nombre,
 				Message: values.description,
 				Sender_id: JSON.parse(localStorage.getItem('DepositoLogin')).Deposito_id,
-				Date: new Date().toLocaleString(),
+				Date: new Date().toLocaleString("en-US"),
 				Deposito_id: final_dep ? final_dep.Deposito_id : null
 			}).then(async (item) => {
 				var m = Notific;
@@ -60,7 +60,7 @@ function SendMessage({ sendActive, allNotify, setAllNotify, ...props }) {
 			var msg = {
 				Title: values.not_nombre,
 				Message:  values.description,
-				Date: new Date().toLocaleString(),
+				Date: new Date().toLocaleString("en-US"),
 				createdAt: new Date().toISOString()
 			}
 			note.push(msg)
